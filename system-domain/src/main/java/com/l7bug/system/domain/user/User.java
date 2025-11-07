@@ -10,11 +10,20 @@ import lombok.Data;
  */
 @Data
 public class User {
+	private UserGateway userGateway;
 	private Long id;
 	private String username;
 	private String nickname;
 	private String password;
+	/**
+	 * 密码,明文
+	 */
+	private transient String rawPassword;
 	private Status status;
+
+	public User(UserGateway userGateway) {
+		this.userGateway = userGateway;
+	}
 
 	public boolean isEnable() {
 		return status == Status.ENABLE;
@@ -32,11 +41,18 @@ public class User {
 		this.status = Status.ENABLE;
 	}
 
-	public boolean save(UserGateway userGateway) {
-		User userByUsername = userGateway.getUserByUsername(this.username);
-		if (userByUsername != null && !userByUsername.getId().equals(this.id)) {
+	public boolean save() {
+		User userByUsername = userGateway.getUserByUsername(username);
+		if (userByUsername != null && !userByUsername.getId().equals(id)) {
 			return false;
 		}
+		if (this.rawPassword != null) {
+			this.password = userGateway.encode(this.rawPassword);
+		}
 		return userGateway.save(this);
+	}
+
+	public String login() {
+		return this.userGateway.login(this.username, this.rawPassword);
 	}
 }
