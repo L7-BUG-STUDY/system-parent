@@ -10,29 +10,33 @@ import lombok.Data;
  */
 @Data
 public class User {
-    private Long id;
-    private String username;
-    private String nickname;
-    private String password;
-    private Status status;
+	private Long id;
+	private String username;
+	private String nickname;
+	private String password;
+	private Status status;
 
-    public boolean isEnable(){
-        return status == Status.ENABLE;
-    }
+	public boolean isEnable() {
+		return status == Status.ENABLE;
+	}
 
-    public boolean isDisable(){
-        return status == Status.DISABLE;
-    }
+	public boolean isDisable() {
+		return status == Status.DISABLE;
+	}
 
-    public void setDisable(){
-        this.status = Status.DISABLE;
-    }
+	public void setDisable() {
+		this.status = Status.DISABLE;
+	}
 
-    public void setEnable(){
-        this.status = Status.ENABLE;
-    }
+	public void setEnable() {
+		this.status = Status.ENABLE;
+	}
 
-    public boolean save(UserGateway userGateway){
-        return userGateway.save(this);
-    }
+	public boolean save(UserGateway userGateway) {
+		User userByUsername = userGateway.getUserByUsername(this.username);
+		if (userByUsername != null && !userByUsername.getId().equals(this.id)) {
+			return false;
+		}
+		return userGateway.save(this);
+	}
 }

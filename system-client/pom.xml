@@ -21,7 +21,6 @@
         <dependency>
             <groupId>com.l7bug</groupId>
             <artifactId>l7bug-common</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.l7bug</groupId>
         <artifactId>l7bug-dependencies</artifactId>
-        <version>1.0.5-SNAPSHOT</version>
+        <version>1.0.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>system-parent</artifactId>
