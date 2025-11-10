@@ -13,6 +13,8 @@ public interface UserGateway {
 
 	User getUserByUsername(String username);
 
+	User currentUser();
+
 	String login(String username, String rawPassword);
 
 	void logout();

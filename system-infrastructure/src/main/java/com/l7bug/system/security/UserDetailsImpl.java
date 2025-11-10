@@ -21,6 +21,7 @@ public class UserDetailsImpl implements UserDetails {
 	private static final long serialVersionUID = -6457333811221304131L;
 	private Long id;
 	private String username;
+	private String nickname;
 	private String password;
 
 	@Override

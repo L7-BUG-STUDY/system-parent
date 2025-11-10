@@ -1,0 +1,32 @@
+services:
+    test-postgres:
+        image: postgres:18
+        restart: always
+        #        ports:
+        #            - "15432:5432"
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: 123456
+            TZ: Asia/Shanghai
+            PGTZ: Asia/Shanghai
+        networks:
+            - test-network
+    test-redis:
+        image: redis:8-alpine  # 使用特定版本
+        restart: always
+        ports:
+            - "6379"      # 暴露默认端口
+        environment:
+            - TZ=Asia/Shanghai
+        networks:
+            - test-network
+    test-java21:
+        image: eclipse-temurin:21
+        networks:
+            - test-network
+        environment:
+            TZ: Asia/Shanghai
+
+networks:
+    test-network: # 隔离网络提升安全性
+        external: true  # 关键：声明此网络已在外部创建
