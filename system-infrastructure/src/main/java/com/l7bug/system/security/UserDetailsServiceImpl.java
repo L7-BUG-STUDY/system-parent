@@ -2,10 +2,10 @@ package com.l7bug.system.security;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.l7bug.common.error.ClientErrorCode;
-import com.l7bug.common.exception.ClientException;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,11 +26,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userGateway.getUserByUsername(username);
 		if (user == null) {
-			throw new ClientException(ClientErrorCode.LOGIN_ERROR);
+			throw new BadCredentialsException(ClientErrorCode.LOGIN_ERROR.getMessage());
 		}
-		if (user.isDisable()) {
-			throw new ClientException(ClientErrorCode.USER_IS_DISABLE);
-		}
+
 		return BeanUtil.copyProperties(user, UserDetailsImpl.class);
 	}
 }

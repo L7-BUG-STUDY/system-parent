@@ -1,7 +1,9 @@
 package com.l7bug.system.gateway;
 
+import cn.hutool.core.util.StrUtil;
 import com.l7bug.common.error.ServerErrorCode;
 import com.l7bug.common.exception.ServerException;
+import com.l7bug.system.context.MdcUserInfoContext;
 import com.l7bug.system.convertor.UserConvertor;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
@@ -16,7 +18,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -61,8 +62,8 @@ public class UserGatewayImpl implements UserGateway {
 
 	@Override
 	public User currentUser() {
-		String token = MDC.get("token");
-		if (token == null) {
+		String token = MdcUserInfoContext.getMdcToken();
+		if (StrUtil.isBlank(token)) {
 			return null;
 		}
 		var ops = stringRedisTemplate.opsForHash();
@@ -79,7 +80,8 @@ public class UserGatewayImpl implements UserGateway {
 
 	@Override
 	public String login(String username, String rawPassword) {
-		Authentication authenticate = applicationContext.getBean(AuthenticationManager.class).authenticate(new UsernamePasswordAuthenticationToken(username, rawPassword));
+		Authentication authenticate = null;
+		authenticate = applicationContext.getBean(AuthenticationManager.class).authenticate(new UsernamePasswordAuthenticationToken(username, rawPassword));
 		if (authenticate.getPrincipal() != null && authenticate.getPrincipal() instanceof UserDetailsImpl userDetails) {
 			String token = userDetails.getId() + ":" + UUID.randomUUID();
 			HashOperations<String, Object, Object> ops = stringRedisTemplate.opsForHash();
@@ -87,7 +89,7 @@ public class UserGatewayImpl implements UserGateway {
 			ops.put(key, "id", userDetails.getId().toString());
 			ops.put(key, "username", userDetails.getUsername());
 			ops.put(key, "nickname", userDetails.getNickname());
-			ops.put(key, "authorities", userDetails.getAuthorities().parallelStream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")));
+			ops.put(key, "authorities", userDetails.getAuthoritiesSet().parallelStream().collect(Collectors.joining(",")));
 			stringRedisTemplate.expire(key, 2, TimeUnit.HOURS);
 			return token;
 		}

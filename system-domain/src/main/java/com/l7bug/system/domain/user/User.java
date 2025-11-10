@@ -2,6 +2,8 @@ package com.l7bug.system.domain.user;
 
 import lombok.Data;
 
+import java.util.Collection;
+
 /**
  * User
  *
@@ -19,6 +21,7 @@ public class User {
 	 * 密码,明文
 	 */
 	private transient String rawPassword;
+	private transient Collection<String> authoritiesSet;
 	private Status status;
 
 	public User(UserGateway userGateway) {
