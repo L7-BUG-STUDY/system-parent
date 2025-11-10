@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +41,6 @@ public class UserGatewayImpl implements UserGateway {
 	private final PasswordEncoder passwordEncoder;
 	private final ApplicationContext applicationContext;
 	private final StringRedisTemplate stringRedisTemplate;
-	private final RedisTemplate<Object, Object> redisTemplate;
 
 	@Override
 	public boolean save(User user) {
@@ -67,13 +65,13 @@ public class UserGatewayImpl implements UserGateway {
 		if (token == null) {
 			return null;
 		}
+		var ops = stringRedisTemplate.opsForHash();
 		String key = buildRedisKey(token);
-		if (!redisTemplate.hasKey(key)) {
+		if (!stringRedisTemplate.hasKey(key)) {
 			return null;
 		}
 		User user = new User(this);
-		var ops = redisTemplate.opsForHash();
-		user.setId(Optional.ofNullable(ops.get(key, "id")).map(Object::toString).map(Long::valueOf).orElse(-1L));
+		user.setId(Optional.ofNullable(ops.get(key, "id")).map(Object::toString).map(Long::valueOf).orElse(null));
 		user.setUsername(Optional.ofNullable(ops.get(key, "username")).map(Object::toString).orElse(""));
 		user.setNickname(Optional.ofNullable(ops.get(key, "nickname")).map(Object::toString).orElse(""));
 		return user;
@@ -102,7 +100,7 @@ public class UserGatewayImpl implements UserGateway {
 		if (token == null) {
 			return;
 		}
-		stringRedisTemplate.delete(token);
+		stringRedisTemplate.delete(buildRedisKey(token));
 	}
 
 	@Override

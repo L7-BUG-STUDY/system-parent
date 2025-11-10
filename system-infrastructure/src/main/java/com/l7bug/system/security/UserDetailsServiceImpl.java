@@ -26,10 +26,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userGateway.getUserByUsername(username);
 		if (user == null) {
-			throw new ClientException(ClientErrorCode.CLIENT_ERROR);
+			throw new ClientException(ClientErrorCode.LOGIN_ERROR);
 		}
 		if (user.isDisable()) {
-			throw new ClientException(ClientErrorCode.CLIENT_ERROR);
+			throw new ClientException(ClientErrorCode.USER_IS_DISABLE);
 		}
 		return BeanUtil.copyProperties(user, UserDetailsImpl.class);
 	}
