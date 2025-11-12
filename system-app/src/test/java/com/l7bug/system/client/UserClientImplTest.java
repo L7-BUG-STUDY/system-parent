@@ -25,7 +25,7 @@ class UserClientImplTest {
 
 	@Autowired
 	private UserGateway userGateway;
-	private User user = new User(userGateway);
+	private User user;
 
 	@BeforeEach
 	void setUp() {
