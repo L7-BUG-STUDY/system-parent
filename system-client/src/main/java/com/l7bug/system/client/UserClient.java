@@ -1,6 +1,7 @@
 package com.l7bug.system.client;
 
 import com.l7bug.common.result.Result;
+import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import jakarta.validation.Valid;
@@ -33,4 +34,12 @@ public interface UserClient {
 	 * @return 操作信息
 	 */
 	Result<Void> logout();
+
+	/**
+	 * 创建用户
+	 *
+	 * @param createUserRequest 用户
+	 * @return 操作信息
+	 */
+	Result<Void> createUser(@Valid CreateUserRequest createUserRequest);
 }
