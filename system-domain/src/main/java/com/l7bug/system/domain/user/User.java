@@ -1,10 +1,14 @@
 package com.l7bug.system.domain.user;
 
 import com.l7bug.common.error.ClientErrorCode;
+import com.l7bug.common.error.ServerErrorCode;
 import com.l7bug.common.exception.ClientException;
+import com.l7bug.common.exception.ServerException;
 import lombok.Data;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 /**
  * User
@@ -14,6 +18,7 @@ import java.util.Collection;
  */
 @Data
 public class User {
+	private static final int WAIT_TIME = 1;
 	private UserGateway userGateway;
 	private Long id;
 	private String username;
@@ -47,17 +52,34 @@ public class User {
 	}
 
 	public boolean save() {
-		User userByUsername = userGateway.getUserByUsername(username);
-		if (userByUsername != null && !userByUsername.getId().equals(id)) {
-			throw new ClientException(ClientErrorCode.USER_NOT_NULL);
+		try {
+			if (!this.getLock().tryLock(WAIT_TIME, TimeUnit.SECONDS)) {
+				throw new ServerException(ServerErrorCode.TIME_OUT);
+			}
+			User userByUsername = userGateway.getUserByUsername(username);
+			if (userByUsername != null && !userByUsername.getId().equals(id)) {
+				throw new ClientException(ClientErrorCode.USER_NOT_NULL);
+			}
+			if (this.rawPassword != null) {
+				this.password = userGateway.encode(this.rawPassword);
+			}
+			return userGateway.save(this);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return false;
+		} finally {
+			try {
+				this.getLock().unlock();
+			} catch (Exception ignored) {
+			}
 		}
-		if (this.rawPassword != null) {
-			this.password = userGateway.encode(this.rawPassword);
-		}
-		return userGateway.save(this);
 	}
 
 	public String login() {
 		return this.userGateway.login(this.username, this.rawPassword);
+	}
+
+	private synchronized Lock getLock() {
+		return this.userGateway.getUserLock(this.username);
 	}
 }
