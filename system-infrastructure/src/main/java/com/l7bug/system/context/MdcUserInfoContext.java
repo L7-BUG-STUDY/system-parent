@@ -10,25 +10,13 @@ import java.util.Optional;
  * @author Administrator
  * @since 2025/11/10 15:13
  */
-public class MdcUserInfoContext {
-	private final static String MDC_USER_ID = "userId";
+public final class MdcUserInfoContext {
 
 	private final static String MDC_USER_NAME = "username";
-	private final static String MDC_NICKNAME = "nickname";
 	private final static String MDC_REQUEST_ID = "requestId";
 	private final static String MDC_TOKEN = "token";
 
-	public static Long userId() {
-		try {
-			return Optional.ofNullable(MDC.get(MDC_USER_ID)).map(Long::valueOf).orElse(-1L);
-
-		} catch (IllegalArgumentException e) {
-			return -1L;
-		}
-	}
-
-	public static void putUserId(String userId) {
-		MDC.put(MDC_USER_ID, userId);
+	private MdcUserInfoContext() {
 	}
 
 	public static void putMdcRequestId(String requestId) {
@@ -41,14 +29,6 @@ public class MdcUserInfoContext {
 
 	public static String getMdcUserName() {
 		return Optional.ofNullable(MDC.get(MDC_USER_NAME)).orElse("");
-	}
-
-	public static void putMdcNickname(String mdcNickname) {
-		MDC.put(MDC_NICKNAME, mdcNickname);
-	}
-
-	public static String getMdcNickname() {
-		return Optional.ofNullable(MDC.get(MDC_NICKNAME)).orElse("");
 	}
 
 	public static String getMdcRequestId() {

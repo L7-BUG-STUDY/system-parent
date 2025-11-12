@@ -41,8 +41,6 @@ class UserClientImplTest {
 		MdcUserInfoContext.putMdcToken(login);
 		User user = userGateway.currentUser();
 		MdcUserInfoContext.putMdcUserName(user.getUsername());
-		MdcUserInfoContext.putMdcNickname(user.getNickname());
-		MdcUserInfoContext.putUserId(user.getId().toString());
 		UserDetailsImpl userDetails = BeanUtil.copyProperties(user, UserDetailsImpl.class);
 		userDetails.setPassword("123456");
 		UsernamePasswordAuthenticationToken authentication =

@@ -116,6 +116,9 @@ class UserGatewayImplTest {
 		this.userGatewayImpl.logout();
 		currentUser = this.userGatewayImpl.currentUser();
 		Assertions.assertNull(currentUser);
+		MDC.put("token", token + 1);
+		Assertions.assertNull(this.userGatewayImpl.currentUser());
+		this.userGatewayImpl.logout();
 	}
 
 	@Test

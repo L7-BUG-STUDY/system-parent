@@ -5,7 +5,6 @@ import com.l7bug.system.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +31,7 @@ import java.util.List;
 @EnableMethodSecurity
 public class AppSecurityConfiguration {
 	public final static String LOGIN_URL = "/auth/login";
+	private final AuthConfiguration.AuthProperties authProperties;
 
 	private final JwtAuthenticationFilter jwtAuthorizationFilter;
 
@@ -57,7 +57,7 @@ public class AppSecurityConfiguration {
 			.authorizeHttpRequests(auth ->
 				auth
 					// 放行无需认证的URL
-					.requestMatchers(HttpMethod.POST, LOGIN_URL).permitAll()
+					.requestMatchers(authProperties.getWhiteApi()).permitAll()
 					// 其他所有请求都需要认证
 					.anyRequest().authenticated()
 			)

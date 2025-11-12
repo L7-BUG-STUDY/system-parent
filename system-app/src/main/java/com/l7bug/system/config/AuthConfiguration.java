@@ -5,9 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collections;
-import java.util.Set;
-
 /**
  * AuthConfig
  *
@@ -20,6 +17,6 @@ public class AuthConfiguration {
 	@ConfigurationProperties(prefix = "l7bug.auth")
 	@Data
 	public static class AuthProperties {
-		private Set<String> whiteApi = Collections.singleton("/auth/login");
+		private String[] whiteApi = {"/auth/login"};
 	}
 }

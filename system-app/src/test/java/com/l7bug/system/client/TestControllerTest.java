@@ -200,7 +200,7 @@ public class TestControllerTest {
 		String token = responseEntity.getBody().getData();
 		responseVoid = restTemplate.exchange(
 			apiHost + "/test/throw/AbstractException",
-			HttpMethod.DELETE,
+			HttpMethod.GET,
 			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
 			new ParameterizedTypeReference<>() {
 			}
@@ -208,8 +208,24 @@ public class TestControllerTest {
 		Assertions.assertNotNull(responseVoid.getBody());
 		Assertions.assertTrue(responseVoid.getBody().isFailure());
 		responseVoid = restTemplate.exchange(
+			apiHost + "/test/throw/AbstractException2",
+			HttpMethod.GET,
+			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
+			new ParameterizedTypeReference<>() {
+			}
+		);
+		Assertions.assertNotNull(responseVoid.getBody());
+		Assertions.assertTrue(responseVoid.getBody().isFailure());
+		responseVoid = restTemplate.exchange(
+			apiHost + "/test/throw/Throwable?id=1",
+			HttpMethod.GET,
+			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token, SystemEtc.REQUEST_ID, UUID.randomUUID().toString()))),
+			new ParameterizedTypeReference<>() {
+			}
+		);
+		responseVoid = restTemplate.exchange(
 			apiHost + "/test/throw/Throwable",
-			HttpMethod.DELETE,
+			HttpMethod.GET,
 			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
 			new ParameterizedTypeReference<>() {
 			}

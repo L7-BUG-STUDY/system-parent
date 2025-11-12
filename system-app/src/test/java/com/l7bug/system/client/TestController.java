@@ -1,7 +1,7 @@
 package com.l7bug.system.client;
 
-import com.l7bug.common.error.ServerErrorCode;
-import com.l7bug.common.exception.AbstractException;
+import com.l7bug.common.error.ClientErrorCode;
+import com.l7bug.common.exception.ClientException;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
 import com.l7bug.system.config.AppSecurityConfiguration;
@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.Serial;
 
 /**
  * TestController
@@ -49,10 +47,13 @@ public class TestController {
 
 	@GetMapping("/test/throw/AbstractException")
 	public Result<Void> throwAbstractException() {
-		throw new AbstractException(ServerErrorCode.SERVER_ERROR) {
-			@Serial
-			private static final long serialVersionUID = -8117518293821661847L;
-		};
+		throw new ClientException(ClientErrorCode.NOT_AUTHENTICATION);
+	}
+
+	@GetMapping("/test/throw/AbstractException2")
+	public Result<Void> throwAbstractException2() {
+		ClientException clientException = new ClientException(ClientErrorCode.NOT_AUTHENTICATION);
+		throw new ClientException(ClientErrorCode.NOT_AUTHENTICATION, clientException);
 	}
 
 	@GetMapping("/test/throw/Throwable")

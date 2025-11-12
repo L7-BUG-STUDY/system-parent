@@ -11,5 +11,10 @@ logging:
     level:
         root: info
         com.l7bug: debug
+l7bug:
+    auth:
+        white-api:
+            - /auth/login
+            - /test/auth/login
 server:
     port: 0
