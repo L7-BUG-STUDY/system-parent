@@ -3,6 +3,8 @@ package com.l7bug.system.domain.user;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.l7bug.common.error.ClientErrorCode;
+import com.l7bug.common.exception.AbstractException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +74,8 @@ class UserTest {
 		Assertions.assertNotNull(user.getPassword());
 		Assertions.assertTrue(StrUtil.isNotBlank(user.getPassword()));
 		admin.setUsername("admin");
-		admin.save();
+		AbstractException abstractException = Assertions.assertThrows(AbstractException.class, admin::save);
+		Assertions.assertEquals(ClientErrorCode.USER_NOT_NULL.getCode(), abstractException.getCode());
 		admin.setId(mockUser.getId());
 		admin.save();
 	}

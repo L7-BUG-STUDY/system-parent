@@ -70,8 +70,7 @@ class UserGatewayImplTest {
 		// 测试更新失败
 		User copyProperties = BeanUtil.copyProperties(user, User.class);
 		copyProperties.setId(-111L);
-		save = copyProperties.save();
-		Assertions.assertFalse(save);
+		Assertions.assertThrows(Exception.class, copyProperties::save);
 	}
 
 	@Test

@@ -1,5 +1,7 @@
 package com.l7bug.system.domain.user;
 
+import com.l7bug.common.error.ClientErrorCode;
+import com.l7bug.common.exception.ClientException;
 import lombok.Data;
 
 import java.util.Collection;
@@ -47,7 +49,7 @@ public class User {
 	public boolean save() {
 		User userByUsername = userGateway.getUserByUsername(username);
 		if (userByUsername != null && !userByUsername.getId().equals(id)) {
-			return false;
+			throw new ClientException(ClientErrorCode.USER_NOT_NULL);
 		}
 		if (this.rawPassword != null) {
 			this.password = userGateway.encode(this.rawPassword);
