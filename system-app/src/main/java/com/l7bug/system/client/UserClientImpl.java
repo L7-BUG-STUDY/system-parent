@@ -7,7 +7,6 @@ import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -42,12 +41,6 @@ public class UserClientImpl implements UserClient {
 	@Override
 	public Result<Void> logout() {
 		userGateway.logout();
-		return Results.success();
-	}
-
-	@PreAuthorize("hasAuthority(#authorities)")
-	@Override
-	public Result<Void> hasAuthorities(String authorities) {
 		return Results.success();
 	}
 }

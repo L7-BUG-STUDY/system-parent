@@ -32,7 +32,7 @@ public class AuthController {
 
 	@GetMapping("/auth/hasAuthorities/{authorities}")
 	public Result<Void> hasAuthorities(@PathVariable("authorities") String authorities) {
-		return userClient.hasAuthorities(authorities);
+		return userClient.hasAuthority(authorities);
 	}
 
 	@GetMapping("/not/login")

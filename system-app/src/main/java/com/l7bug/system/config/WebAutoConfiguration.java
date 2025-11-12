@@ -42,6 +42,7 @@ import com.l7bug.system.context.MdcUserInfoContext;
 import com.l7bug.system.etc.SystemEtc;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +57,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Administrator
  * @since 2025/11/4 17:52
  */
+@Slf4j
 @Configuration
 public class WebAutoConfiguration implements WebMvcConfigurer {
 	@Override
@@ -68,7 +70,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 					if (StrUtil.isBlank(requestId)) {
 						requestId = IdUtil.getSnowflakeNextIdStr();
 					}
-					MdcUserInfoContext.putRequestId(requestId);
+					MdcUserInfoContext.putMdcRequestId(requestId);
 					if (StrUtil.isNotBlank(token)) {
 						MdcUserInfoContext.putMdcToken(token);
 					}

@@ -117,4 +117,9 @@ class UserGatewayImplTest {
 		currentUser = this.userGatewayImpl.currentUser();
 		Assertions.assertNull(currentUser);
 	}
+
+	@Test
+	void getUserByUsername() {
+		Assertions.assertThrows(Exception.class, () -> this.userGatewayImpl.getUserByUsername(null));
+	}
 }

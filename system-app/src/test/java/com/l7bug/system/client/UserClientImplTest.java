@@ -1,6 +1,7 @@
 package com.l7bug.system.client;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.github.javafaker.Faker;
 import com.l7bug.common.result.Result;
 import com.l7bug.system.context.MdcUserInfoContext;
 import com.l7bug.system.domain.user.User;
@@ -16,13 +17,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Locale;
 import java.util.UUID;
 
 @SpringBootTest
 class UserClientImplTest {
+	private final Faker faker = new Faker(Locale.CHINA);
 	@Autowired
 	private UserClientImpl userClient;
-
 	@Autowired
 	private UserGateway userGateway;
 	private User user;
@@ -32,7 +34,7 @@ class UserClientImplTest {
 		user = new User(userGateway);
 		user.setUsername(UUID.randomUUID().toString().replace("-", ""));
 		user.setRawPassword(UUID.randomUUID().toString().replace("-", ""));
-		user.setNickname("测试用户");
+		user.setNickname(faker.name().name());
 		user.setEnable();
 		user.save();
 		String login = user.login();
@@ -67,10 +69,5 @@ class UserClientImplTest {
 		String login = user.login();
 		MdcUserInfoContext.putMdcToken(login);
 		this.userClient.logout();
-	}
-
-	@Test
-	void hasAuthorities() {
-		this.userClient.hasAuthorities("READ");
 	}
 }

@@ -33,11 +33,4 @@ public interface UserClient {
 	 * @return 操作信息
 	 */
 	Result<Void> logout();
-
-	/**
-	 * 测试权限
-	 *
-	 * @return 正常返回表示有用
-	 */
-	Result<Void> hasAuthorities(String authorities);
 }

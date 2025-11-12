@@ -31,8 +31,8 @@ public class MdcUserInfoContext {
 		MDC.put(MDC_USER_ID, userId);
 	}
 
-	public static void putRequestId(String requestId) {
-		MDC.put("requestId", requestId);
+	public static void putMdcRequestId(String requestId) {
+		MDC.put(MDC_REQUEST_ID, requestId);
 	}
 
 	public static void putMdcUserName(String mdcUserName) {
@@ -49,10 +49,6 @@ public class MdcUserInfoContext {
 
 	public static String getMdcNickname() {
 		return Optional.ofNullable(MDC.get(MDC_NICKNAME)).orElse("");
-	}
-
-	public static void putMdcRequestId(String mdcRequestId) {
-		MDC.put(MDC_REQUEST_ID, mdcRequestId);
 	}
 
 	public static String getMdcRequestId() {
