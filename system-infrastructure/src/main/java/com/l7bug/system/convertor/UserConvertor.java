@@ -23,13 +23,13 @@ public class UserConvertor {
 	public User mapDomain(SystemUser systemUser) {
 		User user = new User(applicationContext.getBean(UserGateway.class));
 		BeanUtil.copyProperties(systemUser, user);
-		user.setStatus(systemUser.getStatus() == UserStatus.ENABLE.getValue() ? UserStatus.ENABLE : UserStatus.DISABLE);
+		user.setStatus(systemUser.getStatus() == 1 ? UserStatus.ENABLE : UserStatus.DISABLE);
 		return user;
 	}
 
 	public SystemUser mapDo(User user) {
 		SystemUser systemUser = BeanUtil.copyProperties(user, SystemUser.class);
-		systemUser.setStatus(user.getStatus().getValue());
+		systemUser.setStatus(user.getStatus().ordinal());
 		return systemUser;
 	}
 }

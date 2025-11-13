@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum UserStatus {
-	ENABLE(1),
-	DISABLE(0);
-	private final int value;
+	DISABLE,
+	ENABLE,
+	;
 }
