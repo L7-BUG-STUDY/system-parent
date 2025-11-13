@@ -25,26 +25,26 @@ public class User {
 	 */
 	private transient String rawPassword;
 	private transient Collection<String> authoritiesSet;
-	private Status status;
+	private UserStatus status;
 
 	public User(UserGateway userGateway) {
 		this.userGateway = userGateway;
 	}
 
 	public boolean isEnable() {
-		return status == Status.ENABLE;
+		return status == UserStatus.ENABLE;
 	}
 
 	public boolean isDisable() {
-		return status == Status.DISABLE;
+		return status == UserStatus.DISABLE;
 	}
 
 	public void setDisable() {
-		this.status = Status.DISABLE;
+		this.status = UserStatus.DISABLE;
 	}
 
 	public void setEnable() {
-		this.status = Status.ENABLE;
+		this.status = UserStatus.ENABLE;
 	}
 
 	public boolean save() {

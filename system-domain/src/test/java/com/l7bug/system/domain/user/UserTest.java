@@ -30,7 +30,7 @@ class UserTest {
 		user.setUsername("root");
 		user.setRawPassword("root");
 		user.setNickname("root");
-		user.setStatus(Status.ENABLE);
+		user.setStatus(UserStatus.ENABLE);
 		Mockito.doAnswer(i -> i.getArgument(0).toString())
 			.when(userGateway)
 			.encode(Mockito.anyString());

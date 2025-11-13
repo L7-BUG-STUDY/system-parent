@@ -1,6 +1,6 @@
 package com.l7bug.system.security;
 
-import com.l7bug.system.domain.user.Status;
+import com.l7bug.system.domain.user.UserStatus;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +26,7 @@ public class UserDetailsImpl implements UserDetails {
 	private String username;
 	private String nickname;
 	private String password;
-	private Status status;
+	private UserStatus status;
 	private Collection<String> authoritiesSet = List.of("READ", "WRITE");
 
 	@Override
@@ -40,7 +40,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return status == Status.ENABLE;
+		return status == UserStatus.ENABLE;
 	}
 
 }

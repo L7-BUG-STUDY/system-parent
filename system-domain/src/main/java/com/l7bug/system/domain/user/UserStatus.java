@@ -11,8 +11,8 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum Status {
-    ENABLE(1),
-    DISABLE(0);
-    private final int value;
+public enum UserStatus {
+	ENABLE(1),
+	DISABLE(0);
+	private final int value;
 }

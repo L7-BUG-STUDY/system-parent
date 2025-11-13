@@ -1,9 +1,9 @@
 package com.l7bug.system.convertor;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.l7bug.system.domain.user.Status;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
+import com.l7bug.system.domain.user.UserStatus;
 import com.l7bug.system.mybatis.dataobject.SystemUser;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -23,7 +23,7 @@ public class UserConvertor {
 	public User mapDomain(SystemUser systemUser) {
 		User user = new User(applicationContext.getBean(UserGateway.class));
 		BeanUtil.copyProperties(systemUser, user);
-		user.setStatus(systemUser.getStatus() == Status.ENABLE.getValue() ? Status.ENABLE : Status.DISABLE);
+		user.setStatus(systemUser.getStatus() == UserStatus.ENABLE.getValue() ? UserStatus.ENABLE : UserStatus.DISABLE);
 		return user;
 	}
 

@@ -3,8 +3,8 @@ package com.l7bug.system.gateway;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.javafaker.Faker;
-import com.l7bug.system.domain.user.Status;
 import com.l7bug.system.domain.user.User;
+import com.l7bug.system.domain.user.UserStatus;
 import com.l7bug.system.mybatis.mapper.SystemUserMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -36,7 +36,7 @@ class UserGatewayImplTest {
 		user = new User(userGatewayImpl);
 		user.setUsername(faker.phoneNumber().cellPhone());
 		user.setRawPassword(faker.internet().password());
-		user.setStatus(Status.ENABLE);
+		user.setStatus(UserStatus.ENABLE);
 		user.setNickname(faker.name().name());
 	}
 
@@ -66,7 +66,7 @@ class UserGatewayImplTest {
 		user.setDisable();
 		user.save();
 		selectUser = this.userGatewayImpl.getUserByUsername(user.getUsername());
-		Assertions.assertEquals(Status.DISABLE, selectUser.getStatus());
+		Assertions.assertEquals(UserStatus.DISABLE, selectUser.getStatus());
 		// 测试更新失败
 		User copyProperties = BeanUtil.copyProperties(user, User.class);
 		copyProperties.setId(-111L);
