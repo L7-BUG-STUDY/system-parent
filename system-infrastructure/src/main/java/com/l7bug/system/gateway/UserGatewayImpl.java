@@ -25,8 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -115,11 +113,6 @@ public class UserGatewayImpl implements UserGateway {
 	@Override
 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
 		return passwordEncoder.matches(rawPassword, encodedPassword);
-	}
-
-	@Override
-	public Lock getUserLock(String username) {
-		return new ReentrantLock();
 	}
 
 	private String buildRedisKey(String token) {

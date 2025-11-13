@@ -2,8 +2,6 @@ package com.l7bug.system.domain.user;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.util.concurrent.locks.Lock;
-
 /**
  * UserGateway
  *
@@ -25,5 +23,4 @@ public interface UserGateway {
 
 	boolean matches(CharSequence rawPassword, String encodedPassword);
 
-	Lock getUserLock(String username);
 }
