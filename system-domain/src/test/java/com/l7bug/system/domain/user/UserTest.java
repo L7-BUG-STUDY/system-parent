@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.UUID;
+
 class UserTest {
 	UserGateway userGateway;
 	private User user;
@@ -29,12 +31,15 @@ class UserTest {
 		user.setRawPassword("root");
 		user.setNickname("root");
 		user.setStatus(Status.ENABLE);
-		Mockito.doAnswer(i -> user.getRawPassword())
+		Mockito.doAnswer(i -> i.getArgument(0).toString())
 			.when(userGateway)
 			.encode(Mockito.anyString());
 		Mockito.doAnswer(i -> i.getArgument(0).equals(i.getArgument(1)))
 			.when(userGateway)
 			.matches(Mockito.anyString(), Mockito.anyString());
+		Mockito.doAnswer(i -> mockUser)
+			.when(userGateway)
+			.getUserById(mockUser.getId());
 	}
 
 	@AfterEach
@@ -84,5 +89,15 @@ class UserTest {
 	@Test
 	void loginTest() {
 		user.login();
+	}
+
+	@Test
+	void checkPassword() {
+		String password = UUID.randomUUID().toString().replace("-", "");
+		mockUser.setRawPassword(password);
+		mockUser.save();
+		Assertions.assertTrue(mockUser.checkPassword(password));
+		Assertions.assertFalse(user.checkPassword(password));
+		Assertions.assertFalse(user.checkPassword(""));
 	}
 }

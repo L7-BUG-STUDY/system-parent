@@ -53,11 +53,20 @@ public class UserGatewayImpl implements UserGateway {
 
 	@Override
 	public User getUserByUsername(String username) {
+		if (StrUtil.isBlank(username)) {
+			return null;
+		}
 		SystemUser systemUser = systemUserService.findByUsername(username);
 		if (systemUser == null) {
 			return null;
 		}
 		return userConvertor.mapDomain(systemUser);
+	}
+
+	@Override
+	public User getUserById(Long id) {
+		SystemUser data = systemUserService.getById(id);
+		return data == null ? null : userConvertor.mapDomain(data);
 	}
 
 	@Override

@@ -13,6 +13,8 @@ public interface UserGateway {
 
 	User getUserByUsername(String username);
 
+	User getUserById(@NotNull(message = "id不能为空") Long id);
+
 	User currentUser();
 
 	String login(String username, String rawPassword);

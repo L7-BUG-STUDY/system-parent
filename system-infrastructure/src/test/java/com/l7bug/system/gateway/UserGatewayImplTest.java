@@ -103,6 +103,7 @@ class UserGatewayImplTest {
 
 	@Test
 	void currentUserTest() {
+		MDC.clear();
 		this.userGatewayImpl.logout();
 		user.save();
 		String token = user.login();
@@ -122,6 +123,23 @@ class UserGatewayImplTest {
 
 	@Test
 	void getUserByUsername() {
-		Assertions.assertThrows(Exception.class, () -> this.userGatewayImpl.getUserByUsername(null));
+		User userByUsername = this.userGatewayImpl.getUserByUsername(null);
+		Assertions.assertNull(userByUsername);
+		userByUsername = this.userGatewayImpl.getUserByUsername("");
+		Assertions.assertNull(userByUsername);
+		user.save();
+		userByUsername = this.userGatewayImpl.getUserByUsername(user.getUsername());
+		Assertions.assertNotNull(userByUsername);
+	}
+
+	@Test
+	void getUserById() {
+		Exception exception = Assertions.assertThrows(Exception.class, () -> this.userGatewayImpl.getUserById(null));
+		System.err.println(exception.getMessage());
+		user.save();
+		User userById = this.userGatewayImpl.getUserById(user.getId());
+		Assertions.assertEquals(user.getId(), userById.getId());
+		Assertions.assertEquals(user.getUsername(), userById.getUsername());
+		Assertions.assertEquals(user.getPassword(), userById.getPassword());
 	}
 }

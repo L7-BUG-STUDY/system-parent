@@ -1,6 +1,7 @@
 package com.l7bug.system.client;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSON;
 import com.github.javafaker.Faker;
 import com.l7bug.common.error.ClientErrorCode;
@@ -12,6 +13,8 @@ import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.response.UserInfoResponse;
+import com.l7bug.system.mybatis.dataobject.SystemUser;
+import com.l7bug.system.mybatis.service.SystemUserService;
 import com.l7bug.system.security.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +37,8 @@ class UserClientImplTest {
 	@Autowired
 	private UserGateway userGateway;
 	private User user;
+	@Autowired
+	private SystemUserService systemUserService;
 
 	@BeforeEach
 	void setUp() {
@@ -90,5 +95,20 @@ class UserClientImplTest {
 		String login = loginUser.login();
 		Assertions.assertNotNull(login);
 		Assertions.assertFalse(login.isBlank());
+	}
+
+	@Test
+	void updateUserById() {
+		Assertions.assertThrows(Exception.class, () -> this.userClient.updateUserById(null, null));
+		Assertions.assertThrows(Exception.class, () -> this.userClient.updateUserById(1L, null));
+		Assertions.assertThrows(Exception.class, () -> this.userClient.updateUserById(null, new CreateUserRequest("", "", "")));
+		AbstractException abstractException = Assertions.assertThrows(AbstractException.class, () -> this.userClient.updateUserById(IdUtil.getSnowflakeNextId(), new CreateUserRequest("", "", "")));
+		Assertions.assertEquals(ClientErrorCode.DATA_IS_NULL.getCode(), abstractException.getCode());
+		MdcUserInfoContext.putMdcToken(user.login());
+		Result<Void> voidResult = this.userClient.updateUserById(user.getId(), new CreateUserRequest(faker.name().name(), UUID.randomUUID().toString().replace("-", ""), faker.phoneNumber().cellPhone()));
+		Assertions.assertTrue(voidResult.isSuccess());
+		SystemUser byId = systemUserService.getById(user.getId());
+		Assertions.assertNotNull(byId);
+		Assertions.assertEquals(user.getId(), byId.getUpdateBy());
 	}
 }

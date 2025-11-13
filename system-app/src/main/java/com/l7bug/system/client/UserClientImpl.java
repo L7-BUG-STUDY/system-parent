@@ -11,6 +11,7 @@ import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,6 +23,7 @@ import java.util.Collections;
  * @author Administrator
  * @since 2025/11/10 15:40
  */
+@Slf4j
 @Component
 @Validated
 @AllArgsConstructor
@@ -61,6 +63,21 @@ public class UserClientImpl implements UserClient {
 		user.setRawPassword(createUserRequest.rawPassword());
 		user.setEnable();
 		user.save();
+		return Results.success();
+	}
+
+	@Override
+	public Result<Void> updateUserById(Long id, CreateUserRequest updateUserRequest) {
+		User userById = userGateway.getUserById(id);
+		if (userById == null) {
+			// 用户瞎请求
+			log.warn("[用户非法请求]!!!,数据id:[{}],修改内容:[{}]", id, updateUserRequest);
+			throw new ClientException(ClientErrorCode.DATA_IS_NULL);
+		}
+		userById.setUsername(updateUserRequest.username());
+		userById.setNickname(updateUserRequest.nickname());
+		userById.setRawPassword(updateUserRequest.rawPassword());
+		userById.save();
 		return Results.success();
 	}
 }

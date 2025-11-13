@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://maven.apache.org/POM/4.0.0"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.l7bug</groupId>
+		<artifactId>system-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>system-test-aggregate</artifactId>
+
+	<properties>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.l7bug</groupId>
+			<artifactId>system-domain</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.l7bug</groupId>
+			<artifactId>system-infrastructure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.l7bug</groupId>
+			<artifactId>system-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.l7bug</groupId>
+			<artifactId>system-app</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.l7bug</groupId>
+			<artifactId>system-adapter</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<!-- 执行目标：生成聚合报告 -->
+					<execution>
+						<id>report-aggregate</id>
+						<phase>verify</phase> <!-- 绑定到verify阶段 -->
+						<goals>
+							<goal>report-aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

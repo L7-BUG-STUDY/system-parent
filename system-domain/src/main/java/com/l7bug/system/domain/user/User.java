@@ -1,5 +1,6 @@
 package com.l7bug.system.domain.user;
 
+import cn.hutool.core.util.StrUtil;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import lombok.Data;
@@ -14,7 +15,6 @@ import java.util.Collection;
  */
 @Data
 public class User {
-	private static final int WAIT_TIME = 1;
 	private UserGateway userGateway;
 	private Long id;
 	private String username;
@@ -61,4 +61,16 @@ public class User {
 	public String login() {
 		return this.userGateway.login(this.username, this.rawPassword);
 	}
+
+	public boolean checkPassword(String oldPassword) {
+		if (StrUtil.isBlank(oldPassword)) {
+			return false;
+		}
+		User userById = this.userGateway.getUserById(this.getId());
+		if (userById == null) {
+			return false;
+		}
+		return this.userGateway.matches(this.userGateway.encode(oldPassword), userById.getPassword());
+	}
+
 }

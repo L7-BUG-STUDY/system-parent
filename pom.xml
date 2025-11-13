@@ -21,6 +21,7 @@
 		<module>system-app</module>
 		<module>system-adapter</module>
 		<module>start</module>
+		<module>system-test-aggregate</module>
 	</modules>
 
 	<properties>
@@ -74,4 +75,26 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal> <!-- 准备代理，在测试运行时收集数据 -->
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase> <!-- 绑定到 test 阶段 -->
+						<goals>
+							<goal>report</goal> <!-- 生成报告 -->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

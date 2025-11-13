@@ -5,6 +5,7 @@ import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * UserService
@@ -42,4 +43,6 @@ public interface UserClient {
 	 * @return 操作信息
 	 */
 	Result<Void> createUser(@Valid CreateUserRequest createUserRequest);
+
+	Result<Void> updateUserById(@NotNull(message = "id不能为空") Long id, @NotNull(message = "用户修改对象不能为空") CreateUserRequest updateUserRequest);
 }
