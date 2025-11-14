@@ -33,10 +33,10 @@
 			<groupId>com.l7bug</groupId>
 			<artifactId>system-app</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.l7bug</groupId>
-			<artifactId>system-adapter</artifactId>
-		</dependency>
+		<!--		<dependency>-->
+		<!--			<groupId>com.l7bug</groupId>-->
+		<!--			<artifactId>system-adapter</artifactId>-->
+		<!--		</dependency>-->
 	</dependencies>
 	<build>
 		<plugins>

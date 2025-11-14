@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @SpringBootTest
 class JwtAuthenticationFilterTest {
-	Faker faker = new Faker(Locale.CANADA);
+	Faker faker = new Faker(Locale.CHINA);
 	@Autowired
 	private JwtAuthenticationFilter jwtAuthenticationFilter;
 	@Autowired
