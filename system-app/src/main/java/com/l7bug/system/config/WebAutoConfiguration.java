@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -40,7 +41,17 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 					if (StrUtil.isNotBlank(token)) {
 						MdcUserInfoContext.putMdcToken(token);
 					}
+					log.info("开始请求:{}", request.getRequestURI());
+					long currentTimeMillis = System.currentTimeMillis();
+					MDC.put("currentTimeMillis", String.valueOf(currentTimeMillis));
 					return HandlerInterceptor.super.preHandle(request, response, handler);
+				}
+
+				@Override
+				public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+					String s = MDC.get("currentTimeMillis");
+					log.info("请求耗时:{}/ms", System.currentTimeMillis() - Long.parseLong(s));
+					HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
 				}
 			})
 			.order(Integer.MIN_VALUE)

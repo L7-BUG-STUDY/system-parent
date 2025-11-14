@@ -6,13 +6,16 @@ import com.alibaba.fastjson2.JSON;
 import com.github.javafaker.Faker;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.AbstractException;
+import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
 import com.l7bug.system.context.MdcUserInfoContext;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
+import com.l7bug.system.dto.request.QueryUserRequest;
 import com.l7bug.system.dto.response.CurrentUserInfoResponse;
+import com.l7bug.system.dto.response.UserInfoResponse;
 import com.l7bug.system.mybatis.dataobject.SystemUser;
 import com.l7bug.system.mybatis.service.SystemUserService;
 import com.l7bug.system.security.UserDetailsImpl;
@@ -110,5 +113,13 @@ class UserClientImplTest {
 		SystemUser byId = systemUserService.getById(user.getId());
 		Assertions.assertNotNull(byId);
 		Assertions.assertEquals(user.getId(), byId.getUpdateBy());
+	}
+
+	@Test
+	void pageUser() {
+		Result<PageData<UserInfoResponse>> pageDataResult = this.userClient.pageUser(new QueryUserRequest());
+		Assertions.assertTrue(pageDataResult.isSuccess());
+		Assertions.assertNotNull(pageDataResult.getData());
+		Assertions.assertNotNull(pageDataResult.getData().data());
 	}
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * UserClientImpl
@@ -86,6 +87,12 @@ public class UserClientImpl implements UserClient {
 
 	@Override
 	public Result<PageData<UserInfoResponse>> pageUser(QueryUserRequest queryUserRequest) {
-		return null;
+		PageData<User> page = this.userGateway.page(queryUserRequest);
+		List<UserInfoResponse> list = page.data().stream().map(item -> {
+			UserInfoResponse temp = BeanUtil.copyProperties(item, UserInfoResponse.class);
+			temp.setStatus(item.getStatus().ordinal());
+			return temp;
+		}).toList();
+		return Results.success(new PageData<>(page.total(), list));
 	}
 }
