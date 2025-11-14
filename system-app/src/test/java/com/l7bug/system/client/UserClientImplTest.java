@@ -12,7 +12,7 @@ import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
-import com.l7bug.system.dto.response.UserInfoResponse;
+import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.mybatis.dataobject.SystemUser;
 import com.l7bug.system.mybatis.service.SystemUserService;
 import com.l7bug.system.security.UserDetailsImpl;
@@ -70,7 +70,7 @@ class UserClientImplTest {
 	void currentUserInfo() {
 		String login = user.login();
 		MdcUserInfoContext.putMdcToken(login);
-		Result<UserInfoResponse> userInfoResponseResult = this.userClient.currentUserInfo();
+		Result<CurrentUserInfoResponse> userInfoResponseResult = this.userClient.currentUserInfo();
 		Assertions.assertTrue(userInfoResponseResult.isSuccess());
 	}
 

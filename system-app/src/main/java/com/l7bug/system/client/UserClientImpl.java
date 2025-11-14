@@ -3,12 +3,15 @@ package com.l7bug.system.client;
 import cn.hutool.core.bean.BeanUtil;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
+import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
+import com.l7bug.system.dto.request.QueryUserRequest;
+import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +43,10 @@ public class UserClientImpl implements UserClient {
 	}
 
 	@Override
-	public Result<UserInfoResponse> currentUserInfo() {
+	public Result<CurrentUserInfoResponse> currentUserInfo() {
 		User user = userGateway.currentUser();
 
-		return Results.success(new UserInfoResponse(user.getUsername(), user.getNickname(), Collections.singletonList("READ")));
+		return Results.success(new CurrentUserInfoResponse(user.getId(), user.getUsername(), user.getNickname(), Collections.singletonList("READ")));
 	}
 
 	@Override
@@ -79,5 +82,10 @@ public class UserClientImpl implements UserClient {
 		userById.setRawPassword(updateUserRequest.rawPassword());
 		userById.save();
 		return Results.success();
+	}
+
+	@Override
+	public Result<PageData<UserInfoResponse>> pageUser(QueryUserRequest queryUserRequest) {
+		return null;
 	}
 }

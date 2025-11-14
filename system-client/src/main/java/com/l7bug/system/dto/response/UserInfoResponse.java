@@ -1,12 +1,17 @@
 package com.l7bug.system.dto.response;
 
-import java.util.Collection;
+import lombok.Data;
 
 /**
- * UserInfo
+ * UserResponse
  *
  * @author Administrator
- * @since 2025/11/7 14:22
+ * @since 2025/11/14 16:26
  */
-public record UserInfoResponse(String username, String nickname, Collection<String> authorities) {
+@Data
+public class UserInfoResponse {
+	private Long id;
+	private String username;
+	private String nickname;
+	private Integer status;
 }

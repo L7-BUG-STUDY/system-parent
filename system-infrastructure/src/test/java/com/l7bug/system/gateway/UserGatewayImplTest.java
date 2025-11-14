@@ -3,9 +3,12 @@ package com.l7bug.system.gateway;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.javafaker.Faker;
+import com.l7bug.common.page.PageData;
+import com.l7bug.common.page.PageQuery;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserStatus;
 import com.l7bug.system.mybatis.mapper.SystemUserMapper;
+import com.l7bug.system.mybatis.service.SystemUserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +28,8 @@ class UserGatewayImplTest {
 	private final Faker faker = new Faker(Locale.CHINA);
 	@Autowired
 	private UserGatewayImpl userGatewayImpl;
+	@Autowired
+	private SystemUserService systemUserService;
 	private User user;
 	@MockitoSpyBean
 	private AuthenticationManager authenticationManager;
@@ -141,5 +146,24 @@ class UserGatewayImplTest {
 		Assertions.assertEquals(user.getId(), userById.getId());
 		Assertions.assertEquals(user.getUsername(), userById.getUsername());
 		Assertions.assertEquals(user.getPassword(), userById.getPassword());
+	}
+
+	@Test
+	void page() {
+		user.save();
+		PageQuery pageQuery = new PageQuery();
+		pageQuery.setCurrent(0);
+		pageQuery.setSize(0);
+		pageQuery.setColumn("id");
+		pageQuery.setAsc(true);
+		PageData<User> page = this.userGatewayImpl.page(pageQuery);
+		Assertions.assertEquals(this.systemUserService.count(), page.total());
+		Assertions.assertTrue(page.data().isEmpty());
+		pageQuery.setCurrent(1);
+		pageQuery.setSize(1);
+		page = this.userGatewayImpl.page(pageQuery);
+		System.err.println(page);
+		Assertions.assertEquals(1, page.data().size());
+		Assertions.assertEquals("root", page.data().iterator().next().getUsername());
 	}
 }

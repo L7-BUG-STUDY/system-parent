@@ -1,8 +1,12 @@
 package com.l7bug.system.gateway;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.l7bug.common.error.ServerErrorCode;
 import com.l7bug.common.exception.ServerException;
+import com.l7bug.common.page.PageData;
+import com.l7bug.common.page.PageQuery;
 import com.l7bug.system.context.MdcUserInfoContext;
 import com.l7bug.system.convertor.UserConvertor;
 import com.l7bug.system.domain.user.User;
@@ -22,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -122,6 +127,20 @@ public class UserGatewayImpl implements UserGateway {
 	@Override
 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
 		return passwordEncoder.matches(rawPassword, encodedPassword);
+	}
+
+	@Override
+	public PageData<User> page(PageQuery pageQuery) {
+		Page<SystemUser> page = new Page<>();
+		page.setCurrent(pageQuery.getCurrent());
+		page.setSize(pageQuery.getSize());
+		OrderItem orderItem = new OrderItem();
+		orderItem.setColumn(pageQuery.getColumn());
+		orderItem.setAsc(pageQuery.isAsc());
+		page.addOrder(orderItem);
+		Page<SystemUser> systemUserPage = this.systemUserService.page(page);
+		List<User> data = systemUserPage.getRecords().stream().map(userConvertor::mapDomain).toList();
+		return new PageData<>(systemUserPage.getTotal(), data);
 	}
 
 	private String buildRedisKey(String token) {

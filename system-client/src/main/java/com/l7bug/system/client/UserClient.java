@@ -1,8 +1,12 @@
 package com.l7bug.system.client;
 
+
+import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
 import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
+import com.l7bug.system.dto.request.QueryUserRequest;
+import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +31,7 @@ public interface UserClient {
 	 *
 	 * @return 用户信息
 	 */
-	Result<UserInfoResponse> currentUserInfo();
+	Result<CurrentUserInfoResponse> currentUserInfo();
 
 	/**
 	 * 退出登录
@@ -45,4 +49,12 @@ public interface UserClient {
 	Result<Void> createUser(@Valid CreateUserRequest createUserRequest);
 
 	Result<Void> updateUserById(@NotNull(message = "id不能为空") Long id, @NotNull(message = "用户修改对象不能为空") CreateUserRequest updateUserRequest);
+
+	/**
+	 * 分页查询用户信息
+	 *
+	 * @param queryUserRequest 查询对象
+	 * @return 分页对象
+	 */
+	Result<PageData<UserInfoResponse>> pageUser(@NotNull(message = "查询条件不能为空") QueryUserRequest queryUserRequest);
 }

@@ -1,16 +1,19 @@
 package com.l7bug.system.web;
 
+import cn.hutool.core.io.IoUtil;
+import com.alibaba.fastjson2.JSONArray;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
 import com.l7bug.system.client.UserClient;
 import com.l7bug.system.config.AppSecurityConfiguration;
 import com.l7bug.system.dto.request.LoginRequest;
-import com.l7bug.system.dto.response.UserInfoResponse;
+import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * AuthController
@@ -28,13 +31,21 @@ public class AuthController {
 		return userClient.login(loginRequest);
 	}
 
-	@GetMapping("/current-user-info")
-	public Result<UserInfoResponse> currentUserInfo() {
+	@DeleteMapping("/auth/logout")
+	public Result<Void> logout() {
+		return userClient.logout();
+	}
+
+	@GetMapping("/user/current-user-info")
+	public Result<CurrentUserInfoResponse> currentUserInfo() {
 		return userClient.currentUserInfo();
 	}
 
-	@GetMapping("/not/login")
-	public Result<Void> notLogin() {
-		return Results.success();
+	@GetMapping("/menu-list")
+	public Result<JSONArray> menuList() throws IOException {
+		try (InputStream inputStream = this.getClass().getResourceAsStream("/menu-list.json")) {
+			String read = IoUtil.read(inputStream, StandardCharsets.UTF_8);
+			return Results.success(JSONArray.parseArray(read));
+		}
 	}
 }

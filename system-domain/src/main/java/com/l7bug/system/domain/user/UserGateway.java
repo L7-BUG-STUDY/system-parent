@@ -1,5 +1,7 @@
 package com.l7bug.system.domain.user;
 
+import com.l7bug.common.page.PageData;
+import com.l7bug.common.page.PageQuery;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -25,4 +27,6 @@ public interface UserGateway {
 
 	boolean matches(CharSequence rawPassword, String encodedPassword);
 
+
+	PageData<User> page(@NotNull(message = "查询参数不能为空") PageQuery pageQuery);
 }
