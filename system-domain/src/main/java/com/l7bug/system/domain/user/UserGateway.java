@@ -29,4 +29,6 @@ public interface UserGateway {
 
 
 	PageData<User> page(@NotNull(message = "查询参数不能为空") PageQuery pageQuery);
+
+	boolean deleteById(Long id);
 }

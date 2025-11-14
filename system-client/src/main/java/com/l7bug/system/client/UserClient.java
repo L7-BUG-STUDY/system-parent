@@ -3,9 +3,9 @@ package com.l7bug.system.client;
 
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
-import com.l7bug.system.dto.request.CreateUserRequest;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.request.QueryUserRequest;
+import com.l7bug.system.dto.request.UpdateUserRequest;
 import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import jakarta.validation.Valid;
@@ -46,9 +46,9 @@ public interface UserClient {
 	 * @param createUserRequest 用户
 	 * @return 操作信息
 	 */
-	Result<Void> createUser(@Valid CreateUserRequest createUserRequest);
+	Result<Void> createUser(@Valid UpdateUserRequest createUserRequest);
 
-	Result<Void> updateUserById(@NotNull(message = "id不能为空") Long id, @NotNull(message = "用户修改对象不能为空") CreateUserRequest updateUserRequest);
+	Result<Void> updateUserById(@NotNull(message = "id不能为空") Long id, @NotNull(message = "用户修改对象不能为空") UpdateUserRequest updateUserRequest);
 
 	/**
 	 * 分页查询用户信息
@@ -57,4 +57,6 @@ public interface UserClient {
 	 * @return 分页对象
 	 */
 	Result<PageData<UserInfoResponse>> pageUser(@NotNull(message = "查询条件不能为空") QueryUserRequest queryUserRequest);
+
+	Result<Void> deleteUserById(@NotNull Long id);
 }

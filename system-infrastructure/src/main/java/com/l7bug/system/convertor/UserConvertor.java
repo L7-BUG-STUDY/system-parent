@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * UserConvertor
  *
@@ -29,7 +31,7 @@ public class UserConvertor {
 
 	public SystemUser mapDo(User user) {
 		SystemUser systemUser = BeanUtil.copyProperties(user, SystemUser.class);
-		systemUser.setStatus(user.getStatus().ordinal());
+		systemUser.setStatus(Optional.ofNullable(user).map(User::getStatus).map(UserStatus::ordinal).orElse(null));
 		return systemUser;
 	}
 }

@@ -73,4 +73,8 @@ public class User {
 		return this.userGateway.matches(this.userGateway.encode(oldPassword), userById.getPassword());
 	}
 
+	public boolean delete() {
+		return this.userGateway.deleteById(this.getId());
+	}
+
 }

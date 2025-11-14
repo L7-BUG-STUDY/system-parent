@@ -143,6 +143,11 @@ public class UserGatewayImpl implements UserGateway {
 		return new PageData<>(systemUserPage.getTotal(), data);
 	}
 
+	@Override
+	public boolean deleteById(Long id) {
+		return this.systemUserService.removeById(id);
+	}
+
 	private String buildRedisKey(String token) {
 		return "system:user:token:" + token;
 	}

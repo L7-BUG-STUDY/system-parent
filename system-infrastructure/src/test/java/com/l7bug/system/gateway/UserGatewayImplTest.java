@@ -60,6 +60,7 @@ class UserGatewayImplTest {
 		// 测试查询
 		User selectUser = this.userGatewayImpl.getUserByUsername(user.getUsername());
 		Assertions.assertNotNull(selectUser);
+		Assertions.assertEquals(user.getPassword(), selectUser.getPassword());
 		Assertions.assertEquals(user.getUsername(), selectUser.getUsername());
 		Assertions.assertEquals(user.getNickname(), selectUser.getNickname());
 		Assertions.assertEquals(user.getStatus(), selectUser.getStatus());
@@ -165,5 +166,18 @@ class UserGatewayImplTest {
 		System.err.println(page);
 		Assertions.assertEquals(1, page.data().size());
 		Assertions.assertEquals("root", page.data().iterator().next().getUsername());
+	}
+
+	@Test
+	void deleteById() {
+		user.save();
+		boolean delete = user.delete();
+		System.err.println(delete);
+		Assertions.assertTrue(delete);
+		delete = user.delete();
+		System.err.println(delete);
+		Assertions.assertFalse(delete);
+		User userById = this.userGatewayImpl.getUserById(user.getId());
+		Assertions.assertNull(userById);
 	}
 }

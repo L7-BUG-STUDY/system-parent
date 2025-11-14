@@ -100,4 +100,9 @@ class UserTest {
 		Assertions.assertFalse(user.checkPassword(password));
 		Assertions.assertFalse(user.checkPassword(""));
 	}
+
+	@Test
+	void delete() {
+		mockUser.delete();
+	}
 }

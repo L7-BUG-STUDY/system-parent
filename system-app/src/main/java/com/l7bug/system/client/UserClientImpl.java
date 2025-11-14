@@ -8,11 +8,13 @@ import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
-import com.l7bug.system.dto.request.CreateUserRequest;
+import com.l7bug.system.domain.user.UserStatus;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.request.QueryUserRequest;
+import com.l7bug.system.dto.request.UpdateUserRequest;
 import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.UserInfoResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -57,7 +59,7 @@ public class UserClientImpl implements UserClient {
 	}
 
 	@Override
-	public Result<Void> createUser(CreateUserRequest createUserRequest) {
+	public Result<Void> createUser(@Valid UpdateUserRequest createUserRequest) {
 		User userByUsername = userGateway.getUserByUsername(createUserRequest.username());
 		if (userByUsername != null) {
 			throw new ClientException(ClientErrorCode.USER_NOT_NULL);
@@ -71,15 +73,17 @@ public class UserClientImpl implements UserClient {
 	}
 
 	@Override
-	public Result<Void> updateUserById(Long id, CreateUserRequest updateUserRequest) {
+	public Result<Void> updateUserById(Long id, UpdateUserRequest updateUserRequest) {
 		User userById = userGateway.getUserById(id);
 		if (userById == null) {
 			// 用户瞎请求
 			log.warn("[用户非法请求]!!!,数据id:[{}],修改内容:[{}]", id, updateUserRequest);
 			throw new ClientException(ClientErrorCode.DATA_IS_NULL);
 		}
-		userById.setUsername(updateUserRequest.username());
-		userById.setNickname(updateUserRequest.nickname());
+		BeanUtil.copyProperties(updateUserRequest, userById);
+		if (updateUserRequest.status() != null) {
+			userById.setStatus(updateUserRequest.status() == 1 ? UserStatus.ENABLE : UserStatus.DISABLE);
+		}
 		userById.setRawPassword(updateUserRequest.rawPassword());
 		userById.save();
 		return Results.success();
@@ -94,5 +98,17 @@ public class UserClientImpl implements UserClient {
 			return temp;
 		}).toList();
 		return Results.success(new PageData<>(page.total(), list));
+	}
+
+	@Override
+	public Result<Void> deleteUserById(Long id) {
+		User userById = userGateway.getUserById(id);
+		if (userById == null) {
+			// 用户瞎请求
+			log.warn("[用户非法请求]!!!,数据id:[{}],修改内容:[删除]", id);
+			throw new ClientException(ClientErrorCode.DATA_IS_NULL);
+		}
+		userById.delete();
+		return Results.success();
 	}
 }
