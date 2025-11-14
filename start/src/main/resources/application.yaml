@@ -1,0 +1,11 @@
+spring:
+    datasource:
+        driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+        url: jdbc:shardingsphere:classpath:shardingsphere-config-mock.yaml
+    data:
+        redis:
+            host: localhost
+            database: 15
+            port: 6379
+server:
+    port: 11111
