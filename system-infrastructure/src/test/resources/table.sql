@@ -12,8 +12,7 @@ create table public.system_users
     create_by   bigint,
     update_by   bigint,
     create_time timestamp,
-    update_time timestamp,
-    del_flag    boolean
+    update_time timestamp
 );
 
 comment on table public.system_users is '用户表';
@@ -32,8 +31,8 @@ alter table public.system_users
 create unique index system_users_username_idx
     on public.system_users (username);
 
-create index system_users_status_del_flag_idx
-    on public.system_users (status, del_flag);
+create index system_users_status_idx
+    on public.system_users (status);
 
 create index system_users_create_by_idx
     on public.system_users using hash (create_by);
@@ -55,8 +54,7 @@ create table public.system_role
     create_by   bigint,
     update_by   bigint,
     create_time timestamp,
-    update_time timestamp,
-    del_flag    boolean
+    update_time timestamp
 );
 
 comment on table public.system_role is '用户表';
@@ -85,8 +83,8 @@ create unique index system_role_code_idx
 create index system_role_full_code_idx
     on public.system_role (full_code);
 
-create index system_role_status_del_flag_idx
-    on public.system_role (status, del_flag);
+create index system_role_status_idx
+    on public.system_role (status);
 
 create index system_role_create_by_idx
     on public.system_role using hash (create_by);
