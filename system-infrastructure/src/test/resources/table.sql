@@ -39,9 +39,9 @@ create table public.system_role
 (
     id          bigint not null
         primary key,
+    father_id   bigint        default NULL,
     code        varchar(64)   default NULL,
     name        varchar(64)   default NULL,
-    father_id   bigint        default NULL,
     full_id     varchar(2048) default NULL,
     full_name   varchar(1024) default NULL,
     remark      varchar(256)  default NULL,
@@ -54,9 +54,9 @@ create table public.system_role
 
 comment on table public.system_role is '角色表';
 
+comment on column public.system_role.father_id is '上级id';
 comment on column public.system_role.code is '角色编码';
 comment on column public.system_role.name is '角色名称';
-comment on column public.system_role.father_id is '上级id';
 comment on column public.system_role.full_id is '全路径id';
 comment on column public.system_role.full_name is '全路径名称';
 comment on column public.system_role.remark is '备注';
