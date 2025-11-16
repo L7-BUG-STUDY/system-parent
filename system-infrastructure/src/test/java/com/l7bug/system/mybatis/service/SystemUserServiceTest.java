@@ -17,10 +17,10 @@ class SystemUserServiceTest {
 		if (root == null) {
 			root = new User(userGateway);
 			root.setUsername("root");
-			root.setNickname("root");
-			root.setRawPassword("123456");
-			root.setEnable();
 		}
+		root.setEnable();
+		root.setNickname("root");
+		root.setRawPassword("123456");
 		root.save();
 	}
 }

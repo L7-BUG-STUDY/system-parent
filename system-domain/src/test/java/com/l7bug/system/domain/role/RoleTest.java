@@ -10,7 +10,7 @@ class RoleTest {
 	@BeforeEach
 	void setUp() {
 		role = new Role(Mockito.mock(RoleGateway.class));
-		role.setStatus(RoleStatus.ENABLED);
+		role.setStatus(RoleStatus.ENABLE);
 		System.err.println(role);
 	}
 

@@ -7,7 +7,7 @@ package com.l7bug.system.domain.role;
  * @since 2025/11/13 12:00
  */
 public enum RoleStatus {
-	DISABLED,
-	ENABLED,
+	DISABLE,
+	ENABLE,
 	;
 }

@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.Locale;
+import java.util.UUID;
 
 @SpringBootTest
 class UserGatewayImplTest {
@@ -39,7 +40,7 @@ class UserGatewayImplTest {
 	@BeforeEach
 	void setUp() {
 		user = new User(userGatewayImpl);
-		user.setUsername(faker.phoneNumber().cellPhone());
+		user.setUsername(UUID.randomUUID().toString().replace("-", ""));
 		user.setRawPassword(faker.internet().password());
 		user.setStatus(UserStatus.ENABLE);
 		user.setNickname(faker.name().name());
