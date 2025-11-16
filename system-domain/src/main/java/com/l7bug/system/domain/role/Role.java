@@ -31,7 +31,7 @@ public class Role {
 	/**
 	 * 上级id
 	 */
-	private String fatherCode;
+	private String fatherId;
 
 	/**
 	 * 角色标识
@@ -40,18 +40,18 @@ public class Role {
 	private String code;
 
 	/**
-	 * 全路径名称
-	 */
-	private String fullCode;
-
-	/**
 	 * 名称
 	 */
 	@NotBlank(message = "名称不能为空")
 	private String name;
 
 	/**
-	 *
+	 * 全路径id
+	 */
+	private String fullId;
+
+	/**
+	 * 全路径名称
 	 */
 	private String fullName;
 
@@ -103,14 +103,14 @@ public class Role {
 		if (!oldName.equals(this.name)) {
 			canUpdateChildren = true;
 		}
+		List<Role> allChildren = this.getRoleGateway().getAllChildren(this.getId());
+		if (canUpdateChildren) {
 
-		return true;
-	}
-
-	public void queryAllChildren() {
-		List<Role> allChildren = this.getRoleGateway().getAllChildren(this.id);
-		if (allChildren == null) {
-			return;
 		}
+		for (Role children : allChildren) {
+			// 修改所有子节点的全路径信息
+			String childrenFullId = children.getFullId();
+		}
+		return true;
 	}
 }
