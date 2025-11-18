@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,8 +18,6 @@ import java.util.Optional;
  * @since 2025/11/13 11:48
  */
 @Data
-@Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Role {
 	@Getter(AccessLevel.PRIVATE)
 	private final RoleGateway roleGateway;

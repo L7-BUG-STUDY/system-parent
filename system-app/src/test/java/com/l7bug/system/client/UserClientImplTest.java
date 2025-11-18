@@ -1,7 +1,5 @@
 package com.l7bug.system.client;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSON;
 import com.github.javafaker.Faker;
 import com.l7bug.common.error.ClientErrorCode;
@@ -24,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,7 +56,8 @@ class UserClientImplTest {
 		MdcUserInfoContext.putMdcToken(login);
 		User user = userGateway.currentUser();
 		MdcUserInfoContext.putMdcUserName(user.getUsername());
-		UserDetailsImpl userDetails = BeanUtil.copyProperties(user, UserDetailsImpl.class);
+		UserDetailsImpl userDetails = new UserDetailsImpl();
+		BeanUtils.copyProperties(user, userDetails);
 		userDetails.setPassword("123456");
 		UsernamePasswordAuthenticationToken authentication =
 			new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -106,7 +106,7 @@ class UserClientImplTest {
 		Assertions.assertThrows(Exception.class, () -> this.userClient.updateUserById(null, null));
 		Assertions.assertThrows(Exception.class, () -> this.userClient.updateUserById(1L, null));
 		Assertions.assertThrows(Exception.class, () -> this.userClient.updateUserById(null, new UpdateUserRequest("", "", "", null)));
-		AbstractException abstractException = Assertions.assertThrows(AbstractException.class, () -> this.userClient.updateUserById(IdUtil.getSnowflakeNextId(), new UpdateUserRequest("", "", "", null)));
+		AbstractException abstractException = Assertions.assertThrows(AbstractException.class, () -> this.userClient.updateUserById(System.currentTimeMillis(), new UpdateUserRequest("", "", "", null)));
 		Assertions.assertEquals(ClientErrorCode.DATA_IS_NULL.getCode(), abstractException.getCode());
 		MdcUserInfoContext.putMdcToken(user.login());
 		Result<Void> voidResult = this.userClient.updateUserById(user.getId(), new UpdateUserRequest(null, faker.name().name(), faker.phoneNumber().cellPhone(), null));

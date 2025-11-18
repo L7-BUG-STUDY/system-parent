@@ -1,8 +1,7 @@
 package com.l7bug.system.config;
 
 
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Strings;
 import com.l7bug.common.result.Result;
 import com.l7bug.system.context.MdcUserInfoContext;
 import com.l7bug.system.etc.SystemEtc;
@@ -17,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.UUID;
 
 /**
  * WebAutoConfiguration
@@ -34,11 +35,11 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 				public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 					String requestId = request.getHeader(SystemEtc.REQUEST_ID);
 					String token = request.getHeader(SystemEtc.TOKEN_HEADER);
-					if (StrUtil.isBlank(requestId)) {
-						requestId = IdUtil.getSnowflakeNextIdStr();
+					if (Strings.isNullOrEmpty(requestId)) {
+						requestId = UUID.randomUUID().toString();
 					}
 					MdcUserInfoContext.putMdcRequestId(requestId);
-					if (StrUtil.isNotBlank(token)) {
+					if (Strings.isNullOrEmpty(token)) {
 						MdcUserInfoContext.putMdcToken(token);
 					}
 					log.info("开始请求:{}", request.getRequestURI());

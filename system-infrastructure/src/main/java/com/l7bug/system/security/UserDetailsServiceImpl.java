@@ -1,10 +1,10 @@
 package com.l7bug.system.security;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,6 +29,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new BadCredentialsException(ClientErrorCode.LOGIN_ERROR.getMessage());
 		}
 
-		return BeanUtil.copyProperties(user, UserDetailsImpl.class);
+		UserDetailsImpl userDetails = new UserDetailsImpl();
+		BeanUtils.copyProperties(user, userDetails);
+		return userDetails;
 	}
 }

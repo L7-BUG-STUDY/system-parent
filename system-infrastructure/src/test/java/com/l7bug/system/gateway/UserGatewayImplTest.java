@@ -1,8 +1,7 @@
 package com.l7bug.system.gateway;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import com.github.javafaker.Faker;
+import com.google.common.base.Strings;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.page.PageQuery;
 import com.l7bug.system.domain.user.User;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.MDC;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -57,7 +57,7 @@ class UserGatewayImplTest {
 		Assertions.assertTrue(save);
 		Assertions.assertNotNull(user.getId());
 		// 检查加密密码是否生成
-		Assertions.assertTrue(StrUtil.isNotBlank(user.getPassword()));
+		Assertions.assertFalse(Strings.isNullOrEmpty(user.getPassword()));
 		// 测试查询
 		User selectUser = this.userGatewayImpl.getUserByUsername(user.getUsername());
 		Assertions.assertNotNull(selectUser);
@@ -75,7 +75,8 @@ class UserGatewayImplTest {
 		selectUser = this.userGatewayImpl.getUserByUsername(user.getUsername());
 		Assertions.assertEquals(UserStatus.DISABLE, selectUser.getStatus());
 		// 测试更新失败
-		User copyProperties = BeanUtil.copyProperties(user, User.class);
+		User copyProperties = new User(userGatewayImpl);
+		BeanUtils.copyProperties(user, copyProperties);
 		copyProperties.setId(-111L);
 		Assertions.assertThrows(Exception.class, copyProperties::save);
 	}
@@ -89,7 +90,7 @@ class UserGatewayImplTest {
 		user.setEnable();
 		user.save();
 		String login = user.login();
-		Assertions.assertTrue(StrUtil.isNotBlank(login));
+		Assertions.assertFalse(Strings.isNullOrEmpty(login));
 		Assertions.assertTrue(login.contains(user.getId().toString()));
 		user.setRawPassword("1234");
 		Assertions.assertThrows(Exception.class, () -> user.login());

@@ -1,7 +1,7 @@
 package com.l7bug.system.handler;
 
 
-import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Strings;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.error.ServerErrorCode;
 import com.l7bug.common.exception.AbstractException;
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
 	}
 
 	private String getUrl(HttpServletRequest request) {
-		if (StrUtil.isBlank(request.getQueryString())) {
+		if (Strings.isNullOrEmpty(request.getQueryString())) {
 			return request.getRequestURL().toString();
 		}
 		return request.getRequestURL().toString() + "?" + request.getQueryString();

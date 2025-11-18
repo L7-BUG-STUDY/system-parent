@@ -1,7 +1,7 @@
 package com.l7bug.system.web;
 
-import cn.hutool.core.io.IoUtil;
 import com.alibaba.fastjson2.JSONArray;
+import com.google.common.io.CharStreams;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
 import com.l7bug.system.client.UserClient;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -44,7 +45,10 @@ public class AuthController {
 	@GetMapping("/menu-list")
 	public Result<JSONArray> menuList() throws IOException {
 		try (InputStream inputStream = this.getClass().getResourceAsStream("/menu-list.json")) {
-			String read = IoUtil.read(inputStream, StandardCharsets.UTF_8);
+			String read = null;
+			if (inputStream != null) {
+				read = CharStreams.toString(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+			}
 			return Results.success(JSONArray.parseArray(read));
 		}
 	}

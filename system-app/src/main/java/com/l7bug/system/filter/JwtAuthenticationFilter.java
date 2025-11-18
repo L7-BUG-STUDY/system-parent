@@ -1,6 +1,5 @@
 package com.l7bug.system.filter;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.l7bug.system.config.AuthConfiguration;
 import com.l7bug.system.context.MdcUserInfoContext;
 import com.l7bug.system.domain.user.User;
@@ -14,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -62,7 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		tokenService.expireToken(token);
 		User user = userGateway.currentUser();
 		MdcUserInfoContext.putMdcUserName(user.getUsername());
-		UserDetailsImpl userDetails = BeanUtil.copyProperties(user, UserDetailsImpl.class);
+		UserDetailsImpl userDetails = new UserDetailsImpl();
+		BeanUtils.copyProperties(user, userDetails);
 		userDetails.setPassword("123456");
 		UsernamePasswordAuthenticationToken authentication =
 			new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

@@ -1,7 +1,6 @@
 package com.l7bug.system.domain.user;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.AbstractException;
@@ -22,7 +21,7 @@ class UserTest {
 	void setUp() {
 		userGateway = Mockito.mock(UserGateway.class);
 		mockUser = new User(userGateway);
-		mockUser.setId(IdUtil.getSnowflakeNextId());
+		mockUser.setId(System.currentTimeMillis());
 		mockUser.setUsername("admin");
 		Mockito.when(userGateway.getUserByUsername("admin")).thenReturn(mockUser);
 		Mockito.when(userGateway.getUserByUsername("root")).thenReturn(null);

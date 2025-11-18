@@ -1,6 +1,6 @@
 package com.l7bug.system.domain.user;
 
-import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Strings;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import lombok.Data;
@@ -63,7 +63,7 @@ public class User {
 	}
 
 	public boolean checkPassword(String oldPassword) {
-		if (StrUtil.isBlank(oldPassword)) {
+		if (Strings.isNullOrEmpty(oldPassword)) {
 			return false;
 		}
 		User userById = this.userGateway.getUserById(this.getId());

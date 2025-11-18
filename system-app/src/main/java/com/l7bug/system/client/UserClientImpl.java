@@ -1,6 +1,5 @@
 package com.l7bug.system.client;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import com.l7bug.common.page.PageData;
@@ -17,6 +16,7 @@ import com.l7bug.system.dto.response.UserInfoResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -65,7 +65,7 @@ public class UserClientImpl implements UserClient {
 			throw new ClientException(ClientErrorCode.USER_NOT_NULL);
 		}
 		User user = new User(userGateway);
-		BeanUtil.copyProperties(createUserRequest, user);
+		BeanUtils.copyProperties(createUserRequest, user);
 		user.setRawPassword(createUserRequest.rawPassword());
 		user.setEnable();
 		user.save();
@@ -80,7 +80,7 @@ public class UserClientImpl implements UserClient {
 			log.warn("[用户非法请求]!!!,数据id:[{}],修改内容:[{}]", id, updateUserRequest);
 			throw new ClientException(ClientErrorCode.DATA_IS_NULL);
 		}
-		BeanUtil.copyProperties(updateUserRequest, userById);
+		BeanUtils.copyProperties(updateUserRequest, userById);
 		if (updateUserRequest.status() != null) {
 			userById.setStatus(updateUserRequest.status() == 1 ? UserStatus.ENABLE : UserStatus.DISABLE);
 		}
@@ -93,7 +93,8 @@ public class UserClientImpl implements UserClient {
 	public Result<PageData<UserInfoResponse>> pageUser(QueryUserRequest queryUserRequest) {
 		PageData<User> page = this.userGateway.page(queryUserRequest);
 		List<UserInfoResponse> list = page.data().stream().map(item -> {
-			UserInfoResponse temp = BeanUtil.copyProperties(item, UserInfoResponse.class);
+			UserInfoResponse temp = new UserInfoResponse();
+			BeanUtils.copyProperties(item, UserInfoResponse.class);
 			temp.setStatus(item.getStatus().ordinal());
 			return temp;
 		}).toList();

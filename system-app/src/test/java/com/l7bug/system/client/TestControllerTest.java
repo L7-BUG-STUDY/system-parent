@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -59,6 +60,7 @@ public class TestControllerTest {
 		user.setDisable();
 		System.err.println("测试地址:" + apiHost);
 		System.err.println("本次测试用到的用户:" + JSON.toJSONString(user));
+		MDC.clear();
 	}
 
 	@Test

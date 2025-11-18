@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Locale;
-import java.util.UUID;
 
 @SpringBootTest
 class JwtAuthenticationFilterTest {
@@ -33,12 +33,9 @@ class JwtAuthenticationFilterTest {
 
 	@Test
 	void doFilterInternal() throws ServletException, IOException {
-		User user = new User(userGateway);
-		user.setEnable();
-		user.setNickname(faker.name().name());
-		user.setUsername(UUID.randomUUID().toString().replace("-", ""));
-		user.setRawPassword(faker.phoneNumber().cellPhone());
-		user.save();
+		MDC.clear();
+		User user = userGateway.getUserByUsername("root");
+		user.setRawPassword("123456");
 		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 
 		Mockito.doReturn("/test/test/test").when(httpServletRequest).getRequestURI();

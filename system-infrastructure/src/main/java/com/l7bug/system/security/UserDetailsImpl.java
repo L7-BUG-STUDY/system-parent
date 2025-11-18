@@ -27,15 +27,18 @@ public class UserDetailsImpl implements UserDetails {
 	private String nickname;
 	private String password;
 	private UserStatus status;
-	private Collection<String> authoritiesSet = List.of("READ", "WRITE");
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Optional.ofNullable(authoritiesSet)
+		return Optional.ofNullable(getAuthoritiesSet())
 			.orElse(Collections.emptyList())
 			.stream()
 			.map(SimpleGrantedAuthority::new)
 			.toList();
+	}
+
+	public Collection<String> getAuthoritiesSet() {
+		return List.of("READ", "WRITE");
 	}
 
 	@Override

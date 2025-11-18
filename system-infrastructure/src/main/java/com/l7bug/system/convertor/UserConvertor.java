@@ -1,11 +1,11 @@
 package com.l7bug.system.convertor;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.domain.user.UserStatus;
 import com.l7bug.system.mybatis.dataobject.SystemUser;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +24,18 @@ public class UserConvertor {
 
 	public User mapDomain(SystemUser systemUser) {
 		User user = new User(applicationContext.getBean(UserGateway.class));
-		BeanUtil.copyProperties(systemUser, user);
+		BeanUtils.copyProperties(systemUser, user);
 		user.setStatus(systemUser.getStatus() == 1 ? UserStatus.ENABLE : UserStatus.DISABLE);
 		return user;
 	}
 
 	public SystemUser mapDo(User user) {
-		SystemUser systemUser = BeanUtil.copyProperties(user, SystemUser.class);
-		systemUser.setStatus(Optional.ofNullable(user).map(User::getStatus).map(UserStatus::ordinal).orElse(null));
+		if (user == null) {
+			return null;
+		}
+		SystemUser systemUser = new SystemUser();
+		BeanUtils.copyProperties(user, systemUser);
+		systemUser.setStatus(Optional.of(user).map(User::getStatus).map(UserStatus::ordinal).orElse(null));
 		return systemUser;
 	}
 }

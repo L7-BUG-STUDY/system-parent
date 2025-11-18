@@ -1,8 +1,8 @@
 package com.l7bug.system.gateway;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.base.Strings;
 import com.l7bug.common.error.ServerErrorCode;
 import com.l7bug.common.exception.ServerException;
 import com.l7bug.common.page.PageData;
@@ -58,7 +58,7 @@ public class UserGatewayImpl implements UserGateway {
 
 	@Override
 	public User getUserByUsername(String username) {
-		if (StrUtil.isBlank(username)) {
+		if (Strings.isNullOrEmpty(username)) {
 			return null;
 		}
 		SystemUser systemUser = systemUserService.findByUsername(username);
@@ -77,7 +77,7 @@ public class UserGatewayImpl implements UserGateway {
 	@Override
 	public User currentUser() {
 		String token = MdcUserInfoContext.getMdcToken();
-		if (StrUtil.isBlank(token)) {
+		if (Strings.isNullOrEmpty(token)) {
 			return null;
 		}
 		var ops = stringRedisTemplate.opsForHash();
