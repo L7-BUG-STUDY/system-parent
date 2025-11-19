@@ -1,7 +1,6 @@
 package com.l7bug.system.domain.user;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Strings;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.AbstractException;
 import org.junit.jupiter.api.AfterEach;
@@ -74,10 +73,14 @@ class UserTest {
 
 	@Test
 	void saveTest() {
-		User admin = BeanUtil.copyProperties(user, User.class);
+		User admin = new User(userGateway);
+		admin.setUsername("root");
+		admin.setRawPassword("root");
+		admin.setNickname("root");
+		admin.setStatus(UserStatus.ENABLE);
 		user.save();
 		Assertions.assertNotNull(user.getPassword());
-		Assertions.assertTrue(StrUtil.isNotBlank(user.getPassword()));
+		Assertions.assertFalse(Strings.isNullOrEmpty(user.getPassword()));
 		admin.setUsername("admin");
 		AbstractException abstractException = Assertions.assertThrows(AbstractException.class, admin::save);
 		Assertions.assertEquals(ClientErrorCode.USER_NOT_NULL.getCode(), abstractException.getCode());

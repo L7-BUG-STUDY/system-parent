@@ -22,12 +22,6 @@
 			<groupId>com.l7bug</groupId>
 			<artifactId>l7bug-common</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
@@ -36,7 +30,6 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>33.5.0-jre</version>
 		</dependency>
 	</dependencies>
 </project>
