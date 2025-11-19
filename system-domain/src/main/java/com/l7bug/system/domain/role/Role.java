@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,8 +58,6 @@ public class Role {
 	 * 状态
 	 */
 	private RoleStatus status;
-
-	private Collection<Role> collection;
 
 
 	public boolean isEnable() {
