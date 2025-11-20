@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 @Data
 public class User {
-	private UserGateway userGateway;
+	private final UserGateway userGateway;
 	private Long id;
 	private String username;
 	private String nickname;
