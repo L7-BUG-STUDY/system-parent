@@ -28,7 +28,7 @@ public interface UserGateway {
 	boolean matches(CharSequence rawPassword, String encodedPassword);
 
 
-	PageData<User> page(@NotNull(message = "查询参数不能为空") PageQuery pageQuery);
+	PageData<User> page(@NotNull(message = "查询参数不能为空") PageQuery pageQuery, String username);
 
 	boolean deleteById(Long id);
 }

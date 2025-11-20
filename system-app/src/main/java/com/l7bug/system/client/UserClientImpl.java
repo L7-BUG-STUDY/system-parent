@@ -91,7 +91,7 @@ public class UserClientImpl implements UserClient {
 
 	@Override
 	public Result<PageData<UserInfoResponse>> pageUser(QueryUserRequest queryUserRequest) {
-		PageData<User> page = this.userGateway.page(queryUserRequest);
+		PageData<User> page = this.userGateway.page(queryUserRequest, "");
 		List<UserInfoResponse> list = page.data().stream().map(item -> {
 			UserInfoResponse temp = new UserInfoResponse();
 			BeanUtils.copyProperties(item, UserInfoResponse.class);

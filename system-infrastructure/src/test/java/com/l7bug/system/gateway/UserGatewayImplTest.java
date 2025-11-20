@@ -159,14 +159,15 @@ class UserGatewayImplTest {
 		pageQuery.setSize(0);
 		pageQuery.setColumn("id");
 		pageQuery.setAsc(true);
-		PageData<User> page = this.userGatewayImpl.page(pageQuery);
+		PageData<User> page = this.userGatewayImpl.page(pageQuery, "");
 		Assertions.assertEquals(this.systemUserService.count(), page.total());
 		Assertions.assertTrue(page.data().isEmpty());
 		pageQuery.setCurrent(1);
 		pageQuery.setSize(1);
-		page = this.userGatewayImpl.page(pageQuery);
+		page = this.userGatewayImpl.page(pageQuery, "root");
 		System.err.println(page);
 		Assertions.assertEquals(1, page.data().size());
+		Assertions.assertEquals("root", page.data().iterator().next().getUsername());
 		Assertions.assertEquals("root", page.data().iterator().next().getUsername());
 	}
 
