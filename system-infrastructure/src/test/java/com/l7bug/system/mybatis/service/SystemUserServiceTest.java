@@ -1,5 +1,6 @@
 package com.l7bug.system.mybatis.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SystemUserServiceTest {
 	@Autowired
 	private UserGateway userGateway;
+
+	@Autowired
+	private SystemUserService systemUserService;
 
 	@Test
 	void saveRoot() {
@@ -22,5 +26,10 @@ class SystemUserServiceTest {
 		root.setNickname("root");
 		root.setRawPassword("123456");
 		root.save();
+	}
+
+	@Test
+	void all() throws JsonProcessingException {
+		systemUserService.list().forEach(System.err::println);
 	}
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.l7bug.database.dataobject.BaseNotDeleDo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serial;
 
@@ -16,6 +17,7 @@ import java.io.Serial;
 @TableName("system_users")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class SystemUser extends BaseNotDeleDo {
 	@Serial
 	private static final long serialVersionUID = 8094785838755617085L;

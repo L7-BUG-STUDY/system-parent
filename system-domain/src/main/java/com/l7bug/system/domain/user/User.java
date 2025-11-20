@@ -3,7 +3,9 @@ package com.l7bug.system.domain.user;
 import com.google.common.base.Strings;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.Collection;
 
@@ -15,6 +17,7 @@ import java.util.Collection;
  */
 @Data
 public class User {
+	@Getter(AccessLevel.PRIVATE)
 	private final UserGateway userGateway;
 	private Long id;
 	private String username;

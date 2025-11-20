@@ -10,8 +10,8 @@ create table public.system_users
     status      integer      default 1,
     create_by   bigint,
     update_by   bigint,
-    create_time timestamp,
-    update_time timestamp
+    create_time timestamptz,
+    update_time timestamptz
 );
 
 comment on table public.system_users is '用户表';
@@ -48,8 +48,8 @@ create table public.system_role
     status      integer       default 1,
     create_by   bigint,
     update_by   bigint,
-    create_time timestamp,
-    update_time timestamp
+    create_time timestamptz,
+    update_time timestamptz
 );
 
 comment on table public.system_role is '角色表';
