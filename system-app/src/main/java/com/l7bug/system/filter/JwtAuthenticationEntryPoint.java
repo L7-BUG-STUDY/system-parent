@@ -3,7 +3,7 @@ package com.l7bug.system.filter;
 import com.alibaba.fastjson2.JSON;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.result.Results;
-import com.l7bug.system.context.MdcUserInfoContext;
+import com.l7bug.web.context.MdcUserInfoContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

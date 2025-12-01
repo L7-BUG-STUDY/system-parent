@@ -1,10 +1,10 @@
 package com.l7bug.system.filter;
 
 import com.github.javafaker.Faker;
+import com.l7bug.common.etc.SystemEtc;
 import com.l7bug.system.config.AuthConfiguration;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
-import com.l7bug.system.etc.SystemEtc;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
