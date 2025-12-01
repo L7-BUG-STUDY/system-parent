@@ -52,6 +52,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 				public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 					String s = MDC.get("currentTimeMillis");
 					log.info("请求耗时:{}/ms", System.currentTimeMillis() - Long.parseLong(s));
+					MDC.clear();
 					HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
 				}
 			})
