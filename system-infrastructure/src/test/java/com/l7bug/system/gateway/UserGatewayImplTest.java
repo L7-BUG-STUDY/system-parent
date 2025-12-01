@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.page.PageQuery;
 import com.l7bug.system.domain.user.User;
+import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.domain.user.UserStatus;
 import com.l7bug.system.mybatis.mapper.SystemUserMapper;
 import com.l7bug.system.mybatis.service.SystemUserService;
@@ -17,6 +18,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -36,6 +38,8 @@ class UserGatewayImplTest {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private SystemUserMapper userMapper;
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	@BeforeEach
 	void setUp() {
@@ -182,5 +186,16 @@ class UserGatewayImplTest {
 		Assertions.assertFalse(delete);
 		User userById = this.userGatewayImpl.getUserById(user.getId());
 		Assertions.assertNull(userById);
+	}
+
+	@Test
+	void beanScopePrototypeTest() {
+		User bean1 = applicationContext.getBean(User.class);
+		User bean2 = applicationContext.getBean(User.class);
+		User bean3 = applicationContext.getBean(User.class);
+		User bean4 = applicationContext.getBean(User.class);
+		Assertions.assertNotSame(bean1, bean2);
+		Assertions.assertNotSame(bean3, bean4);
+		Assertions.assertSame(applicationContext.getBean(UserGateway.class), applicationContext.getBean(UserGateway.class));
 	}
 }
