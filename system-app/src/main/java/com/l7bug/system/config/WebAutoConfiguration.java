@@ -38,7 +38,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 					if (Strings.isNullOrEmpty(requestId)) {
 						requestId = UUID.randomUUID().toString();
 					}
-					MdcUserInfoContext.putMdcRequestId(requestId);
+					MdcUserInfoContext.putMdcTraceId(requestId);
 					if (Strings.isNullOrEmpty(token)) {
 						MdcUserInfoContext.putMdcToken(token);
 					}
@@ -75,7 +75,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 
 		@AfterReturning(value = "execution(public com.l7bug.common.result.Result *(..))", returning = "result")
 		public void afterReturning(Result<?> result) {
-			result.setRequestId(MdcUserInfoContext.getMdcRequestId());
+			result.setRequestId(MdcUserInfoContext.getMdcTraceId());
 		}
 	}
 }

@@ -14,10 +14,10 @@ class MdcUserInfoContextTest {
 	}
 
 	@Test
-	void getMdcRequestId() {
+	void getMdcTraceId() {
 		String string = UUID.randomUUID().toString();
-		MdcUserInfoContext.putMdcRequestId(string);
-		Assertions.assertEquals(string, MdcUserInfoContext.getMdcRequestId());
+		MdcUserInfoContext.putMdcTraceId(string);
+		Assertions.assertEquals(string, MdcUserInfoContext.getMdcTraceId());
 	}
 
 	@Test

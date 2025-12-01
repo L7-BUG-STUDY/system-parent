@@ -28,6 +28,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		log.warn("未认证拦截器捕获!", authException);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json;charset=UTF-8");
-		response.getWriter().write(JSON.toJSONString(Results.buildResult(MdcUserInfoContext.getMdcRequestId(), ClientErrorCode.NOT_AUTHENTICATION.getCode(), ClientErrorCode.NOT_AUTHENTICATION.getMessage(), null)));
+		response.getWriter().write(JSON.toJSONString(Results.buildResult(MdcUserInfoContext.getMdcTraceId(), ClientErrorCode.NOT_AUTHENTICATION.getCode(), ClientErrorCode.NOT_AUTHENTICATION.getMessage(), null)));
 	}
 }

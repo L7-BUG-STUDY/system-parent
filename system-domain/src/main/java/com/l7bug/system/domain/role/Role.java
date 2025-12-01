@@ -82,22 +82,23 @@ public class Role {
 	 * @return true 成功修改
 	 */
 	public boolean save() {
-		Role role = this.getRoleGateway().get(this.getCode());
-		if (role != null && !role.getId().equals(this.getId())) {
+		Role oldData = this.getRoleGateway().get(this.getCode());
+		if (oldData != null && !oldData.getId().equals(this.getId())) {
 			throw new ClientException(ClientErrorCode.ROLE_CODE_NOT_NULL);
 		}
-		boolean canUpdateChildren = false;
-		String oldCode = Optional.ofNullable(role).map(Role::getCode).orElse("");
-		String oldName = Optional.ofNullable(role).map(Role::getName).orElse("");
-		if (!oldCode.equals(this.code)) {
-			canUpdateChildren = true;
+		boolean canUpdateFullValue = false;
+		String oldFatherId = Optional.ofNullable(oldData).map(Role::getFatherId).orElse("");
+		String oldName = Optional.ofNullable(oldData).map(Role::getName).orElse("");
+		if (!oldFatherId.equals(this.fatherId)) {
+			// 父节点变了,所有相关节点都需要修改全路径
+			canUpdateFullValue = true;
 		}
 		if (!oldName.equals(this.name)) {
-			canUpdateChildren = true;
+			// 名称变了,所有相关节点也要调整
+			canUpdateFullValue = true;
 		}
 		List<Role> allChildren = this.getRoleGateway().getAllChildren(this.getId());
-		if (canUpdateChildren) {
-
+		if (canUpdateFullValue) {
 		}
 		for (Role children : allChildren) {
 			// 修改所有子节点的全路径信息

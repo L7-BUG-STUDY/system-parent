@@ -5,7 +5,7 @@
 		<encoder>
 			<pattern>
 				%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %blue(%-40logger{40}:%-4line)
-				%thread [requestId=%X{requestId},username=%X{username}] %msg%n
+				%thread [traceId=%X{traceId},username=%X{username}] %msg%n
 			</pattern>
 		</encoder>
 		<!-- 只输出INFO及以上日志 -->
