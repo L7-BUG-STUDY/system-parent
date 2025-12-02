@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SystemStart {
 	public static void main(String[] args) {
+		long currentTimeMillis = System.currentTimeMillis();
 		SpringApplication.run(SystemStart.class, args);
+		System.err.println(System.currentTimeMillis() - currentTimeMillis + "/ms");
 	}
 }
