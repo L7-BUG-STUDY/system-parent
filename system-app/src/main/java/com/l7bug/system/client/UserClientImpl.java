@@ -94,7 +94,7 @@ public class UserClientImpl implements UserClient {
 		PageData<User> page = this.userGateway.page(queryUserRequest, "");
 		List<UserInfoResponse> list = page.data().stream().map(item -> {
 			UserInfoResponse temp = new UserInfoResponse();
-			BeanUtils.copyProperties(item, UserInfoResponse.class);
+			BeanUtils.copyProperties(item, temp);
 			temp.setStatus(item.getStatus().ordinal());
 			return temp;
 		}).toList();
