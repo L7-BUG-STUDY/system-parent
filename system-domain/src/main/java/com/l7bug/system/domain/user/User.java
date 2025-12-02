@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
@@ -29,6 +30,8 @@ public class User {
 	private transient String rawPassword;
 	private transient Collection<String> authoritiesSet;
 	private UserStatus status;
+
+	private LocalDateTime createTime;
 
 	public User(UserGateway userGateway) {
 		this.userGateway = userGateway;

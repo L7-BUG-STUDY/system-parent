@@ -2,6 +2,8 @@ package com.l7bug.system.dto.response;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * UserResponse
  *
@@ -14,4 +16,5 @@ public class UserInfoResponse {
 	private String username;
 	private String nickname;
 	private Integer status;
+	private LocalDateTime createTime;
 }

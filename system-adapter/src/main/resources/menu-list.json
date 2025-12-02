@@ -227,7 +227,8 @@
                     "title": {
                         "zh_CN": "用户管理",
                         "en_US": "userManagement"
-                    }
+                    },
+                    "icon": "user-list"
                 }
             }
         ]

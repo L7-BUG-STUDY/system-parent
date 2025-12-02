@@ -2,12 +2,12 @@ drop table if exists public.system_users;
 
 create table public.system_users
 (
-    id          bigint not null
+    id          bigint       not null
         primary key,
-    nickname    varchar(64)  default NULL::character varying,
-    username    varchar(64)  default NULL::character varying,
-    password    varchar(256) default NULL::character varying,
-    status      integer      default 1,
+    nickname    varchar(64)  not null default '',
+    username    varchar(64)  not null default '',
+    password    varchar(256) not null default '',
+    status      integer      not null default 1,
     create_by   bigint,
     update_by   bigint,
     create_time timestamptz,
@@ -33,19 +33,19 @@ INSERT INTO public.system_users (id, nickname, username, password, status, creat
                                  update_time)
 VALUES (-1, 'root', 'root', '$2b$10$2Wh0XP9AAgTH.XWi2gfPyuwyrFhjUJIbZs4sFVSzedDS/XA3eycYS', 1, -1, -1,
         now(), now());
-
+/*
 drop table if exists public.system_role;
 create table public.system_role
 (
-    id          bigint not null
+    id          bigint        not null
         primary key,
-    father_id   bigint        default NULL,
-    code        varchar(64)   default NULL,
-    name        varchar(64)   default NULL,
-    full_id     varchar(2048) default NULL,
-    full_name   varchar(1024) default NULL,
-    remark      varchar(256)  default NULL,
-    status      integer       default 1,
+    father_id   bigint        not null default -1,
+    code        varchar(64)   not null default NULL,
+    name        varchar(64)   not null default NULL,
+    full_id     varchar(2048) not null default NULL,
+    full_name   varchar(1024) not null default NULL,
+    remark      varchar(256)  not null default NULL,
+    status      integer       not null default 1,
     create_by   bigint,
     update_by   bigint,
     create_time timestamptz,
@@ -72,5 +72,5 @@ create index
     on public.system_role (full_id);
 
 create index
-    on public.system_role (status);
+    on public.system_role (status);*/
 
