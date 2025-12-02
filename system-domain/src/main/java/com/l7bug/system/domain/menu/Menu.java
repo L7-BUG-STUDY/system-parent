@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @Data
 public class Menu {
-	private static final long ROOT_ID = -1L;
+	public static final long ROOT_ID = -1L;
 	private static final String PATH_SEPARATOR = "/";
 	@Getter(AccessLevel.PRIVATE)
 	private final MenuGateway menuGateway;
@@ -64,15 +64,6 @@ public class Menu {
 	 * 启用状态
 	 */
 	private Boolean enable;
-
-	/**
-	 * 判断是否为根节点
-	 *
-	 * @return 根节点
-	 */
-	private boolean isRoot() {
-		return this.fatherId == ROOT_ID;
-	}
 
 	/**
 	 * 新增子节点
