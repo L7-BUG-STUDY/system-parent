@@ -74,3 +74,40 @@ create index
 create index
     on public.system_role (status);*/
 
+drop table if exists public.system_menu;
+
+create table public.system_menu
+(
+    id          bigint       not null
+        primary key,
+    father_id   bigint       not null default -1,
+    full_id     varchar(256) not null default '',
+    path        varchar(64)  not null default '',
+    name        varchar(64)  not null default '',
+    component   varchar(64)  not null default '',
+    type        varchar(16)  not null default 'FOLDER',
+    meta        jsonb        not null default '{}'::jsonb,
+    enable      boolean      not null default true,
+    sort        int          not null default 0,
+    create_by   bigint,
+    update_by   bigint,
+    create_time timestamptz,
+    update_time timestamptz,
+    del_flag    boolean               default false
+);
+
+comment on table public.system_menu is '菜单表';
+
+comment on column public.system_menu.father_id is '父id';
+comment on column public.system_menu.full_id is '全路径id';
+comment on column public.system_menu.path is '路径';
+comment on column public.system_menu.name is '名称';
+comment on column public.system_menu.component is '组件路径';
+comment on column public.system_menu.type is '菜单类型';
+comment on column public.system_menu.meta is '元数据';
+comment on column public.system_menu.sort is '排序值';
+comment on column public.system_menu.enable is '启用状态';
+
+create index on public.system_menu (del_flag);
+create index on public.system_menu (father_id);
+create index on public.system_menu (full_id);
