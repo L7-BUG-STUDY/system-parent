@@ -1,5 +1,7 @@
 package com.l7bug.system.config;
 
+import com.l7bug.system.domain.menu.Menu;
+import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,5 +22,11 @@ public class BeanConfig {
 	@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public User user(UserGateway userGateway) {
 		return new User(userGateway);
+	}
+
+	@Bean
+	@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	public Menu menu(MenuGateway menuGateway) {
+		return new Menu(menuGateway);
 	}
 }

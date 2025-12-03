@@ -1,6 +1,6 @@
 package com.l7bug.system.convertor;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import cn.hutool.core.util.IdUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuType;
@@ -32,13 +32,13 @@ public class MenuConvertor {
 		BeanUtils.copyProperties(systemMenu, menu);
 		try {
 			menu.setMeta(objectMapper.readValue(systemMenu.getMeta(), MetaVal.class));
-		} catch (JsonProcessingException e) {
+		} catch (Exception e) {
 			log.warn("错误的元数据:[{}]导致转换失败!转为默认空值!错误信息:[{}]", systemMenu.getMeta(), e.getMessage());
 			menu.setMeta(new MetaVal());
 		}
 		try {
 			menu.setType(MenuType.valueOf(systemMenu.getType().toUpperCase()));
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			log.warn("传递错误的菜单类型导致转换失败,设为默认值:[{}],错误的类型:[{}],异常信息:[{}]", MenuType.FOLDER, systemMenu.getType(), e.getMessage());
 			menu.setType(MenuType.FOLDER);
 		}
@@ -49,11 +49,18 @@ public class MenuConvertor {
 		if (menu == null) {
 			return null;
 		}
+		if (menu.getId() == null) {
+			menu.setId(IdUtil.getSnowflakeNextId());
+		}
 		SystemMenu systemMenu = new SystemMenu();
 		BeanUtils.copyProperties(menu, systemMenu);
 		try {
-			systemMenu.setMeta(objectMapper.writeValueAsString(menu.getMeta()));
-		} catch (JsonProcessingException e) {
+			if (menu.getMeta() == null) {
+				systemMenu.setMeta("{}");
+			} else {
+				systemMenu.setMeta(objectMapper.writeValueAsString(menu.getMeta()));
+			}
+		} catch (Exception e) {
 			log.warn("[{}]对象序列化json失败!置为空json字符串", Menu.class);
 			log.warn("异常信息:", e);
 			systemMenu.setMeta("{}");

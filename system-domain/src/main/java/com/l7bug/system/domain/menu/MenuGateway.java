@@ -28,6 +28,13 @@ public interface MenuGateway {
 	Menu findById(Long id);
 
 	/**
+	 * 获取所有根节点
+	 *
+	 * @return 所有的跟节点
+	 */
+	List<Menu> findAllRootNode();
+
+	/**
 	 * 根据id删除数据
 	 *
 	 * @param id id
@@ -42,7 +49,7 @@ public interface MenuGateway {
 	 * @return true成功
 	 */
 	default boolean save(Menu menu) {
-		return save(Collections.singletonList(menu)) > 0;
+		return save(Collections.singletonList(menu));
 	}
 
 	/**
@@ -51,5 +58,5 @@ public interface MenuGateway {
 	 * @param menus 菜单集合
 	 * @return 操作是否成功
 	 */
-	int save(Collection<Menu> menus);
+	boolean save(Collection<Menu> menus);
 }

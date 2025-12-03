@@ -6,8 +6,10 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 菜单
@@ -18,7 +20,7 @@ import java.util.Optional;
 @Data
 public class Menu {
 	public static final long ROOT_ID = -1L;
-	private static final String PATH_SEPARATOR = "/";
+	public static final String PATH_SEPARATOR = "/";
 	@Getter(AccessLevel.PRIVATE)
 	private final MenuGateway menuGateway;
 	/**
@@ -65,6 +67,8 @@ public class Menu {
 	 */
 	private Boolean enable;
 
+	private List<Menu> children;
+
 	/**
 	 * 新增子节点
 	 *
@@ -92,7 +96,7 @@ public class Menu {
 		String saveFullId = Optional.ofNullable(fatherMenu).map(Menu::getFullId).orElse("") + PATH_SEPARATOR + this.getId();
 		this.setFatherId(saveFatherId);
 		this.setFullId(saveFullId);
-		List<Menu> byFullId = this.getMenuGateway().findByFullId(this.getFullId());
+		List<Menu> byFullId = new LinkedList<>(this.getMenuGateway().findByFullId(this.getFullId()));
 		for (Menu menu : byFullId) {
 			// 设置子节点
 			menu.setFullId(this.getFullId() + PATH_SEPARATOR + menu.getId());
@@ -108,6 +112,7 @@ public class Menu {
 		Menu oldData = this.getMenuGateway().findById(this.getId());
 		if (oldData == null) {
 			this.getMenuGateway().save(this);
+			this.moveFather(this.getFatherId());
 			return;
 		}
 		if (!oldData.getFatherId().equals(this.getFatherId())) {
@@ -130,5 +135,20 @@ public class Menu {
 			throw new ClientException(ClientErrorCode.CHILDREN_IS_NOT_NULL);
 		}
 		this.getMenuGateway().deleteById(this.getId());
+	}
+
+	/**
+	 * 获取此节点下所有子节点信息
+	 */
+	public void findChildren() {
+		List<Menu> byFullId = this.getMenuGateway().findByFullId(this.getFullId());
+		if (byFullId.isEmpty()) {
+			return;
+		}
+		var childrenMap = byFullId.stream().collect(Collectors.groupingBy(Menu::getFatherId));
+		for (var entry : byFullId) {
+			entry.setChildren(childrenMap.getOrDefault(entry.getId(), new LinkedList<>()));
+		}
+		this.setChildren(childrenMap.getOrDefault(this.getId(), new LinkedList<>()));
 	}
 }

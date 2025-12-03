@@ -2,6 +2,7 @@ package com.l7bug.system.gateway;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.base.Strings;
+import com.l7bug.system.convertor.MenuConvertor;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.mybatis.dataobject.SystemMenu;
@@ -9,8 +10,7 @@ import com.l7bug.system.mybatis.service.SystemMenuService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * RuleGatewayImpl
@@ -22,28 +22,42 @@ import java.util.List;
 @Component
 public class MenuGatewayImpl implements MenuGateway {
 	private final SystemMenuService systemMenuService;
+	private final MenuConvertor menuConvertor;
 
 	@Override
 	public List<Menu> findByFullId(String fullId) {
 		if (Strings.isNullOrEmpty(fullId)) {
-			return List.of();
+			return new ArrayList<>();
 		}
-		List<SystemMenu> list = systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class));
-		return List.of();
+		List<SystemMenu> list = systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class).likeRight(SystemMenu::getFullId, fullId + Menu.PATH_SEPARATOR).orderByAsc(SystemMenu::getSort));
+		return list.stream().map(menuConvertor::mapDomain).toList();
 	}
 
 	@Override
 	public Menu findById(Long id) {
-		return null;
+		return systemMenuService.getOptById(id)
+			.map(menuConvertor::mapDomain)
+			.orElse(null);
+	}
+
+	@Override
+	public List<Menu> findAllRootNode() {
+		return systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class).eq(SystemMenu::getFatherId, Menu.ROOT_ID).orderByAsc(SystemMenu::getSort))
+			.stream().map(menuConvertor::mapDomain).toList();
 	}
 
 	@Override
 	public boolean deleteById(Long id) {
-		return false;
+		return systemMenuService.removeById(id);
 	}
 
 	@Override
-	public int save(Collection<Menu> menus) {
-		return 0;
+	public boolean save(Collection<Menu> menus) {
+		List<SystemMenu> list = Optional.ofNullable(menus)
+			.orElse(Collections.emptyList())
+			.stream()
+			.map(menuConvertor::mapDo)
+			.toList();
+		return systemMenuService.saveOrUpdateBatch(list);
 	}
 }
