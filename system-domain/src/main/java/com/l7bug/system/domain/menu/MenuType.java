@@ -15,4 +15,8 @@ public enum MenuType {
 	 * 页面
 	 */
 	PAGE,
+	/**
+	 * 按钮
+	 */
+	BUTTON,
 }
