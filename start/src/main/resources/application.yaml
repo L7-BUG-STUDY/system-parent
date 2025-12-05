@@ -10,5 +10,8 @@ spring:
     mvc:
         servlet:
             path: /api
+    threads:
+        virtual:
+            enabled: true
 server:
     port: 11111
