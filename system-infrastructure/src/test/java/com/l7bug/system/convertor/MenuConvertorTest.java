@@ -1,7 +1,5 @@
 package com.l7bug.system.convertor;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuType;
@@ -13,17 +11,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.lang.reflect.Type;
 
 @Slf4j
 class MenuConvertorTest {
 	private final MetaVal exceptionMeta = new MetaVal();
-	ObjectMapper objectMapper;
+	JsonMapper objectMapper;
 	MetaVal metaVal = new MetaVal();
 	private MenuConvertor menuConvertor;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		objectMapper = Mockito.spy(new ObjectMapper());
+		objectMapper = Mockito.spy(JsonMapper.builder().build());
 		Mockito.doThrow(new RuntimeException("")).when(objectMapper).writeValueAsString(exceptionMeta);
 		ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
 		menuConvertor = new MenuConvertor(applicationContext, objectMapper);
@@ -35,6 +37,10 @@ class MenuConvertorTest {
 				"en_US": "系统管理-en"
 			}
 			""", new TypeReference<>() {
+			@Override
+			public Type getType() {
+				return super.getType();
+			}
 		}));
 	}
 

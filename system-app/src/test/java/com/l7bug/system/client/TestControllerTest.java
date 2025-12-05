@@ -15,18 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestClient;
 
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -42,16 +37,16 @@ public class TestControllerTest {
 	private final Faker faker = new Faker(Locale.CHINA);
 	@LocalServerPort
 	private int port;
-	@Autowired
-	private TestRestTemplate restTemplate;
 	private String apiHost;
 	private User user;
+	private RestClient restClient;
 
 	@Autowired
 	private UserGateway userGateway;
 
 	@BeforeEach
 	void setUp() {
+
 		apiHost = "http://localhost:" + port;
 		user = new User(userGateway);
 		user.setNickname(faker.name().name());
@@ -61,178 +56,162 @@ public class TestControllerTest {
 		System.err.println("测试地址:" + apiHost);
 		System.err.println("本次测试用到的用户:" + JSON.toJSONString(user));
 		MDC.clear();
+
+		this.restClient = RestClient.builder()
+			.baseUrl(apiHost)
+			.build();
 	}
 
 	@Test
 	public void loginError() {
 		log.info("开始测试认证失败...");
-		ResponseEntity<Result<String>> responseEntity = restTemplate.exchange(
-			apiHost + "/auth/login",
-			HttpMethod.POST,
-			new HttpEntity<>(new LoginRequest(user.getUsername(), user.getRawPassword())),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseEntity.getBody());
-		log.info("认证失败调用结果:{}", JSON.toJSONString(responseEntity.getBody()));
-		Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		Assertions.assertEquals(ClientErrorCode.LOGIN_ERROR.getCode(), responseEntity.getBody().getCode());
+		Result<String> body = restClient.post()
+			.uri("/auth/login")
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(new LoginRequest(user.getUsername(), user.getRawPassword()))
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(body);
+		log.info("认证失败调用结果:{}", JSON.toJSONString(body));
+		Assertions.assertEquals(ClientErrorCode.LOGIN_ERROR.getCode(), body.getCode());
 		log.info("开始测试用户被禁用...");
 		user.save();
-		responseEntity = restTemplate.exchange(
-			apiHost + "/auth/login",
-			HttpMethod.POST,
-			new HttpEntity<>(new LoginRequest(user.getUsername(), user.getRawPassword())),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseEntity.getBody());
-		log.info("用户被禁用调用结果:{}", JSON.toJSONString(responseEntity.getBody()));
-		Assertions.assertEquals(ClientErrorCode.USER_IS_DISABLE.getCode(), responseEntity.getBody().getCode());
+		body = restClient.post()
+			.uri("/auth/login")
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(new LoginRequest(user.getUsername(), user.getRawPassword()))
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(body);
+		log.info("用户被禁用调用结果:{}", JSON.toJSONString(body));
+		Assertions.assertEquals(ClientErrorCode.USER_IS_DISABLE.getCode(), body.getCode());
 		log.info("开始测试未认证调用接口...");
-		ResponseEntity<Result<?>> responseVoid = restTemplate.exchange(
-			apiHost + "/auth/logout",
-			HttpMethod.DELETE,
-			new HttpEntity<>(null),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseVoid.getBody());
-		log.info("未认证调用接口结果:{}", JSON.toJSONString(responseVoid.getBody()));
-		Assertions.assertEquals(ClientErrorCode.NOT_AUTHENTICATION.getCode(), responseVoid.getBody().getCode());
+		Result<?> resultVoid = restClient.delete()
+			.uri("/auth/logout")
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(resultVoid);
+		log.info("未认证调用接口结果:{}", JSON.toJSONString(resultVoid));
+		Assertions.assertEquals(ClientErrorCode.NOT_AUTHENTICATION.getCode(), resultVoid.getCode());
 	}
 
 	@Test
 	public void loginAndLogoutTest() {
-		ResponseEntity<Result<String>> responseEntity;
-		ResponseEntity<Result<?>> responseVoid;
+		Result<String> responseEntity;
+		Result<?> responseVoid;
 		log.info("开始测试登录成功");
 		user.setEnable();
 		user.save();
-		responseEntity = restTemplate.exchange(
-			apiHost + "/auth/login",
-			HttpMethod.POST,
-			new HttpEntity<>(new LoginRequest(user.getUsername(), user.getRawPassword())),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseEntity.getBody());
-		log.info("登录成功调用结果:{}", JSON.toJSONString(responseEntity.getBody()));
-		Assertions.assertTrue(responseEntity.getBody().isSuccess());
-		String token = responseEntity.getBody().getData();
+		responseEntity = restClient.post()
+			.uri("/auth/login")
+			.body(new LoginRequest(user.getUsername(), user.getRawPassword()))
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(responseEntity);
+		log.info("登录成功调用结果:{}", JSON.toJSONString(responseEntity));
+		Assertions.assertTrue(responseEntity.isSuccess());
+		String token = responseEntity.getData();
 		log.info("开始测试调用退出登录");
-		responseVoid = restTemplate.exchange(
-			apiHost + "/auth/logout",
-			HttpMethod.DELETE,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		log.info("退出登录结果:{}", JSON.toJSONString(responseVoid.getBody()));
-		Assertions.assertNotNull(responseVoid.getBody());
-		Assertions.assertTrue(responseVoid.getBody().isSuccess());
+		responseVoid = restClient.delete()
+			.uri("/auth/logout")
+			.header(SystemEtc.TOKEN_HEADER, token)
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		log.info("退出登录结果:{}", JSON.toJSONString(responseVoid));
+		Assertions.assertNotNull(responseVoid);
+		Assertions.assertTrue(responseVoid.isSuccess());
 		log.info("再次使用刚刚的token调用退出接口");
-		responseVoid = restTemplate.exchange(
-			apiHost + "/auth/logout",
-			HttpMethod.DELETE,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		log.info("退出结果:{}", JSON.toJSONString(responseVoid.getBody()));
-		Assertions.assertNotNull(responseVoid.getBody());
-		Assertions.assertTrue(responseVoid.getBody().isFailure());
-		Assertions.assertEquals(ClientErrorCode.NOT_AUTHENTICATION.getCode(), responseVoid.getBody().getCode());
+		responseVoid = restClient.delete()
+			.uri("/auth/logout")
+			.header(SystemEtc.TOKEN_HEADER, token)
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		log.info("退出结果:{}", JSON.toJSONString(responseVoid));
+		Assertions.assertNotNull(responseVoid);
+		Assertions.assertTrue(responseVoid.isFailure());
+		Assertions.assertEquals(ClientErrorCode.NOT_AUTHENTICATION.getCode(), responseVoid.getCode());
 	}
 
 	@Test
 	public void accessDeniedTest() {
-		ResponseEntity<Result<String>> responseEntity;
-		ResponseEntity<Result<?>> responseVoid;
+		Result<String> responseEntity;
+		Result<?> responseVoid;
 		log.info("开始测试未授权");
 		user.setEnable();
 		user.save();
-		responseEntity = restTemplate.exchange(
-			apiHost + "/auth/login",
-			HttpMethod.POST,
-			new HttpEntity<>(new LoginRequest(user.getUsername(), user.getRawPassword())),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseEntity.getBody());
-		String token = responseEntity.getBody().getData();
-		responseVoid = restTemplate.exchange(
-			apiHost + "/auth/hasAuthorities/123",
-			HttpMethod.GET,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		log.info(JSON.toJSONString(responseVoid.getBody()));
-		Assertions.assertNotNull(responseVoid.getBody());
-		Assertions.assertTrue(responseVoid.getBody().isFailure());
-		Assertions.assertEquals(ClientErrorCode.ACCESS_DENIED.getCode(), responseVoid.getBody().getCode());
-		responseVoid = restTemplate.exchange(
-			apiHost + "/auth/hasAuthorities/READ",
-			HttpMethod.GET,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		log.info(JSON.toJSONString(responseVoid.getBody()));
-		Assertions.assertNotNull(responseVoid.getBody());
-		Assertions.assertTrue(responseVoid.getBody().isSuccess());
+		responseEntity = restClient.post()
+			.uri("/auth/login")
+			.body(new LoginRequest(user.getUsername(), user.getRawPassword()))
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(responseEntity);
+		String token = responseEntity.getData();
+		responseVoid = restClient.get()
+			.uri("/auth/hasAuthorities/123")
+			.header(SystemEtc.TOKEN_HEADER, token)
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		log.info(JSON.toJSONString(responseVoid));
+		Assertions.assertNotNull(responseVoid);
+		Assertions.assertTrue(responseVoid.isFailure());
+		Assertions.assertEquals(ClientErrorCode.ACCESS_DENIED.getCode(), responseVoid.getCode());
+		responseVoid = restClient.get()
+			.uri("/auth/hasAuthorities/READ")
+			.header(SystemEtc.TOKEN_HEADER, token)
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		log.info(JSON.toJSONString(responseVoid));
+		Assertions.assertNotNull(responseVoid);
+		Assertions.assertTrue(responseVoid.isSuccess());
 	}
 
 	@Test
 	public void testThrowException() {
-		ResponseEntity<Result<String>> responseEntity;
-		ResponseEntity<Result<?>> responseVoid;
+		Result<String> responseEntity;
+		Result<?> responseVoid;
 
 		user.setEnable();
 		user.save();
-		responseEntity = restTemplate.exchange(
-			apiHost + "/auth/login",
-			HttpMethod.POST,
-			new HttpEntity<>(new LoginRequest(user.getUsername(), user.getRawPassword())),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseEntity.getBody());
-		String token = responseEntity.getBody().getData();
-		responseVoid = restTemplate.exchange(
-			apiHost + "/test/throw/AbstractException",
-			HttpMethod.GET,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseVoid.getBody());
-		Assertions.assertTrue(responseVoid.getBody().isFailure());
-		responseVoid = restTemplate.exchange(
-			apiHost + "/test/throw/AbstractException2",
-			HttpMethod.GET,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseVoid.getBody());
-		Assertions.assertTrue(responseVoid.getBody().isFailure());
-		responseVoid = restTemplate.exchange(
-			apiHost + "/test/throw/Throwable?id=1",
-			HttpMethod.GET,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token, SystemEtc.REQUEST_ID, UUID.randomUUID().toString()))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		responseVoid = restTemplate.exchange(
-			apiHost + "/test/throw/Throwable",
-			HttpMethod.GET,
-			new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(SystemEtc.TOKEN_HEADER, token))),
-			new ParameterizedTypeReference<>() {
-			}
-		);
-		Assertions.assertNotNull(responseVoid.getBody());
-		Assertions.assertTrue(responseVoid.getBody().isFailure());
+		responseEntity = restClient.post()
+			.uri("/auth/login")
+			.body(new LoginRequest(user.getUsername(), user.getRawPassword()))
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(responseEntity);
+		String token = responseEntity.getData();
+		responseVoid = restClient.get()
+			.uri("/test/throw/AbstractException")
+			.header(SystemEtc.TOKEN_HEADER, token)
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(responseVoid);
+		Assertions.assertTrue(responseVoid.isFailure());
+		responseVoid = restClient.get()
+			.uri("/test/throw/AbstractException2")
+			.header(SystemEtc.TOKEN_HEADER, token)
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(responseVoid);
+		Assertions.assertTrue(responseVoid.isFailure());
+		responseVoid = restClient.get()
+			.uri("/test/throw/Throwable")
+			.header(SystemEtc.TOKEN_HEADER, token)
+			.retrieve()
+			.body(new ParameterizedTypeReference<>() {
+			});
+		Assertions.assertNotNull(responseVoid);
+		Assertions.assertTrue(responseVoid.isFailure());
 	}
 }

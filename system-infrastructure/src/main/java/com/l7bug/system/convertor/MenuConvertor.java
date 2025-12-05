@@ -1,7 +1,6 @@
 package com.l7bug.system.convertor;
 
 import cn.hutool.core.util.IdUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuType;
 import com.l7bug.system.domain.menu.MetaVal;
@@ -11,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ import java.util.Optional;
 @Component
 public class MenuConvertor {
 	private final ApplicationContext applicationContext;
-	private final ObjectMapper objectMapper;
+	private final JsonMapper objectMapper;
 
 	public Menu mapDomain(SystemMenu systemMenu) {
 		Menu menu = applicationContext.getBean(Menu.class);
