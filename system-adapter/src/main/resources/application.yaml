@@ -7,6 +7,9 @@ spring:
             host: localhost
             database: 15
             port: 6379
+    threads:
+        virtual:
+            enabled: true
 logging:
     config: classpath:logback-mock.xml
 server:
