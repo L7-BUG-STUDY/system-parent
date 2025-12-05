@@ -18,6 +18,7 @@ import java.util.Optional;
  */
 @AllArgsConstructor
 @Component
+@Deprecated
 public class UserConvertor {
 	private final ApplicationContext applicationContext;
 
