@@ -1,6 +1,7 @@
 package com.l7bug.system.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
 /**
  * MenuMapper
@@ -8,7 +9,7 @@ import org.mapstruct.Mapper;
  * @author Administrator
  * @since 2025/12/4 18:26
  */
-@Mapper
-public interface MenuMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface MenuMapstruct {
 
 }
