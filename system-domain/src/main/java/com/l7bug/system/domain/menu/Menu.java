@@ -143,6 +143,7 @@ public class Menu {
 	public void findChildren() {
 		List<Menu> byFullId = this.getMenuGateway().findByFullId(this.getFullId());
 		if (byFullId.isEmpty()) {
+			this.setChildren(List.of());
 			return;
 		}
 		var childrenMap = byFullId.stream().collect(Collectors.groupingBy(Menu::getFatherId));
