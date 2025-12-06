@@ -51,7 +51,9 @@ class MenuMapstructTest {
 	@Test
 	void mapDomain() throws Exception {
 		SystemMenu systemMenu = new SystemMenu();
-		Menu menu = menuMapstruct.mapDomain(systemMenu);
+		Menu menu = menuMapstruct.mapDomain(null);
+		Assertions.assertNull(menu);
+		menu = menuMapstruct.mapDomain(systemMenu);
 		Assertions.assertNotNull(menu);
 		Assertions.assertEquals(MenuType.FOLDER, menu.getType());
 		Assertions.assertNotNull(menu.getMeta());
@@ -99,5 +101,11 @@ class MenuMapstructTest {
 		menu.setMeta(exceptionMeta);
 		systemMenu = menuMapstruct.mapDo(menu);
 		Assertions.assertEquals("{}", systemMenu.getMeta());
+	}
+
+	@Test
+	void mapType() {
+		MenuType menuType = menuMapstruct.mapType("123");
+		Assertions.assertEquals(MenuType.FOLDER, menuType);
 	}
 }

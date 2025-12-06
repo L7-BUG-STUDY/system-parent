@@ -77,7 +77,7 @@ public abstract class MenuMapstruct {
 	protected MenuType mapType(String type) {
 		try {
 			return MenuType.valueOf(Optional.ofNullable(type).orElse("FOLDER").toUpperCase());
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			log.warn("传递错误的菜单类型导致转换失败,设为默认值:[{}],错误的类型:[{}],异常信息:[{}]", MenuType.FOLDER, type, e.getMessage());
 			return MenuType.FOLDER;
 		}

@@ -51,7 +51,7 @@ public class UserGatewayImpl implements UserGateway {
 
 	@Override
 	public boolean save(User user) {
-		SystemUser systemUser = userMapstruct.map(user);
+		SystemUser systemUser = userMapstruct.mapDo(user);
 		boolean flag = this.systemUserService.saveOrUpdate(systemUser);
 		user.setId(systemUser.getId());
 		return flag;
@@ -66,13 +66,13 @@ public class UserGatewayImpl implements UserGateway {
 		if (systemUser == null) {
 			return null;
 		}
-		return userMapstruct.map(systemUser);
+		return userMapstruct.mapDomain(systemUser);
 	}
 
 	@Override
 	public User getUserById(Long id) {
 		SystemUser data = systemUserService.getById(id);
-		return data == null ? null : userMapstruct.map(data);
+		return data == null ? null : userMapstruct.mapDomain(data);
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class UserGatewayImpl implements UserGateway {
 		orderItem.setAsc(pageQuery.isAsc());
 		page.addOrder(orderItem);
 		Page<SystemUser> systemUserPage = this.systemUserService.page(page, Wrappers.lambdaQuery(SystemUser.class).eq(!Strings.isNullOrEmpty(username), SystemUser::getUsername, username));
-		List<User> data = systemUserPage.getRecords().stream().map(userMapstruct::map).toList();
+		List<User> data = systemUserPage.getRecords().stream().map(userMapstruct::mapDomain).toList();
 		return new PageData<>(systemUserPage.getTotal(), data);
 	}
 

@@ -22,7 +22,7 @@ public abstract class UserMapstruct {
 		return applicationContext.getBean(User.class);
 	}
 
-	public abstract User map(SystemUser user);
+	public abstract User mapDomain(SystemUser user);
 
-	public abstract SystemUser map(User user);
+	public abstract SystemUser mapDo(User user);
 }
