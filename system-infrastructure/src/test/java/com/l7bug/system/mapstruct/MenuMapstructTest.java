@@ -1,4 +1,4 @@
-package com.l7bug.system.convertor;
+package com.l7bug.system.mapstruct;
 
 import com.google.common.base.Strings;
 import com.l7bug.system.domain.menu.Menu;

@@ -1,4 +1,4 @@
-package com.l7bug.system.convertor;
+package com.l7bug.system.mapstruct;
 
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuType;

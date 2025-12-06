@@ -2,9 +2,9 @@ package com.l7bug.system.gateway;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.base.Strings;
-import com.l7bug.system.convertor.MenuMapstruct;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
+import com.l7bug.system.mapstruct.MenuMapstruct;
 import com.l7bug.system.mybatis.dataobject.SystemMenu;
 import com.l7bug.system.mybatis.service.SystemMenuService;
 import lombok.AllArgsConstructor;

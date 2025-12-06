@@ -1,4 +1,4 @@
-package com.l7bug.system.convertor;
+package com.l7bug.system.mapstruct;
 
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.mybatis.dataobject.SystemUser;
