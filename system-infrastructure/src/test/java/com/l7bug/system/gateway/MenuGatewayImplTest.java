@@ -40,7 +40,7 @@ class MenuGatewayImplTest {
 
 	@Test
 	void appendChildrenTest() {
-		List<Menu> byFullId = this.menuGateway.findByFullId("");
+		List<Menu> byFullId = this.menuGateway.findByFullId(null);
 		Assertions.assertTrue(byFullId.isEmpty());
 		Menu root = new Menu(menuGateway);
 		root.setName(faker.name().fullName());

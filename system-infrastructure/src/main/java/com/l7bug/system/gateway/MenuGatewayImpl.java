@@ -1,7 +1,6 @@
 package com.l7bug.system.gateway;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.google.common.base.Strings;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.mapstruct.MenuMapstruct;
@@ -27,7 +26,7 @@ public class MenuGatewayImpl implements MenuGateway {
 
 	@Override
 	public List<Menu> findByFullId(String fullId) {
-		if (Strings.isNullOrEmpty(fullId)) {
+		if (fullId == null) {
 			return new ArrayList<>();
 		}
 		List<SystemMenu> list = systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class).likeRight(SystemMenu::getFullId, fullId + Menu.PATH_SEPARATOR).orderByAsc(SystemMenu::getSort));
@@ -43,8 +42,12 @@ public class MenuGatewayImpl implements MenuGateway {
 
 	@Override
 	public List<Menu> findAllRootNode() {
-		return systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class).eq(SystemMenu::getFatherId, Menu.ROOT_ID).orderByAsc(SystemMenu::getSort))
-			.stream().map(menuMapstruct::mapDomain).toList();
+		Menu menu = menuMapstruct.menu();
+		menu.setId(-1L);
+		menu.setFullId("");
+		menu.setName("root");
+		menu.findChildren();
+		return menu.getChildren();
 	}
 
 	@Override

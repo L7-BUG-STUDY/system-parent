@@ -1,5 +1,6 @@
 package com.l7bug.system.client;
 
+import com.l7bug.common.result.Result;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
 import jakarta.validation.Valid;
@@ -19,7 +20,7 @@ public interface MenuClient {
 	 *
 	 * @return 根节点数据
 	 */
-	List<MenuNodeRequest> getAllRootNodes();
+	Result<List<MenuNodeResponse>> getAllRootNodes();
 
 	/**
 	 * 根据节点id获取单条数据
@@ -27,7 +28,7 @@ public interface MenuClient {
 	 * @param id 节点id
 	 * @return 节点
 	 */
-	MenuNodeResponse getNodeById(@NotNull Long id);
+	Result<MenuNodeResponse> getNodeById(@NotNull Long id);
 
 	/**
 	 * 新增菜单节点
@@ -35,7 +36,7 @@ public interface MenuClient {
 	 * @param menuNodeRequest 菜单
 	 * @return true新增成功
 	 */
-	boolean createMenuNode(@NotNull @Valid MenuNodeRequest menuNodeRequest);
+	Result<MenuNodeResponse> createMenuNode(@NotNull @Valid MenuNodeRequest menuNodeRequest);
 
 	/**
 	 * 根据id修改单条数据
@@ -44,7 +45,7 @@ public interface MenuClient {
 	 * @param id              id
 	 * @return true修改成功
 	 */
-	boolean updateMenuNode(@NotNull @Valid MenuNodeRequest menuNodeRequest, @NotNull Long id);
+	Result<Boolean> updateMenuNode(@NotNull @Valid MenuNodeRequest menuNodeRequest, @NotNull Long id);
 
 	/**
 	 * 根据id删除单条数据
@@ -52,5 +53,5 @@ public interface MenuClient {
 	 * @param id id
 	 * @return true成功
 	 */
-	boolean deleteMenuNode(Long id);
+	Result<Boolean> deleteMenuNode(Long id);
 }

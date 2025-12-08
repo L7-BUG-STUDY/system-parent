@@ -51,21 +51,21 @@ public class Menu {
 	/**
 	 * 菜单类型
 	 */
-	private MenuType type;
+	private MenuType type = MenuType.PAGE;
 	/**
 	 * 元数据
 	 */
-	private MetaVal meta;
+	private MetaVal meta = new MetaVal();
 
 	/**
 	 * 排序值
 	 */
-	private Integer sort;
+	private Integer sort = 0;
 
 	/**
 	 * 启用状态
 	 */
-	private Boolean enable;
+	private Boolean enable = true;
 
 	private List<Menu> children;
 
@@ -129,12 +129,12 @@ public class Menu {
 	 *
 	 * @throws com.l7bug.common.exception.ClientException 当子节点不为空时,抛出此异常,并给予提示
 	 */
-	public void delete() {
+	public boolean delete() {
 		List<Menu> byFullId = this.getMenuGateway().findByFullId(this.getFullId());
 		if (!byFullId.isEmpty()) {
 			throw new ClientException(ClientErrorCode.CHILDREN_IS_NOT_NULL);
 		}
-		this.getMenuGateway().deleteById(this.getId());
+		return this.getMenuGateway().deleteById(this.getId());
 	}
 
 	/**

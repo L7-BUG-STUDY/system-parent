@@ -17,5 +17,5 @@ import java.util.List;
 public class MenuNodeResponse extends MenuNodeRequest {
 	private Long id;
 
-	private List<MenuNodeRequest> children;
+	private List<MenuNodeResponse> children;
 }
