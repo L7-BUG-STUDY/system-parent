@@ -21,13 +21,13 @@ import java.lang.reflect.Type;
 
 @Slf4j
 @SpringBootTest
-class MenuMapstructTest {
+class MenuDoMapstructTest {
 	private final MetaVal exceptionMeta = new MetaVal();
 	MetaVal metaVal = new MetaVal();
 	@MockitoSpyBean
 	private JsonMapper objectMapper;
 	@Autowired
-	private MenuMapstruct menuMapstruct;
+	private MenuDoMapstruct menuDoMapstruct;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -51,9 +51,9 @@ class MenuMapstructTest {
 	@Test
 	void mapDomain() throws Exception {
 		SystemMenu systemMenu = new SystemMenu();
-		Menu menu = menuMapstruct.mapDomain(null);
+		Menu menu = menuDoMapstruct.mapDomain(null);
 		Assertions.assertNull(menu);
-		menu = menuMapstruct.mapDomain(systemMenu);
+		menu = menuDoMapstruct.mapDomain(systemMenu);
 		Assertions.assertNotNull(menu);
 		Assertions.assertEquals(MenuType.FOLDER, menu.getType());
 		Assertions.assertNotNull(menu.getMeta());
@@ -61,10 +61,10 @@ class MenuMapstructTest {
 		Assertions.assertNull(menu.getMeta().getTitle());
 		systemMenu.setMeta(objectMapper.writeValueAsString(metaVal));
 		systemMenu.setType(MenuType.PAGE.name());
-		menu = menuMapstruct.mapDomain(systemMenu);
+		menu = menuDoMapstruct.mapDomain(systemMenu);
 		Assertions.assertEquals(MenuType.PAGE, menu.getType());
 		systemMenu.setType(MenuType.FOLDER.name());
-		menu = menuMapstruct.mapDomain(systemMenu);
+		menu = menuDoMapstruct.mapDomain(systemMenu);
 		Assertions.assertEquals(MenuType.FOLDER, menu.getType());
 		Assertions.assertFalse(menu.getMeta().getTitle().isEmpty());
 		Assertions.assertEquals(2, menu.getMeta().getTitle().size());
@@ -74,12 +74,12 @@ class MenuMapstructTest {
 
 	@Test
 	void mapDo() {
-		SystemMenu systemMenu = menuMapstruct.mapDo(null);
+		SystemMenu systemMenu = menuDoMapstruct.mapDo(null);
 		Assertions.assertNull(systemMenu);
 		Menu menu = new Menu(Mockito.mock());
 		menu.setMeta(metaVal);
 		menu.setType(MenuType.PAGE);
-		systemMenu = menuMapstruct.mapDo(menu);
+		systemMenu = menuDoMapstruct.mapDo(menu);
 		log.info(systemMenu.toString());
 		Assertions.assertNotNull(systemMenu);
 		Assertions.assertNotNull(systemMenu.getType());
@@ -87,11 +87,11 @@ class MenuMapstructTest {
 		Assertions.assertEquals(MenuType.PAGE.name(), systemMenu.getType());
 		Assertions.assertFalse(Strings.isNullOrEmpty(systemMenu.getMeta()));
 		menu.setType(MenuType.FOLDER);
-		systemMenu = menuMapstruct.mapDo(menu);
+		systemMenu = menuDoMapstruct.mapDo(menu);
 		Assertions.assertEquals(MenuType.FOLDER.name(), systemMenu.getType());
 		menu.setMeta(null);
 		menu.setType(null);
-		systemMenu = menuMapstruct.mapDo(menu);
+		systemMenu = menuDoMapstruct.mapDo(menu);
 		Assertions.assertNotNull(systemMenu);
 		Assertions.assertNotNull(systemMenu.getType());
 		Assertions.assertNotNull(systemMenu.getMeta());
@@ -99,13 +99,13 @@ class MenuMapstructTest {
 		Assertions.assertFalse(Strings.isNullOrEmpty(systemMenu.getMeta()));
 		Assertions.assertFalse(systemMenu.getMeta().isBlank());
 		menu.setMeta(exceptionMeta);
-		systemMenu = menuMapstruct.mapDo(menu);
+		systemMenu = menuDoMapstruct.mapDo(menu);
 		Assertions.assertEquals("{}", systemMenu.getMeta());
 	}
 
 	@Test
 	void mapType() {
-		MenuType menuType = menuMapstruct.mapType("123");
+		MenuType menuType = menuDoMapstruct.mapType("123");
 		Assertions.assertEquals(MenuType.FOLDER, menuType);
 	}
 }

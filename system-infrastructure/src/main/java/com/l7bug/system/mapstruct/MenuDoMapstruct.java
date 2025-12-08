@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class MenuMapstruct {
+public abstract class MenuDoMapstruct {
 	@Resource
 	private ApplicationContext applicationContext;
 

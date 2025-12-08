@@ -3,7 +3,7 @@ package com.l7bug.system.gateway;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
-import com.l7bug.system.mapstruct.MenuMapstruct;
+import com.l7bug.system.mapstruct.MenuDoMapstruct;
 import com.l7bug.system.mybatis.dataobject.SystemMenu;
 import com.l7bug.system.mybatis.service.SystemMenuService;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class MenuGatewayImpl implements MenuGateway {
 	private final SystemMenuService systemMenuService;
-	private final MenuMapstruct menuMapstruct;
+	private final MenuDoMapstruct menuDoMapstruct;
 
 	@Override
 	public List<Menu> findByFullId(String fullId) {
@@ -30,19 +30,19 @@ public class MenuGatewayImpl implements MenuGateway {
 			return new ArrayList<>();
 		}
 		List<SystemMenu> list = systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class).likeRight(SystemMenu::getFullId, fullId + Menu.PATH_SEPARATOR).orderByAsc(SystemMenu::getSort));
-		return list.stream().map(menuMapstruct::mapDomain).toList();
+		return list.stream().map(menuDoMapstruct::mapDomain).toList();
 	}
 
 	@Override
 	public Menu findById(Long id) {
 		return systemMenuService.getOptById(id)
-			.map(menuMapstruct::mapDomain)
+			.map(menuDoMapstruct::mapDomain)
 			.orElse(null);
 	}
 
 	@Override
 	public List<Menu> findAllRootNode() {
-		Menu menu = menuMapstruct.menu();
+		Menu menu = menuDoMapstruct.menu();
 		menu.setId(-1L);
 		menu.setFullId("");
 		menu.setName("root");
@@ -60,7 +60,7 @@ public class MenuGatewayImpl implements MenuGateway {
 		Map<Menu, SystemMenu> collect = Optional.ofNullable(menus)
 			.orElse(Collections.emptyList())
 			.stream()
-			.collect(Collectors.toMap(menu -> menu, menuMapstruct::mapDo));
+			.collect(Collectors.toMap(menu -> menu, menuDoMapstruct::mapDo));
 		boolean b = systemMenuService.saveOrUpdateBatch(collect.values());
 		for (Map.Entry<Menu, SystemMenu> entry : collect.entrySet()) {
 			entry.getKey().setId(entry.getValue().getId());

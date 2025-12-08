@@ -10,7 +10,7 @@ import com.l7bug.common.page.PageData;
 import com.l7bug.common.page.PageQuery;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
-import com.l7bug.system.mapstruct.UserMapstruct;
+import com.l7bug.system.mapstruct.UserDoMapstruct;
 import com.l7bug.system.mybatis.dataobject.SystemUser;
 import com.l7bug.system.mybatis.service.SystemUserService;
 import com.l7bug.system.security.UserDetailsImpl;
@@ -44,14 +44,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserGatewayImpl implements UserGateway {
 	private final SystemUserService systemUserService;
-	private final UserMapstruct userMapstruct;
+	private final UserDoMapstruct userDoMapstruct;
 	private final PasswordEncoder passwordEncoder;
 	private final ApplicationContext applicationContext;
 	private final StringRedisTemplate stringRedisTemplate;
 
 	@Override
 	public boolean save(User user) {
-		SystemUser systemUser = userMapstruct.mapDo(user);
+		SystemUser systemUser = userDoMapstruct.mapDo(user);
 		boolean flag = this.systemUserService.saveOrUpdate(systemUser);
 		user.setId(systemUser.getId());
 		return flag;
@@ -66,13 +66,13 @@ public class UserGatewayImpl implements UserGateway {
 		if (systemUser == null) {
 			return null;
 		}
-		return userMapstruct.mapDomain(systemUser);
+		return userDoMapstruct.mapDomain(systemUser);
 	}
 
 	@Override
 	public User getUserById(Long id) {
 		SystemUser data = systemUserService.getById(id);
-		return data == null ? null : userMapstruct.mapDomain(data);
+		return data == null ? null : userDoMapstruct.mapDomain(data);
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class UserGatewayImpl implements UserGateway {
 		orderItem.setAsc(pageQuery.isAsc());
 		page.addOrder(orderItem);
 		Page<SystemUser> systemUserPage = this.systemUserService.page(page, Wrappers.lambdaQuery(SystemUser.class).eq(!Strings.isNullOrEmpty(username), SystemUser::getUsername, username));
-		List<User> data = systemUserPage.getRecords().stream().map(userMapstruct::mapDomain).toList();
+		List<User> data = systemUserPage.getRecords().stream().map(userDoMapstruct::mapDomain).toList();
 		return new PageData<>(systemUserPage.getTotal(), data);
 	}
 

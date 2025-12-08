@@ -6,7 +6,7 @@ import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
-import com.l7bug.system.mapstruct.MenuMapstruct;
+import com.l7bug.system.mapstruct.MenuDoMapstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ class MenuClientImplTest {
 	private JsonMapper jsonMapper;
 
 	@Autowired
-	private MenuMapstruct menuMapstruct;
+	private MenuDoMapstruct menuDoMapstruct;
 	@Autowired
 	private MenuGateway menuGateway;
 
@@ -52,7 +52,7 @@ class MenuClientImplTest {
 
 	@Test
 	void getNodeById() {
-		Menu menu = menuMapstruct.menu();
+		Menu menu = menuDoMapstruct.menu();
 		menu.setName(UUID.randomUUID().toString());
 		menu.save();
 		Result<MenuNodeResponse> nodeById = menuClient.getNodeById(menu.getId());
@@ -79,7 +79,7 @@ class MenuClientImplTest {
 		MenuNodeRequest menuNodeRequest = new MenuNodeRequest();
 		Result<Boolean> booleanResult = menuClient.updateMenuNode(menuNodeRequest, System.currentTimeMillis());
 		Assertions.assertFalse(booleanResult.getData());
-		Menu menu = menuMapstruct.menu();
+		Menu menu = menuDoMapstruct.menu();
 		menu.setName(UUID.randomUUID().toString());
 		menu.save();
 		menuNodeRequest.setName(UUID.randomUUID().toString());
@@ -91,7 +91,7 @@ class MenuClientImplTest {
 
 	@Test
 	void deleteMenuNode() {
-		Menu menu = menuMapstruct.menu();
+		Menu menu = menuDoMapstruct.menu();
 		menu.setName(UUID.randomUUID().toString());
 		menu.save();
 		Result<Boolean> booleanResult = menuClient.deleteMenuNode(menu.getId());

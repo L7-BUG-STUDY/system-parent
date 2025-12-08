@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContext;
  * @since 2025/12/5 17:57
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class UserMapstruct {
+public abstract class UserDoMapstruct {
 	@Resource
 	private ApplicationContext applicationContext;
 

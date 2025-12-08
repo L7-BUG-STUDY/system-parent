@@ -26,7 +26,7 @@ public class MenuAppMapstructTest {
 	@Autowired
 	private MenuAppMapstruct menuAppMapstruct;
 	@Autowired
-	private MenuMapstruct menuMapstruct;
+	private MenuDoMapstruct menuDoMapstruct;
 
 	@Autowired
 	private JsonMapper jsonMapper;
@@ -42,13 +42,13 @@ public class MenuAppMapstructTest {
 
 	@Test
 	public void mapResponse() {
-		Menu root = menuMapstruct.menu();
+		Menu root = menuDoMapstruct.menu();
 		root.setName("root");
 		root.save();
-		Menu children = menuMapstruct.menu();
+		Menu children = menuDoMapstruct.menu();
 		children.setName("children");
 		root.addChildren(children);
-		Menu temp = menuMapstruct.menu();
+		Menu temp = menuDoMapstruct.menu();
 		temp.setName("temp");
 		children.addChildren(temp);
 		root.findChildren();

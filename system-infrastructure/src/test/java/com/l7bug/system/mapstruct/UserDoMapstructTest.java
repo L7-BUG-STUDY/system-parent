@@ -8,28 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserMapstructTest {
+class UserDoMapstructTest {
 	@Autowired
-	private UserMapstruct userMapstruct;
+	private UserDoMapstruct userDoMapstruct;
 
 	@Test
 	void mapDomain() {
-		User user = userMapstruct.mapDomain(null);
+		User user = userDoMapstruct.mapDomain(null);
 		Assertions.assertNull(user);
 		SystemUser user1 = new SystemUser();
 		user1.setStatus(null);
-		user = userMapstruct.mapDomain(user1);
+		user = userDoMapstruct.mapDomain(user1);
 		Assertions.assertNotNull(user);
 		Assertions.assertNull(user.getStatus());
 	}
 
 	@Test
 	void mapDo() {
-		SystemUser systemUser = userMapstruct.mapDo(null);
+		SystemUser systemUser = userDoMapstruct.mapDo(null);
 		Assertions.assertNull(systemUser);
 		User user = new User(null);
 		user.setStatus(null);
-		systemUser = userMapstruct.mapDo(user);
+		systemUser = userDoMapstruct.mapDo(user);
 		Assertions.assertNotNull(systemUser);
 		Assertions.assertNull(systemUser.getStatus());
 	}
