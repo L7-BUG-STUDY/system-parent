@@ -24,7 +24,7 @@ public abstract class MenuConvertor {
 
 	public abstract MenuNodeResponse mapResponse(Menu menu);
 
-	public abstract List<MenuNodeResponse> mapResponse(Collection<Menu> menus);
+	public abstract List<MenuNodeResponse> mapResponseByColletion(Collection<Menu> menus);
 
 	public abstract Menu mapDomain(MenuNodeRequest menuNodeRequest);
 

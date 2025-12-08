@@ -18,6 +18,8 @@ import tools.jackson.databind.json.JsonMapper;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 class MenuClientImplTest {
 	@Autowired
@@ -93,8 +95,19 @@ class MenuClientImplTest {
 		menu.setName(UUID.randomUUID().toString());
 		menu.save();
 		Result<Boolean> booleanResult = menuClient.deleteMenuNode(menu.getId());
-		Assertions.assertFalse(booleanResult.getData());
+		assertThat(booleanResult)
+			.as("调用结果不能为空")
+			.isNotNull()
+			.extracting(Result::getData)
+			.as("调用结果必须为true")
+			.isEqualTo(true);
+		booleanResult = menuClient.deleteMenuNode((long) UUID.randomUUID().hashCode());
+		assertThat(booleanResult)
+			.isNotNull()
+			.extracting(Result::getData)
+			.isEqualTo(false);
 		menu = menuGateway.findById(menu.getId());
-		Assertions.assertNull(menu);
+		assertThat(menu)
+			.isNull();
 	}
 }

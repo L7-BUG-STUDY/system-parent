@@ -27,7 +27,7 @@ public class MenuClientImpl implements MenuClient {
 	@Override
 	public Result<List<MenuNodeResponse>> getAllRootNodes() {
 		List<Menu> allRootNode = menuGateway.findAllRootNode();
-		return Results.success(menuConvertor.mapResponse(allRootNode));
+		return Results.success(menuConvertor.mapResponseByColletion(allRootNode));
 	}
 
 	@Override
