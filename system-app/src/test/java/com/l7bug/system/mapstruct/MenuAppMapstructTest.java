@@ -1,4 +1,4 @@
-package com.l7bug.system.convertor;
+package com.l7bug.system.mapstruct;
 
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MetaVal;
@@ -6,7 +6,6 @@ import com.l7bug.system.dto.base.MenuType;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
 import com.l7bug.system.dto.response.Meta;
-import com.l7bug.system.mapstruct.MenuMapstruct;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,9 +22,9 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class MenuConvertorTest {
+public class MenuAppMapstructTest {
 	@Autowired
-	private MenuConvertor menuConvertor;
+	private MenuAppMapstruct menuAppMapstruct;
 	@Autowired
 	private MenuMapstruct menuMapstruct;
 
@@ -34,7 +33,7 @@ public class MenuConvertorTest {
 
 	@BeforeEach
 	void setUp() {
-		System.err.println(menuConvertor);
+		System.err.println(menuAppMapstruct);
 	}
 
 	@AfterEach
@@ -53,7 +52,7 @@ public class MenuConvertorTest {
 		temp.setName("temp");
 		children.addChildren(temp);
 		root.findChildren();
-		MenuNodeResponse menuNodeResponse = menuConvertor.mapResponse(root);
+		MenuNodeResponse menuNodeResponse = menuAppMapstruct.mapResponse(root);
 		// 1. 断言根节点属性
 		assertThat(menuNodeResponse)
 			.isNotNull() // 确保对象非空
@@ -88,26 +87,26 @@ public class MenuConvertorTest {
 
 	@Test
 	void testNull() {
-		List<MenuNodeResponse> menuNodeResponses = menuConvertor.mapResponseByColletion(null);
+		List<MenuNodeResponse> menuNodeResponses = menuAppMapstruct.mapResponseByColletion(null);
 		assertThat((menuNodeResponses))
 			.as("null转为null")
 			.isNull();
-		assertThat((menuConvertor.mapResponseByColletion(Collections.emptyList())))
+		assertThat((menuAppMapstruct.mapResponseByColletion(Collections.emptyList())))
 			.as("空集合转为空集合")
 			.isNotNull()
 			.isEmpty();
-		MenuNodeResponse menuNodeResponse = menuConvertor.mapResponse(null);
+		MenuNodeResponse menuNodeResponse = menuAppMapstruct.mapResponse(null);
 		assertThat((menuNodeResponse))
 			.as("null转换为null")
 			.isNull();
-		assertThat(menuConvertor.mapDomain(null))
+		assertThat(menuAppMapstruct.mapDomain(null))
 			.isNull();
 	}
 
 	@Test
 	void testEnum() {
 		MenuNodeRequest menuNodeRequest = new MenuNodeRequest();
-		Menu menu = menuConvertor.mapDomain(menuNodeRequest);
+		Menu menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 
 		assertThat(menu)
 			.as("空对象转换以后也是空对象")
@@ -116,13 +115,13 @@ public class MenuConvertorTest {
 			.as("type值为null")
 			.isNull();
 		menuNodeRequest.setType(MenuType.PAGE);
-		menu = menuConvertor.mapDomain(menuNodeRequest);
+		menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 		assertThat(menu)
 			.isNotNull()
 			.extracting(Menu::getType)
 			.as("type值转换以后,同样为领域type值")
 			.isEqualTo(com.l7bug.system.domain.menu.MenuType.PAGE);
-		menuNodeRequest = menuConvertor.mapResponse(menu);
+		menuNodeRequest = menuAppMapstruct.mapResponse(menu);
 		assertThat(menuNodeRequest.getType())
 			.isNotNull()
 			.as("domain转回request对象,type正常")
@@ -132,12 +131,12 @@ public class MenuConvertorTest {
 	@Test
 	void testMeta() {
 		MenuNodeRequest menuNodeRequest = new MenuNodeRequest();
-		Menu menu = menuConvertor.mapDomain(menuNodeRequest);
+		Menu menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 		assertThat(menu.getMeta())
 			.as("null转null")
 			.isNull();
 		menuNodeRequest.setMeta(new Meta());
-		menu = menuConvertor.mapDomain(menuNodeRequest);
+		menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 		assertThat(menu.getMeta())
 			.as("空值转空值,不为null")
 			.isNotNull()
@@ -147,7 +146,7 @@ public class MenuConvertorTest {
 		;
 		menuNodeRequest.getMeta().setIcon(UUID.randomUUID().toString());
 		menuNodeRequest.getMeta().setTitle(Collections.emptyMap());
-		menu = menuConvertor.mapDomain(menuNodeRequest);
+		menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 		assertThat(menu.getMeta())
 			.as("验证图标不为空,且值匹配")
 			.isNotNull()
@@ -162,7 +161,7 @@ public class MenuConvertorTest {
 			.isNotNull()
 			.isEmpty();
 		menuNodeRequest.getMeta().setTitle(Map.of("zh_cn", "中文", "us_en", "英文"));
-		menu = menuConvertor.mapDomain(menuNodeRequest);
+		menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 		assertThat(menu.getMeta())
 			.isNotNull()
 			.extracting(MetaVal::getTitle)

@@ -2,11 +2,11 @@ package com.l7bug.system.client;
 
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
-import com.l7bug.system.convertor.MenuConvertor;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
+import com.l7bug.system.mapstruct.MenuAppMapstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,24 +22,24 @@ import java.util.List;
 @AllArgsConstructor
 public class MenuClientImpl implements MenuClient {
 	private final MenuGateway menuGateway;
-	private final MenuConvertor menuConvertor;
+	private final MenuAppMapstruct menuAppMapstruct;
 
 	@Override
 	public Result<List<MenuNodeResponse>> getAllRootNodes() {
 		List<Menu> allRootNode = menuGateway.findAllRootNode();
-		return Results.success(menuConvertor.mapResponseByColletion(allRootNode));
+		return Results.success(menuAppMapstruct.mapResponseByColletion(allRootNode));
 	}
 
 	@Override
 	public Result<MenuNodeResponse> getNodeById(Long id) {
-		return Results.success(menuConvertor.mapResponse(menuGateway.findById(id)));
+		return Results.success(menuAppMapstruct.mapResponse(menuGateway.findById(id)));
 	}
 
 	@Override
 	public Result<MenuNodeResponse> createMenuNode(MenuNodeRequest menuNodeRequest) {
-		Menu menu = menuConvertor.mapDomain(menuNodeRequest);
+		Menu menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 		menu.save();
-		return Results.success(menuConvertor.mapResponse(menu));
+		return Results.success(menuAppMapstruct.mapResponse(menu));
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class MenuClientImpl implements MenuClient {
 		if (byId == null) {
 			return Results.success(false);
 		}
-		Menu menu = menuConvertor.mapDomain(menuNodeRequest);
+		Menu menu = menuAppMapstruct.mapDomain(menuNodeRequest);
 		menu.setId(id);
 		menu.save();
 		return Results.success(true);

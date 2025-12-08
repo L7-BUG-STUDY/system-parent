@@ -1,4 +1,4 @@
-package com.l7bug.system.convertor;
+package com.l7bug.system.mapstruct;
 
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.dto.request.MenuNodeRequest;
@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2025/12/6 12:14
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class MenuConvertor {
+public abstract class MenuAppMapstruct {
 	@Resource
 	private ApplicationContext applicationContext;
 
