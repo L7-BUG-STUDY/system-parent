@@ -48,6 +48,13 @@ public interface UserClient {
 	 */
 	Result<Void> createUser(@Valid UpdateUserRequest createUserRequest);
 
+	/**
+	 * 根据id修改
+	 *
+	 * @param id                id
+	 * @param updateUserRequest 修改对象
+	 * @return 操作信息
+	 */
 	Result<Void> updateUserById(@NotNull(message = "id不能为空") Long id, @NotNull(message = "用户修改对象不能为空") UpdateUserRequest updateUserRequest);
 
 	/**
@@ -58,5 +65,11 @@ public interface UserClient {
 	 */
 	Result<PageData<UserInfoResponse>> pageUser(@NotNull(message = "查询条件不能为空") QueryUserRequest queryUserRequest);
 
+	/**
+	 * 根据id删除单条数据
+	 *
+	 * @param id id
+	 * @return 删除的数据
+	 */
 	Result<Void> deleteUserById(@NotNull Long id);
 }

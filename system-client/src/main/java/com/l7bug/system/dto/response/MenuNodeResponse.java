@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 节点响应信息
@@ -14,8 +15,18 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class MenuNodeResponse extends MenuNodeRequest {
+public class MenuNodeResponse extends MenuNodeRequest implements TdTreeNodeResponse<MenuNodeResponse> {
 	private Long id;
 
 	private List<MenuNodeResponse> children;
+
+	@Override
+	public String getLabel() {
+		return this.getName();
+	}
+
+	@Override
+	public String getValue() {
+		return Optional.ofNullable(this.getId()).map(Object::toString).orElse("");
+	}
 }

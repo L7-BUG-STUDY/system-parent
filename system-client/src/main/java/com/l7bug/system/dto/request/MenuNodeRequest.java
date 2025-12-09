@@ -20,6 +20,7 @@ public class MenuNodeRequest {
 	 * 父id
 	 */
 	private Long fatherId;
+	private String fullId;
 	/**
 	 * 路径
 	 */

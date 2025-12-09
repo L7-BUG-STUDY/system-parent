@@ -230,6 +230,18 @@
                     },
                     "icon": "user-list"
                 }
+            },
+            {
+                "path": "system-menu",
+                "name": "SystemMenu",
+                "component": "/system/menu/index",
+                "meta": {
+                    "title": {
+                        "zh_CN": "菜单管理",
+                        "en_US": "menuManagement"
+                    },
+                    "icon": "user-list"
+                }
             }
         ]
     }
