@@ -13,6 +13,8 @@ import org.mapstruct.Named;
 import org.springframework.context.ApplicationContext;
 import tools.jackson.databind.json.JsonMapper;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,6 +39,8 @@ public abstract class MenuDoMapstruct {
 	@Mapping(source = "type", target = "type", qualifiedByName = "mapType")
 	@Mapping(source = "meta", target = "meta", qualifiedByName = "mapMetaVal")
 	public abstract Menu mapDomain(SystemMenu menu);
+
+	public abstract List<Menu> mapDomainByCollection(Collection<SystemMenu> systemMenuCollection);
 
 	@Mapping(source = "type", target = "type", qualifiedByName = "mapTypeStr")
 	@Mapping(source = "meta", target = "meta", qualifiedByName = "mapMetaJson")

@@ -58,7 +58,7 @@ class MenuTest {
 			.extracting(Menu::getFatherId, Menu::getFullId)
 			.containsExactly(Menu.ROOT_ID, "/" + menu.getId());
 		// 有父节点的话,自己会成为父节点下的一个子节点
-		Mockito.doReturn(new ArrayList<>(Collections.singletonList(new Menu(menuGateway)))).when(menuGateway).findByFullId(Mockito.anyString());
+		Mockito.doReturn(new ArrayList<>(Collections.singletonList(new Menu(menuGateway)))).when(menuGateway).findLikeFullId(Mockito.anyString());
 		menu.moveFather(system.getId());
 		assertThat(menu)
 			.as("有父节点的话,自己会成为父节点下的一个子节点")
@@ -95,7 +95,7 @@ class MenuTest {
 	@Test
 	void delete() {
 		menu.delete();
-		Mockito.doReturn(Collections.singletonList(new Menu(menuGateway))).when(menuGateway).findByFullId(Mockito.anyString());
+		Mockito.doReturn(Collections.singletonList(new Menu(menuGateway))).when(menuGateway).findLikeFullId(Mockito.anyString());
 		assertThatThrownBy(menu::delete)
 			.isInstanceOf(Exception.class)
 			.hasMessageContaining(ClientErrorCode.CHILDREN_IS_NOT_NULL.getMessage());
@@ -131,7 +131,7 @@ class MenuTest {
 			.asInstanceOf(InstanceOfAssertFactories.LIST)
 			.hasSize(0)
 			.isEmpty();
-		Mockito.doReturn(List.of(node01, node02, node02_01, node01_01)).when(menuGateway).findByFullId(root.getFullId());
+		Mockito.doReturn(List.of(node01, node02, node02_01, node01_01)).when(menuGateway).findLikeFullId(root.getFullId());
 		root.findChildren();
 		List<Menu> children = root.getChildren();
 		for (Menu child : children) {

@@ -17,7 +17,7 @@ public interface MenuGateway {
 	 * @param fullId 全路径id
 	 * @return 全部子节点
 	 */
-	List<Menu> findByFullId(String fullId);
+	List<Menu> findLikeFullId(String fullId);
 
 	/**
 	 * 根据id查询菜单信息

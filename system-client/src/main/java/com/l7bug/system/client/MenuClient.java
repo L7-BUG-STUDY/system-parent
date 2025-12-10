@@ -6,8 +6,6 @@ import com.l7bug.system.dto.response.MenuNodeResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
-
 /**
  * MenuClient
  *
@@ -15,12 +13,8 @@ import java.util.List;
  * @since 2025/12/3 18:00
  */
 public interface MenuClient {
-	/**
-	 * 获取全部根节点以及子节点数据
-	 *
-	 * @return 根节点数据
-	 */
-	Result<List<MenuNodeResponse>> getAllRootNodes();
+
+	Result<MenuNodeResponse> getRootNode();
 
 	/**
 	 * 根据节点id获取单条数据

@@ -12,6 +12,8 @@ import java.util.Map;
  */
 @Data
 public class MetaVal {
+	public static final String ZH_CN = "zh_CN";
+	public static final String EN_US = "en_US";
 	/**
 	 * 标题元数据,如:
 	 * zh_CN=中文名

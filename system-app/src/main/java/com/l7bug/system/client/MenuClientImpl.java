@@ -4,13 +4,15 @@ import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
+import com.l7bug.system.domain.menu.MenuType;
+import com.l7bug.system.domain.menu.MetaVal;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
 import com.l7bug.system.mapstruct.MenuAppMapstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * MenuClientImpl
@@ -25,9 +27,17 @@ public class MenuClientImpl implements MenuClient {
 	private final MenuAppMapstruct menuAppMapstruct;
 
 	@Override
-	public Result<List<MenuNodeResponse>> getAllRootNodes() {
-		List<Menu> allRootNode = menuGateway.findAllRootNode();
-		return Results.success(menuAppMapstruct.mapResponseByColletion(allRootNode));
+	public Result<MenuNodeResponse> getRootNode() {
+		Menu menu = menuAppMapstruct.menu();
+		menu.setId(-1L);
+		menu.setFullId("");
+		menu.setName("root");
+		menu.findChildren();
+		MetaVal meta = new MetaVal();
+		menu.setMeta(meta);
+		menu.setType(MenuType.FOLDER);
+		meta.setTitle(Map.of(MetaVal.ZH_CN, "根节点", MetaVal.EN_US, "rootNode"));
+		return Results.success(menuAppMapstruct.mapResponse(menu));
 	}
 
 	@Override

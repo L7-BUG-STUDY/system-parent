@@ -96,7 +96,7 @@ public class Menu {
 		String saveFullId = Optional.ofNullable(fatherMenu).map(Menu::getFullId).orElse("") + PATH_SEPARATOR + this.getId();
 		this.setFatherId(saveFatherId);
 		this.setFullId(saveFullId);
-		List<Menu> byFullId = new LinkedList<>(this.getMenuGateway().findByFullId(this.getFullId()));
+		List<Menu> byFullId = new LinkedList<>(this.getMenuGateway().findLikeFullId(this.getFullId()));
 		for (Menu menu : byFullId) {
 			// 设置子节点
 			menu.setFullId(this.getFullId() + PATH_SEPARATOR + menu.getId());
@@ -130,7 +130,7 @@ public class Menu {
 	 * @throws com.l7bug.common.exception.ClientException 当子节点不为空时,抛出此异常,并给予提示
 	 */
 	public boolean delete() {
-		List<Menu> byFullId = this.getMenuGateway().findByFullId(this.getFullId());
+		List<Menu> byFullId = this.getMenuGateway().findLikeFullId(this.getFullId());
 		if (!byFullId.isEmpty()) {
 			throw new ClientException(ClientErrorCode.CHILDREN_IS_NOT_NULL);
 		}
@@ -141,7 +141,7 @@ public class Menu {
 	 * 获取此节点下所有子节点信息
 	 */
 	public void findChildren() {
-		List<Menu> byFullId = this.getMenuGateway().findByFullId(this.getFullId());
+		List<Menu> byFullId = this.getMenuGateway().findLikeFullId(this.getFullId());
 		if (byFullId.isEmpty()) {
 			this.setChildren(List.of());
 			return;

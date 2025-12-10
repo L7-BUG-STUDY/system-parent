@@ -40,7 +40,7 @@ class MenuGatewayImplTest {
 
 	@Test
 	void appendChildrenTest() {
-		List<Menu> byFullId = this.menuGateway.findByFullId(null);
+		List<Menu> byFullId = this.menuGateway.findLikeFullId(null);
 		Assertions.assertTrue(byFullId.isEmpty());
 		Menu root = new Menu(menuGateway);
 		root.setName(faker.name().fullName());
@@ -48,7 +48,7 @@ class MenuGatewayImplTest {
 		Menu children = new Menu(menuGateway);
 		children.setName(faker.name().fullName());
 		root.addChildren(children);
-		byFullId = this.menuGateway.findByFullId(root.getFullId());
+		byFullId = this.menuGateway.findLikeFullId(root.getFullId());
 		Assertions.assertEquals(1, byFullId.size());
 		Assertions.assertEquals(children.getId(), byFullId.get(0).getId());
 		Assertions.assertThrows(ClientException.class, root::delete);
@@ -59,8 +59,8 @@ class MenuGatewayImplTest {
 		// 修改父节点
 		children.moveFather(root2.getId());
 		// 验证是否修改成功
-		Assertions.assertTrue(this.menuGateway.findByFullId(root.getFullId()).isEmpty());
-		byFullId = this.menuGateway.findByFullId(root2.getFullId());
+		Assertions.assertTrue(this.menuGateway.findLikeFullId(root.getFullId()).isEmpty());
+		byFullId = this.menuGateway.findLikeFullId(root2.getFullId());
 		Assertions.assertFalse(byFullId.isEmpty());
 		Assertions.assertEquals(root2.getId(), byFullId.get(0).getFatherId());
 		Assertions.assertEquals(children.getId(), byFullId.get(0).getId());
@@ -70,7 +70,7 @@ class MenuGatewayImplTest {
 		root2.delete();
 		Assertions.assertNull(this.menuGateway.findById(root.getId()));
 		Assertions.assertNull(this.menuGateway.findById(children.getId()));
-		Assertions.assertTrue(this.menuGateway.findByFullId(root.getFullId()).isEmpty());
+		Assertions.assertTrue(this.menuGateway.findLikeFullId(root.getFullId()).isEmpty());
 	}
 
 	@Test

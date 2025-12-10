@@ -8,8 +8,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * MenuController
  *
@@ -22,9 +20,9 @@ import java.util.List;
 public class MenuController {
 	private final MenuClient menuClient;
 
-	@GetMapping
-	public Result<List<MenuNodeResponse>> getAll() {
-		return menuClient.getAllRootNodes();
+	@GetMapping("/root")
+	public Result<MenuNodeResponse> getRoot() {
+		return menuClient.getRootNode();
 	}
 
 	@GetMapping("/{id}")

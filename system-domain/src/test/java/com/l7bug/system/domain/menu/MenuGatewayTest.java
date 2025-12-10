@@ -10,7 +10,7 @@ class MenuGatewayTest {
 	void test() {
 		MenuGateway menuGateway = new MenuGateway() {
 			@Override
-			public List<Menu> findByFullId(String fullId) {
+			public List<Menu> findLikeFullId(String fullId) {
 				return List.of();
 			}
 

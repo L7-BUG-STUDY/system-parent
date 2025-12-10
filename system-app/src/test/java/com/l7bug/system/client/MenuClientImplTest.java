@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,12 +40,16 @@ class MenuClientImplTest {
 	}
 
 	@Test
-	void getAllRootNodes() {
-		Result<List<MenuNodeResponse>> allRootNodes = menuClient.getAllRootNodes();
-		Assertions.assertNotNull(allRootNodes);
-		Assertions.assertTrue(allRootNodes.isSuccess());
-		Assertions.assertNotNull(allRootNodes.getData());
-		System.err.println(jsonMapper.writeValueAsString(allRootNodes));
+	void getRootNode() {
+		Result<MenuNodeResponse> rootNode = menuClient.getRootNode();
+		assertThat(rootNode)
+			.isNotNull()
+			.extracting(Result::getData)
+			.isNotNull()
+			.extracting(MenuNodeResponse::getId)
+			.as("查询出来的节点必定是root节点")
+			.isEqualTo(Menu.ROOT_ID);
+		System.err.println(jsonMapper.writeValueAsString(rootNode));
 
 	}
 
