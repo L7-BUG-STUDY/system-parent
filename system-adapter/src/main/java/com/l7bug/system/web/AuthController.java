@@ -4,10 +4,12 @@ import com.alibaba.fastjson2.JSONArray;
 import com.google.common.io.CharStreams;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
+import com.l7bug.system.client.MenuClient;
 import com.l7bug.system.client.UserClient;
 import com.l7bug.system.config.AppSecurityConfiguration;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.response.CurrentUserInfoResponse;
+import com.l7bug.system.dto.response.MenuNodeResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 @RestController
 public class AuthController {
 	private final UserClient userClient;
+	private final MenuClient menuClient;
 
 	@PostMapping(AppSecurityConfiguration.LOGIN_URL)
 	public Result<String> login(@RequestBody LoginRequest loginRequest) {
@@ -44,12 +47,15 @@ public class AuthController {
 
 	@GetMapping("/menu-list")
 	public Result<JSONArray> menuList() throws IOException {
+		Result<MenuNodeResponse> rootNode = menuClient.getRootNode();
 		try (InputStream inputStream = this.getClass().getResourceAsStream("/menu-list.json")) {
 			String read = null;
 			if (inputStream != null) {
 				read = CharStreams.toString(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 			}
-			return Results.success(JSONArray.parseArray(read));
+			JSONArray data = JSONArray.parseArray(read);
+			data.addAll(rootNode.getData().getChildren());
+			return Results.success(data);
 		}
 	}
 }
