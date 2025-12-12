@@ -37,6 +37,7 @@ public class MenuClientImpl implements MenuClient {
 		menu.setMeta(meta);
 		menu.setType(MenuType.FOLDER);
 		meta.setTitle(Map.of(MetaVal.ZH_CN, "根节点", MetaVal.EN_US, "rootNode"));
+		meta.setIcon("root-list");
 		return Results.success(menuAppMapstruct.mapResponse(menu));
 	}
 
