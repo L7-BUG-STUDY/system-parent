@@ -11,11 +11,16 @@ import java.util.List;
  * @since 2025/12/2 16:20
  */
 public interface MenuGateway {
+
 	/**
-	 * 根据全路径id查询所有相关节点
+	 * 根据全路径ID查找相似的菜单列表
+	 * <p>
+	 * 该方法用于查找具有指定全路径ID前缀的菜单项。如果提供了fullId参数，
+	 * 则查找全路径ID以该参数加上路径分隔符开头的菜单项；
+	 * 如果未提供fullId参数或参数为空，则返回所有菜单项。
 	 *
-	 * @param fullId 全路径id
-	 * @return 全部子节点
+	 * @param fullId 菜单全路径ID前缀，用于模糊匹配菜单项
+	 * @return List<Menu> 符合条件的菜单领域对象列表
 	 */
 	List<Menu> findLikeFullId(String fullId);
 

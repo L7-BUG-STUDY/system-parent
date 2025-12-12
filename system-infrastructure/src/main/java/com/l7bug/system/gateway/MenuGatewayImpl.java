@@ -29,10 +29,13 @@ public class MenuGatewayImpl implements MenuGateway {
 	public List<Menu> findLikeFullId(String fullId) {
 		List<SystemMenu> list;
 		if (Strings.isNullOrEmpty(fullId)) {
+			// 如果fullId为空，则查询所有菜单项
 			list = systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class));
 		} else {
+			// 如果fullId不为空，则查询全路径ID以指定前缀开头的菜单项
 			list = systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class).likeRight(SystemMenu::getFullId, fullId + Menu.PATH_SEPARATOR));
 		}
+		// 将DO对象转换为领域对象并返回
 		return menuDoMapstruct.mapDomainByCollection(list);
 	}
 

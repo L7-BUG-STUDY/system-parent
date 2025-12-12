@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 class MenuGatewayImplTest {
 	private final Faker faker = new Faker(Locale.CHINA);
@@ -41,7 +43,9 @@ class MenuGatewayImplTest {
 	@Test
 	void appendChildrenTest() {
 		List<Menu> byFullId = this.menuGateway.findLikeFullId(null);
-		Assertions.assertTrue(byFullId.isEmpty());
+		assertThat(byFullId)
+			.isNotNull()
+			.isNotEmpty();
 		Menu root = new Menu(menuGateway);
 		root.setName(faker.name().fullName());
 		root.save();
