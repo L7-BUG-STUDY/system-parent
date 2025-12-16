@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @since 2025/12/2 14:32
  */
 @Data
-public class Menu {
+public class Menu implements Comparable<Menu> {
 	public static final long ROOT_ID = -1L;
 	public static final String PATH_SEPARATOR = "/";
 	@Getter(AccessLevel.PRIVATE)
@@ -151,5 +151,29 @@ public class Menu {
 			entry.setChildren(childrenMap.getOrDefault(entry.getId(), new LinkedList<>()));
 		}
 		this.setChildren(childrenMap.getOrDefault(this.getId(), new LinkedList<>()));
+	}
+
+	@Override
+	public int compareTo(Menu o) {
+		Integer thisSort = this.getSort();
+		Integer otherSort = o.getSort();
+		
+		if (thisSort == null && otherSort == null) {
+			return 0;
+		}
+		if (thisSort == null) {
+			return -1;
+		}
+		if (otherSort == null) {
+			return 1;
+		}
+		
+		int sortComparison = thisSort.compareTo(otherSort);
+		if (sortComparison != 0) {
+			return sortComparison;
+		}
+		
+		// 如果sort相同，可以考虑通过id或其他唯一标识进行二次比较以确保一致性
+		return Long.compare(this.getId(), o.getId());
 	}
 }
