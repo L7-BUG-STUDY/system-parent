@@ -158,12 +158,17 @@ public class Menu implements Comparable<Menu> {
 	/**
 	 * 修改节点排序值,修改后节点排序值会自动排序
 	 *
-	 * @param val 节点排序值
+	 * @param val 节点排序值增量
 	 */
 	public void nodeAddSortVal(int val) {
+		// 更新当前节点的排序值
 		this.setSort(this.getSort() + val);
 		this.save();
+		
+		// 获取父节点的所有子节点并按优先级排序
 		var fatherChildren = new PriorityQueue<>(this.getMenuGateway().findByFatherId(this.getFatherId()));
+		
+		// 重新分配所有兄弟节点的排序值
 		List<Menu> updateList = new LinkedList<>();
 		int sort = 0;
 		while (!fatherChildren.isEmpty()) {
@@ -172,6 +177,8 @@ public class Menu implements Comparable<Menu> {
 			sort += 2;
 			updateList.add(poll);
 		}
+		
+		// 批量保存更新后的节点
 		this.getMenuGateway().save(updateList);
 	}
 

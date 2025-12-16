@@ -73,4 +73,14 @@ public class MenuClientImpl implements MenuClient {
 		}
 		return Results.success(byId.delete());
 	}
+
+	@Override
+	public Result<Boolean> addSortVal(Long id, Integer val) {
+		Menu byId = this.menuGateway.findById(id);
+		if (byId == null) {
+			return Results.success(false);
+		}
+		byId.nodeAddSortVal(val);
+		return Results.success(true);
+	}
 }

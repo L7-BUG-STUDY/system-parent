@@ -113,4 +113,29 @@ class MenuClientImplTest {
 		assertThat(menu)
 			.isNull();
 	}
+
+	@Test
+	void addSortVal() {
+		// 测试菜单不存在的情况
+		Result<Boolean> result1 = menuClient.addSortVal((long) UUID.randomUUID().hashCode(), 5);
+		assertThat(result1)
+			.isNotNull()
+			.extracting(Result::isSuccess, Result::getData)
+			.containsExactly(true, false);
+
+		// 测试菜单存在的情况
+		Menu menu = menuDoMapstruct.menu();
+		menu.setName(UUID.randomUUID().toString());
+		menu.save();
+
+		// 验证正常调用
+		Result<Boolean> result2 = menuClient.addSortVal(menu.getId(), 5);
+		assertThat(result2)
+			.isNotNull()
+			.extracting(Result::isSuccess, Result::getData)
+			.containsExactly(true, true);
+
+		// 清理测试数据
+		menu.delete();
+	}
 }

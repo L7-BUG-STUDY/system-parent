@@ -48,4 +48,13 @@ public interface MenuClient {
 	 * @return true成功
 	 */
 	Result<Boolean> deleteMenuNode(Long id);
+
+	/**
+	 * 添加排序值
+	 *
+	 * @param id  菜单id
+	 * @param val 值
+	 * @return 调用结果
+	 */
+	Result<Boolean> addSortVal(Long id, Integer val);
 }
