@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -102,7 +103,7 @@ class MenuGatewayImplTest {
 		Menu menu2 = new Menu(menuGateway);
 		menu2.setName(faker.name().fullName());
 		menu2.save();
-		List<Menu> allRootNode = this.menuGateway.findAllRootNode();
+		Collection<Menu> allRootNode = this.menuGateway.findAllRootNode();
 		boolean flag = allRootNode.parallelStream().map(Menu::getId).anyMatch(menu.getId()::equals);
 		boolean flag2 = allRootNode.parallelStream().map(Menu::getId).anyMatch(menu2.getId()::equals);
 		Assertions.assertTrue(flag);

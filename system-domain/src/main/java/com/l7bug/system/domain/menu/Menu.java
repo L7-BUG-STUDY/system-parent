@@ -9,6 +9,7 @@ import lombok.Getter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -67,7 +68,7 @@ public class Menu implements Comparable<Menu> {
 	 */
 	private Boolean enable = true;
 
-	private List<Menu> children;
+	private PriorityQueue<Menu> children;
 
 	/**
 	 * 新增子节点
@@ -143,21 +144,21 @@ public class Menu implements Comparable<Menu> {
 	public void findChildren() {
 		List<Menu> byFullId = this.getMenuGateway().findLikeFullId(this.getFullId());
 		if (byFullId.isEmpty()) {
-			this.setChildren(List.of());
+			this.setChildren(new PriorityQueue<>());
 			return;
 		}
 		var childrenMap = byFullId.stream().collect(Collectors.groupingBy(Menu::getFatherId));
 		for (var entry : byFullId) {
-			entry.setChildren(childrenMap.getOrDefault(entry.getId(), new LinkedList<>()));
+			entry.setChildren(new PriorityQueue<>(childrenMap.getOrDefault(entry.getId(), new LinkedList<>())));
 		}
-		this.setChildren(childrenMap.getOrDefault(this.getId(), new LinkedList<>()));
+		this.setChildren(new PriorityQueue<>(childrenMap.getOrDefault(this.getId(), new LinkedList<>())));
 	}
 
 	@Override
 	public int compareTo(Menu o) {
 		Integer thisSort = this.getSort();
 		Integer otherSort = o.getSort();
-		
+
 		if (thisSort == null && otherSort == null) {
 			return 0;
 		}
@@ -167,12 +168,12 @@ public class Menu implements Comparable<Menu> {
 		if (otherSort == null) {
 			return 1;
 		}
-		
+
 		int sortComparison = thisSort.compareTo(otherSort);
 		if (sortComparison != 0) {
 			return sortComparison;
 		}
-		
+
 		// 如果sort相同，可以考虑通过id或其他唯一标识进行二次比较以确保一致性
 		return Long.compare(this.getId(), o.getId());
 	}

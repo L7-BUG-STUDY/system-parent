@@ -47,7 +47,7 @@ public class MenuGatewayImpl implements MenuGateway {
 	}
 
 	@Override
-	public List<Menu> findAllRootNode() {
+	public Collection<Menu> findAllRootNode() {
 		Menu menu = menuDoMapstruct.menu();
 		menu.setId(-1L);
 		menu.setFullId("");

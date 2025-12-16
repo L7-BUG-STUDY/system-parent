@@ -7,11 +7,11 @@ import java.util.List;
 
 /**
  * 菜单网关测试类
- * 
+ * <p>
  * 用于测试MenuGateway接口的基本功能
  */
 class MenuGatewayTest {
-	
+
 	/**
 	 * 测试菜单网关的基本功能
 	 * 创建一个MenuGateway的匿名实现，并调用save方法保存一个新的菜单对象
@@ -33,7 +33,7 @@ class MenuGatewayTest {
 			}
 
 			@Override
-			public List<Menu> findAllRootNode() {
+			public Collection<Menu> findAllRootNode() {
 				// 返回空列表作为默认实现
 				return List.of();
 			}

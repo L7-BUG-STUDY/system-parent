@@ -7,17 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * 菜单领域对象测试类
- * 
+ * <p>
  * 包含对Menu领域对象各种操作的测试，如添加子菜单、移动父节点、保存、删除等操作
  */
 class MenuTest {
@@ -33,7 +30,7 @@ class MenuTest {
 	void setUp() {
 		// 创建mock的菜单网关对象
 		menuGateway = Mockito.mock(MenuGateway.class);
-		
+
 		// 初始化测试用的菜单对象
 		menu = new Menu(menuGateway);
 		menu.setId((long) UUID.randomUUID().hashCode());
@@ -48,7 +45,7 @@ class MenuTest {
 		system.setName("system");
 		system.setFatherId(Menu.ROOT_ID);
 		system.setFullId("/" + system.getId());
-		
+
 		// 配置mock对象的预期行为
 		Mockito.doReturn(system).when(menuGateway).findById(system.getId());
 		Mockito.doReturn(menu).when(menuGateway).findById(menu.getId());
@@ -89,7 +86,7 @@ class MenuTest {
 			.as("没有父节点的情况下,自己会成为根节点,参数:[父节点id:%s,全路径id:%s]", menu.getFatherId(), menu.getFullId())
 			.extracting(Menu::getFatherId, Menu::getFullId)
 			.containsExactly(Menu.ROOT_ID, "/" + menu.getId());
-		
+
 		// 配置mock对象，模拟找到子节点的情况
 		// 有父节点的话,自己会成为父节点下的一个子节点
 		Mockito.doReturn(new ArrayList<>(Collections.singletonList(new Menu(menuGateway)))).when(menuGateway).findLikeFullId(Mockito.anyString());
@@ -115,7 +112,7 @@ class MenuTest {
 		menu.save();
 		// 测试保存新创建的菜单
 		new Menu(menuGateway).save();
-		
+
 		// 创建一个新的菜单并设置父节点为system
 		Menu menu1 = new Menu(menuGateway);
 		menu1.setId((long) UUID.randomUUID().hashCode());
@@ -128,7 +125,7 @@ class MenuTest {
 			.isNotNull()
 			.as("验证全路径id是否在且挂在[system]节点下")
 			.isEqualTo(system.getFullId() + Menu.PATH_SEPARATOR + menu1.getId());
-		
+
 		// 创建一个更新父节点的菜单
 		Menu updateFatherId = new Menu(menuGateway);
 		updateFatherId.setId(menu.getId());
@@ -153,7 +150,7 @@ class MenuTest {
 	void delete() {
 		// 删除没有子节点的菜单
 		menu.delete();
-		
+
 		// 配置mock对象，模拟菜单有子节点的情况
 		Mockito.doReturn(Collections.singletonList(new Menu(menuGateway))).when(menuGateway).findLikeFullId(Mockito.anyString());
 		// 尝试删除有子节点的菜单，应该抛出异常
@@ -173,13 +170,13 @@ class MenuTest {
 		root.setId((long) UUID.randomUUID().hashCode());
 		root.setFatherId(Menu.ROOT_ID);
 		root.setFullId(Menu.PATH_SEPARATOR + root.getId());
-		
+
 		// 创建第一层子节点
 		Menu node01 = new Menu(menuGateway);
 		node01.setId((long) UUID.randomUUID().hashCode());
 		node01.setFatherId(root.getId());
 		node01.setFullId(root.getFullId() + Menu.PATH_SEPARATOR + node01.getId());
-		
+
 		Menu node02 = new Menu(menuGateway);
 		node02.setId((long) UUID.randomUUID().hashCode());
 		node02.setFatherId(root.getId());
@@ -195,20 +192,20 @@ class MenuTest {
 		node01_01.setId((long) UUID.randomUUID().hashCode());
 		node01_01.setFatherId(node01.getId());
 		node01_01.setFullId(node01.getFullId() + Menu.PATH_SEPARATOR + node01_01.getId());
-		
+
 		// 第一次查找子节点，应该返回空列表
 		root.findChildren();
 		assertThat(root)
 			.extracting(Menu::getChildren)
-			.asInstanceOf(InstanceOfAssertFactories.LIST)
+			.asInstanceOf(InstanceOfAssertFactories.COLLECTION)
 			.hasSize(0)
 			.isEmpty();
-			
+
 		// 配置mock对象，返回所有子节点
 		Mockito.doReturn(List.of(node01, node02, node02_01, node01_01)).when(menuGateway).findLikeFullId(root.getFullId());
 		// 再次查找子节点，应该正确构建树形结构
 		root.findChildren();
-		List<Menu> children = root.getChildren();
+		Collection<Menu> children = root.getChildren();
 		// 验证子节点是否正确构建
 		for (Menu child : children) {
 			assertThat(child)

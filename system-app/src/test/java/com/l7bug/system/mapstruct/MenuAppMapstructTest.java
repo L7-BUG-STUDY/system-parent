@@ -68,13 +68,13 @@ public class MenuAppMapstructTest {
 		// 提取子节点列表中的第一个元素，并断言其 ID
 		assertThat(menuNodeResponse.getChildren().get(0).getId())
 			.as("Checking first child ID") // 添加一个描述信息，失败时更有帮助
-			.isEqualTo(root.getChildren().get(0).getId());
+			.isEqualTo(root.getChildren().iterator().next().getId());
 
 		// 4. 断言第二层（孙）节点的 ID
 		// 提取第一层子节点（索引 0）的 Children 列表中的第一个元素，并断言其 ID
-		assertThat(menuNodeResponse.getChildren().get(0).getChildren().get(0).getId())
+		assertThat(menuNodeResponse.getChildren().iterator().next().getChildren().iterator().next().getId())
 			.as("Checking grandchild ID")
-			.isEqualTo(root.getChildren().get(0).getChildren().get(0).getId());
+			.isEqualTo(root.getChildren().iterator().next().getChildren().iterator().next().getId());
 		System.err.println(jsonMapper.writeValueAsString(menuNodeResponse));
 		String content = "Hello AssertJ World!";
 

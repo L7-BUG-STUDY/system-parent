@@ -37,7 +37,7 @@ public interface MenuGateway {
 	 *
 	 * @return 所有的跟节点
 	 */
-	List<Menu> findAllRootNode();
+	Collection<Menu> findAllRootNode();
 
 	/**
 	 * 根据id删除数据
