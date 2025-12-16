@@ -33,6 +33,14 @@ public interface MenuGateway {
 	Menu findById(Long id);
 
 	/**
+	 * 根据父节点id查询子节点信息
+	 *
+	 * @param fatherId 父节点id
+	 * @return 子节点信息
+	 */
+	Collection<Menu> findByFatherId(Long fatherId);
+
+	/**
 	 * 获取所有根节点
 	 *
 	 * @return 所有的跟节点

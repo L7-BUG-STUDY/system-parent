@@ -33,6 +33,11 @@ class MenuGatewayTest {
 			}
 
 			@Override
+			public Collection<Menu> findByFatherId(Long fatherId) {
+				return List.of();
+			}
+
+			@Override
 			public Collection<Menu> findAllRootNode() {
 				// 返回空列表作为默认实现
 				return List.of();

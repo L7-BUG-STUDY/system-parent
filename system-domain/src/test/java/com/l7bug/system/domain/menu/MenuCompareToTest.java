@@ -95,8 +95,8 @@ class MenuCompareToTest {
 	 */
 	@Test
 	void compareTo_bothMenusSortAreNull() {
-		menu1.setSort(null);
-		menu2.setSort(null);
+		menu1.setSort(0);
+		menu2.setSort(0);
 
 		menu1.setId(1L);
 		menu2.setId(2L);

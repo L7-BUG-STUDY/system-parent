@@ -47,6 +47,11 @@ public class MenuGatewayImpl implements MenuGateway {
 	}
 
 	@Override
+	public Collection<Menu> findByFatherId(Long fatherId) {
+		return menuDoMapstruct.mapDomainByCollection(systemMenuService.list(Wrappers.lambdaQuery(SystemMenu.class).eq(SystemMenu::getFatherId, fatherId)));
+	}
+
+	@Override
 	public Collection<Menu> findAllRootNode() {
 		Menu menu = menuDoMapstruct.menu();
 		menu.setId(-1L);

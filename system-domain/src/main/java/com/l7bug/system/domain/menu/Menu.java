@@ -114,6 +114,7 @@ public class Menu implements Comparable<Menu> {
 		if (oldData == null) {
 			this.getMenuGateway().save(this);
 			this.moveFather(this.getFatherId());
+			this.nodeAddSortVal(Integer.MAX_VALUE / 2);
 			return;
 		}
 		if (!oldData.getFatherId().equals(this.getFatherId())) {
@@ -152,6 +153,26 @@ public class Menu implements Comparable<Menu> {
 			entry.setChildren(new PriorityQueue<>(childrenMap.getOrDefault(entry.getId(), new LinkedList<>())));
 		}
 		this.setChildren(new PriorityQueue<>(childrenMap.getOrDefault(this.getId(), new LinkedList<>())));
+	}
+
+	/**
+	 * 修改节点排序值,修改后节点排序值会自动排序
+	 *
+	 * @param val 节点排序值
+	 */
+	public void nodeAddSortVal(int val) {
+		this.setSort(this.getSort() + val);
+		this.save();
+		var fatherChildren = new PriorityQueue<>(this.getMenuGateway().findByFatherId(this.getFatherId()));
+		List<Menu> updateList = new LinkedList<>();
+		int sort = 0;
+		while (!fatherChildren.isEmpty()) {
+			Menu poll = fatherChildren.poll();
+			poll.setSort(sort);
+			sort += 2;
+			updateList.add(poll);
+		}
+		this.getMenuGateway().save(updateList);
 	}
 
 	@Override

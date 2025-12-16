@@ -45,10 +45,29 @@ class MenuTest {
 		system.setName("system");
 		system.setFatherId(Menu.ROOT_ID);
 		system.setFullId("/" + system.getId());
-
-		// 配置mock对象的预期行为
-		Mockito.doReturn(system).when(menuGateway).findById(system.getId());
-		Mockito.doReturn(menu).when(menuGateway).findById(menu.getId());
+		Map<Long, Menu> menuMap = new HashMap<>();
+		Mockito.doAnswer(item -> {
+				Long argument = item.getArgument(0, Long.class);
+				return menuMap.get(argument);
+			})
+			.when(menuGateway).findById(Mockito.anyLong());
+		Mockito.doAnswer(item -> {
+			Collection<Menu> args0 = item.getArgument(0);
+			for (Menu menu1 : args0) {
+				if (menu1.getId() == null) {
+					menu1.setId((long) UUID.randomUUID().hashCode());
+				}
+				menuMap.put(menu1.getId(), menu1);
+			}
+			return true;
+		}).when(menuGateway).save(Mockito.anyCollection());
+		// Mockito.doAnswer(item -> {
+		// 	Menu menuArg = item.getArgument(0);
+		// 	menuMap.put(menuArg.getId(), menuArg);
+		// 	return true;
+		// }).when(menuGateway).save(Mockito.any(Menu.class));
+		menu.save();
+		system.save();
 	}
 
 	/**
@@ -110,8 +129,6 @@ class MenuTest {
 	void save() {
 		// 测试基本保存功能
 		menu.save();
-		// 测试保存新创建的菜单
-		new Menu(menuGateway).save();
 
 		// 创建一个新的菜单并设置父节点为system
 		Menu menu1 = new Menu(menuGateway);
