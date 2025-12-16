@@ -45,4 +45,16 @@ public class MenuController {
 	public Result<Boolean> deleteNode(@PathVariable Long id) {
 		return menuClient.deleteMenuNode(id);
 	}
+
+	/**
+	 * 修改指定菜单节点的排序值
+	 *
+	 * @param id   菜单节点ID
+	 * @param sort 排序值增量
+	 * @return 操作结果，true表示操作成功，false表示操作失败
+	 */
+	@PutMapping("/{id}/sort/{sort}")
+	public Result<Boolean> addSortVal(@PathVariable Long id, @PathVariable Integer sort) {
+		return menuClient.addSortVal(id, sort);
+	}
 }
