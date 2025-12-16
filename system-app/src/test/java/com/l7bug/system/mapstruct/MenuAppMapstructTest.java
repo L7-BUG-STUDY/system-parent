@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -87,11 +84,12 @@ public class MenuAppMapstructTest {
 
 	@Test
 	void testNull() {
-		List<MenuNodeResponse> menuNodeResponses = menuAppMapstruct.mapResponseByColletion(null);
+		List<MenuNodeResponse> menuNodeResponses = menuAppMapstruct.mapResponseByQueue(null);
 		assertThat((menuNodeResponses))
-			.as("null转为null")
-			.isNull();
-		assertThat((menuAppMapstruct.mapResponseByColletion(Collections.emptyList())))
+			.as("null转为空集合")
+			.isNotNull()
+			.isEmpty();
+		assertThat((menuAppMapstruct.mapResponseByQueue(new PriorityQueue<>())))
 			.as("空集合转为空集合")
 			.isNotNull()
 			.isEmpty();
