@@ -52,7 +52,7 @@ public class Menu implements Comparable<Menu> {
 	/**
 	 * 菜单类型
 	 */
-	private MenuType type = MenuType.PAGE;
+	private MenuType type = MenuType.FOLDER;
 	/**
 	 * 元数据
 	 */
@@ -111,6 +111,20 @@ public class Menu implements Comparable<Menu> {
 	 */
 	public void save() {
 		Menu oldData = this.getMenuGateway().findById(this.getId());
+		if (this.getType() != null) {
+			Menu fatherMenu = this.getMenuGateway().findById(this.getFatherId());
+			MenuType fatherType = Optional.ofNullable(fatherMenu).map(Menu::getType).orElse(MenuType.FOLDER);
+			if (this.getType() == MenuType.FOLDER || this.getType() == MenuType.PAGE) {
+				if (fatherType != MenuType.FOLDER) {
+					throw new ClientException(ClientErrorCode.FATHER_IS_NOT_FOLDER);
+				}
+			}
+			if (this.getType() == MenuType.BUTTON) {
+				if (fatherType != MenuType.PAGE) {
+					throw new ClientException(ClientErrorCode.FATHER_IS_NOT_PAGE);
+				}
+			}
+		}
 		if (oldData == null) {
 			this.getMenuGateway().save(this);
 			this.moveFather(this.getFatherId());
@@ -164,10 +178,10 @@ public class Menu implements Comparable<Menu> {
 		// 更新当前节点的排序值
 		this.setSort(this.getSort() + val);
 		this.save();
-		
+
 		// 获取父节点的所有子节点并按优先级排序
 		var fatherChildren = new PriorityQueue<>(this.getMenuGateway().findByFatherId(this.getFatherId()));
-		
+
 		// 重新分配所有兄弟节点的排序值
 		List<Menu> updateList = new LinkedList<>();
 		int sort = 0;
@@ -177,7 +191,7 @@ public class Menu implements Comparable<Menu> {
 			sort += 2;
 			updateList.add(poll);
 		}
-		
+
 		// 批量保存更新后的节点
 		this.getMenuGateway().save(updateList);
 	}
