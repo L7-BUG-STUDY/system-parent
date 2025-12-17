@@ -9,8 +9,8 @@ import org.mapstruct.MappingConstants;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -39,7 +39,7 @@ public abstract class MenuAppMapstruct {
 		// 创建响应对象列表
 		var menuNodeResponses = new ArrayList<MenuNodeResponse>(menus.size());
 		// 创建临时队列以避免修改原始队列，并保持队列的有序性
-		Queue<Menu> temp = new LinkedList<>(menus);
+		PriorityQueue<Menu> temp = new PriorityQueue<>(menus);
 		// 使用poll()方式按队列顺序逐个处理元素，确保维持原有排序
 		while (!temp.isEmpty()) {
 			menuNodeResponses.add(mapResponse(temp.poll()));
