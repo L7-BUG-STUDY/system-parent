@@ -2,6 +2,7 @@ package com.l7bug.system.security;
 
 import com.l7bug.system.domain.user.UserStatus;
 import lombok.Data;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * @author Administrator
  * @since 2025/11/7 15:07
  */
+@NullMarked
 @Data
 public class UserDetailsImpl implements UserDetails {
 	@Serial
