@@ -10,9 +10,14 @@ spring:
     threads:
         virtual:
             enabled: true
+    output:
+        ansi:
+            enabled: always
+
 logging:
-    config: classpath:logback-mock.xml
     level:
-        org.springframework.boot.docker.compose: DEBUG
+        root: info
+    file:
+        name: .logs/system-infrastructure.log
 server:
     port: 0
