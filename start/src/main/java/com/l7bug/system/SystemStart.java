@@ -1,4 +1,4 @@
-package com.l7bug;
+package com.l7bug.system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,9 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class SystemStart {
-	public static void main(String[] args) {
-		long currentTimeMillis = System.currentTimeMillis();
+	static void main(String[] args) {
 		SpringApplication.run(SystemStart.class, args);
-		System.err.println(System.currentTimeMillis() - currentTimeMillis + "/ms");
 	}
 }

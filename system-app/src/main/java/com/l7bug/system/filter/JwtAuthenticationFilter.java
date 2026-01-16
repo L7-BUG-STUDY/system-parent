@@ -1,6 +1,7 @@
 package com.l7bug.system.filter;
 
-import com.l7bug.common.etc.SystemEtc;
+
+import com.l7bug.common.etc.Headers;
 import com.l7bug.system.config.AuthConfiguration;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
@@ -49,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				return;
 			}
 		}
-		String token = request.getHeader(SystemEtc.TOKEN_HEADER);
+		String token = request.getHeader(Headers.TOKEN);
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
 			filterChain.doFilter(request, response);
 			return;
@@ -61,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		MdcUserInfoContext.putMdcToken(token);
 		tokenService.expireToken(token);
 		User user = userGateway.currentUser();
-		MdcUserInfoContext.putMdcUserName(user.getUsername());
+		MdcUserInfoContext.putMdcUsername(user.getUsername());
 		UserDetailsImpl userDetails = new UserDetailsImpl();
 		BeanUtils.copyProperties(user, userDetails);
 		userDetails.setPassword("123456");

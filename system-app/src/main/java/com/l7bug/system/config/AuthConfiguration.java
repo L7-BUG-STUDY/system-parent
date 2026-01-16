@@ -17,6 +17,6 @@ public class AuthConfiguration {
 	@ConfigurationProperties(prefix = "l7bug.auth")
 	@Data
 	public static class AuthProperties {
-		private String[] whiteApi = {"/auth/login"};
+		private String[] whiteApi = {"/auth/login", "/actuator/health"};
 	}
 }

@@ -34,7 +34,7 @@ class MenuGatewayImplTest {
 		String login = root.login();
 		MdcUserInfoContext.putMdcToken(login);
 		MdcUserInfoContext.putMdcTraceId(UUID.randomUUID().toString());
-		MdcUserInfoContext.putMdcUserName(root.getUsername());
+		MdcUserInfoContext.putMdcUsername(root.getUsername());
 	}
 
 	@AfterEach
