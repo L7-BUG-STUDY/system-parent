@@ -1,0 +1,27 @@
+spring:
+    application:
+        name: system-service
+    cloud:
+        consul:
+            discovery:
+                health-check-critical-timeout: 30s
+                prefer-ip-address: true
+                instance-id: ${spring.application.name}:${random.uuid}
+            host: localhost
+            port: 18500
+    datasource:
+        driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+        url: jdbc:shardingsphere:classpath:shardingsphere-config-mock.yaml
+    data:
+        redis:
+            host: localhost
+            database: 15
+            port: 6379
+    threads:
+        virtual:
+            enabled: true
+    output:
+        ansi:
+            enabled: always
+server:
+    port: 0
