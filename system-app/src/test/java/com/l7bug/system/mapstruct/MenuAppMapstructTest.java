@@ -1,5 +1,6 @@
 package com.l7bug.system.mapstruct;
 
+import com.l7bug.system.dao.mapstruct.MenuDoMapstruct;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MetaVal;
 import com.l7bug.system.dto.base.MenuType;

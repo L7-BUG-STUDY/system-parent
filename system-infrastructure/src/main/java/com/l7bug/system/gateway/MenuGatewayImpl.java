@@ -3,10 +3,10 @@ package com.l7bug.system.gateway;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.base.Strings;
 import com.l7bug.system.dao.dataobject.SystemMenu;
+import com.l7bug.system.dao.mapstruct.MenuDoMapstruct;
 import com.l7bug.system.dao.mybatis.service.SystemMenuService;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
-import com.l7bug.system.mapstruct.MenuDoMapstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

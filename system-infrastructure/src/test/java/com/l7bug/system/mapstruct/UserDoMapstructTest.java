@@ -1,6 +1,7 @@
 package com.l7bug.system.mapstruct;
 
 import com.l7bug.system.dao.dataobject.SystemUser;
+import com.l7bug.system.dao.mapstruct.UserDoMapstruct;
 import com.l7bug.system.domain.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

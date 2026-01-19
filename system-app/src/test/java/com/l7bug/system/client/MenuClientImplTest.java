@@ -2,11 +2,11 @@ package com.l7bug.system.client;
 
 
 import com.l7bug.common.result.Result;
+import com.l7bug.system.dao.mapstruct.MenuDoMapstruct;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
-import com.l7bug.system.mapstruct.MenuDoMapstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

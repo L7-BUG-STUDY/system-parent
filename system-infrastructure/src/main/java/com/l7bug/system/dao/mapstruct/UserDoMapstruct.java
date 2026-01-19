@@ -1,4 +1,4 @@
-package com.l7bug.system.mapstruct;
+package com.l7bug.system.dao.mapstruct;
 
 import com.l7bug.system.dao.dataobject.SystemUser;
 import com.l7bug.system.domain.user.User;

@@ -2,6 +2,7 @@ package com.l7bug.system.mapstruct;
 
 import com.google.common.base.Strings;
 import com.l7bug.system.dao.dataobject.SystemMenu;
+import com.l7bug.system.dao.mapstruct.MenuDoMapstruct;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuType;
 import com.l7bug.system.domain.menu.MetaVal;
