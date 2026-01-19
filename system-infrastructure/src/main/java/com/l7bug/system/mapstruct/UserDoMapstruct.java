@@ -1,7 +1,7 @@
 package com.l7bug.system.mapstruct;
 
+import com.l7bug.system.dao.dataobject.SystemUser;
 import com.l7bug.system.domain.user.User;
-import com.l7bug.system.mybatis.dataobject.SystemUser;
 import jakarta.annotation.Resource;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

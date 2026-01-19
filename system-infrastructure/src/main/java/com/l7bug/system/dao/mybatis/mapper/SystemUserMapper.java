@@ -1,7 +1,7 @@
-package com.l7bug.system.mybatis.mapper;
+package com.l7bug.system.dao.mybatis.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.l7bug.system.mybatis.dataobject.SystemUser;
+import com.l7bug.system.dao.dataobject.SystemUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

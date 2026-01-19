@@ -1,7 +1,7 @@
-package com.l7bug.system.mybatis.service;
+package com.l7bug.system.dao.mybatis.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.l7bug.system.mybatis.dataobject.SystemMenu;
+import com.l7bug.system.dao.dataobject.SystemMenu;
 
 /**
  * @author Administrator

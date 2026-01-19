@@ -1,4 +1,4 @@
-package com.l7bug.system.mybatis.service;
+package com.l7bug.system.dao.mybatis.service;
 
 import com.l7bug.database.config.DataBaseAutoConfiguration;
 import com.l7bug.system.domain.user.User;

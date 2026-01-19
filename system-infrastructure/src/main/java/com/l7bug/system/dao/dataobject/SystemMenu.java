@@ -1,4 +1,4 @@
-package com.l7bug.system.mybatis.dataobject;
+package com.l7bug.system.dao.dataobject;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.l7bug.database.dataobject.BaseDo;

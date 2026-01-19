@@ -1,9 +1,9 @@
 package com.l7bug.system.mapstruct;
 
+import com.l7bug.system.dao.dataobject.SystemMenu;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuType;
 import com.l7bug.system.domain.menu.MetaVal;
-import com.l7bug.system.mybatis.dataobject.SystemMenu;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;

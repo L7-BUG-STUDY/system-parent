@@ -1,9 +1,9 @@
-package com.l7bug.system.mybatis.service;
+package com.l7bug.system.dao.mybatis.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.l7bug.system.mybatis.dataobject.SystemUser;
-import com.l7bug.system.mybatis.mapper.SystemUserMapper;
+import com.l7bug.system.dao.dataobject.SystemUser;
+import com.l7bug.system.dao.mybatis.mapper.SystemUserMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 

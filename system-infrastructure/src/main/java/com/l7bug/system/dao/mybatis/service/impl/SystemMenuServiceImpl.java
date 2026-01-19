@@ -1,9 +1,9 @@
-package com.l7bug.system.mybatis.service.impl;
+package com.l7bug.system.dao.mybatis.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.l7bug.system.mybatis.dataobject.SystemMenu;
-import com.l7bug.system.mybatis.mapper.SystemMenuMapper;
-import com.l7bug.system.mybatis.service.SystemMenuService;
+import com.l7bug.system.dao.dataobject.SystemMenu;
+import com.l7bug.system.dao.mybatis.mapper.SystemMenuMapper;
+import com.l7bug.system.dao.mybatis.service.SystemMenuService;
 import org.springframework.stereotype.Service;
 
 /**

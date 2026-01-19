@@ -1,10 +1,10 @@
 package com.l7bug.system.mapstruct;
 
 import com.google.common.base.Strings;
+import com.l7bug.system.dao.dataobject.SystemMenu;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuType;
 import com.l7bug.system.domain.menu.MetaVal;
-import com.l7bug.system.mybatis.dataobject.SystemMenu;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
