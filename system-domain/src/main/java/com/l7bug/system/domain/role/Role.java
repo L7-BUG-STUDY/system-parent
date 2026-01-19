@@ -22,21 +22,22 @@ public class Role implements Comparable<Role> {
 	/**
 	 * 角色编码
 	 */
-	@NotBlank
+	@NotBlank(message = "角色编码不能为空")
 	private String code;
 	/**
 	 * 父级角色编码
 	 */
+	@NotBlank(message = "父级编码不能为空")
 	private String fatherCode;
 	/**
 	 * 角色状态
 	 */
-	@NotNull
+	@NotNull(message = "角色状态不能为空")
 	private RoleStatus status = RoleStatus.ENABLED;
 	/**
 	 * 角色名称
 	 */
-	@NotBlank
+	@NotBlank(message = "角色名称不能为空")
 	private String name;
 	/**
 	 * 全路径编码
@@ -64,6 +65,10 @@ public class Role implements Comparable<Role> {
 
 	public void save() {
 		this.roleGateway.save(this);
+	}
+
+	public void delete() {
+		this.roleGateway.deleteById(this.id);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.io.Serial;
 
@@ -18,6 +19,7 @@ import java.io.Serial;
 @Setter
 @Entity
 @Table(name = "system_role")
+@DynamicInsert
 public class SystemRole extends BaseNotDeleDo {
 	@Serial
 	private static final long serialVersionUID = 501611771464247879L;

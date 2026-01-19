@@ -20,5 +20,5 @@ public interface RoleGateway {
 
 	Optional<Role> findById(Long id);
 
-	boolean deleteById(Long id);
+	void deleteById(Long id);
 }

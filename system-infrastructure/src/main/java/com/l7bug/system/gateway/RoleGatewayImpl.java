@@ -46,8 +46,7 @@ public class RoleGatewayImpl implements RoleGateway {
 	}
 
 	@Override
-	public boolean deleteById(Long id) {
+	public void deleteById(Long id) {
 		this.systemRoleRepository.deleteById(id);
-		return true;
 	}
 }
