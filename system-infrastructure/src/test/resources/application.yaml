@@ -17,7 +17,5 @@ spring:
 logging:
     level:
         root: info
-    file:
-        name: .logs/system-infrastructure.log
 server:
     port: 0

@@ -8,10 +8,14 @@ import com.l7bug.system.dao.mybatis.mapper.SystemRoleMapper;
 import com.l7bug.system.domain.role.Role;
 import com.l7bug.system.domain.role.RoleGateway;
 import lombok.AllArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * RoleGatewayImpl
@@ -34,7 +38,18 @@ public class RoleGatewayImpl implements RoleGateway {
 	}
 
 	@Override
-	public List<Role> findLikeFullCode(String fullCode) {
+	public boolean save(Collection<Role> roles) {
+		if (roles.isEmpty()) {
+			return false;
+		}
+		IdentityHashMap<SystemRole, Role> identityHashMap = roles.stream().collect(Collectors.toMap(roleDoMapstruct::mapDo, item -> item, (old, newItem) -> newItem, IdentityHashMap::new));
+		this.systemRoleRepository.saveAllAndFlush(identityHashMap.keySet());
+		identityHashMap.entrySet().parallelStream().forEach(entry -> entry.getValue().setId(entry.getKey().getId()));
+		return true;
+	}
+
+	@Override
+	public List<Role> findLikeFullCode(@Nullable String fullCode) {
 		List<SystemRole> systemRoles = systemRoleMapper.selectList(Wrappers.lambdaQuery(SystemRole.class).likeRight(SystemRole::getFullCode, fullCode));
 		return systemRoles.stream().map(roleDoMapstruct::mapDomain).toList();
 	}
@@ -46,7 +61,10 @@ public class RoleGatewayImpl implements RoleGateway {
 	}
 
 	@Override
-	public Optional<Role> findById(Long id) {
+	public Optional<Role> findById(@Nullable Long id) {
+		if (id == null) {
+			return Optional.empty();
+		}
 		Optional<SystemRole> byId = this.systemRoleRepository.findById(id);
 		return byId.map(roleDoMapstruct::mapDomain);
 	}

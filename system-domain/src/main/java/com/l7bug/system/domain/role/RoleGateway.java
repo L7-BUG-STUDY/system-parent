@@ -1,8 +1,11 @@
 package com.l7bug.system.domain.role;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,11 +19,13 @@ import java.util.Optional;
 public interface RoleGateway {
 	boolean save(@Valid Role role);
 
-	List<Role> findLikeFullCode(String fullCode);
+	boolean save(@NotNull Collection<@Valid Role> roles);
+
+	List<Role> findLikeFullCode(@Nullable String fullCode);
 
 	Optional<Role> findByFullCode(String fullCode);
 
-	Optional<Role> findById(Long id);
+	Optional<Role> findById(@Nullable Long id);
 
 	void deleteById(Long id);
 }
