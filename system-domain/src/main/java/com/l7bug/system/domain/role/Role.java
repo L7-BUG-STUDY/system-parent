@@ -15,6 +15,10 @@ public class Role {
 	 */
 	private String code;
 	/**
+	 * 角色状态
+	 */
+	private RoleStatus status;
+	/**
 	 * 角色名称
 	 */
 	private String name;
