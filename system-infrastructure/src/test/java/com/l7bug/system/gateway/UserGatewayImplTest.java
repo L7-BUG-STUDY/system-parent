@@ -1,6 +1,5 @@
 package com.l7bug.system.gateway;
 
-import com.github.javafaker.Faker;
 import com.google.common.base.Strings;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.page.PageQuery;
@@ -9,6 +8,7 @@ import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.domain.user.UserStatus;
 import com.l7bug.system.mybatis.mapper.SystemUserMapper;
 import com.l7bug.system.mybatis.service.SystemUserService;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

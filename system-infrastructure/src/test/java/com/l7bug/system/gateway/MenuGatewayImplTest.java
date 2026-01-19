@@ -1,10 +1,10 @@
 package com.l7bug.system.gateway;
 
-import com.github.javafaker.Faker;
 import com.l7bug.common.exception.ClientException;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.web.context.MdcUserInfoContext;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

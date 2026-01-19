@@ -1,14 +1,14 @@
 package com.l7bug.system.client;
 
 import com.alibaba.fastjson2.JSON;
-import com.github.javafaker.Faker;
 import com.l7bug.common.error.ClientErrorCode;
-import com.l7bug.common.etc.SystemEtc;
+import com.l7bug.common.etc.Headers;
 import com.l7bug.common.result.Result;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.dto.request.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -118,7 +118,7 @@ public class TestControllerTest {
 		log.info("开始测试调用退出登录");
 		responseVoid = restClient.delete()
 			.uri("/auth/logout")
-			.header(SystemEtc.TOKEN_HEADER, token)
+			.header(Headers.TOKEN, token)
 			.retrieve()
 			.body(new ParameterizedTypeReference<>() {
 			});
@@ -128,7 +128,7 @@ public class TestControllerTest {
 		log.info("再次使用刚刚的token调用退出接口");
 		responseVoid = restClient.delete()
 			.uri("/auth/logout")
-			.header(SystemEtc.TOKEN_HEADER, token)
+			.header(Headers.TOKEN, token)
 			.retrieve()
 			.body(new ParameterizedTypeReference<>() {
 			});
@@ -155,7 +155,7 @@ public class TestControllerTest {
 		String token = responseEntity.getData();
 		responseVoid = restClient.get()
 			.uri("/auth/hasAuthorities/123")
-			.header(SystemEtc.TOKEN_HEADER, token)
+			.header(Headers.TOKEN, token)
 			.retrieve()
 			.body(new ParameterizedTypeReference<>() {
 			});
@@ -165,7 +165,7 @@ public class TestControllerTest {
 		Assertions.assertEquals(ClientErrorCode.ACCESS_DENIED.getCode(), responseVoid.getCode());
 		responseVoid = restClient.get()
 			.uri("/auth/hasAuthorities/READ")
-			.header(SystemEtc.TOKEN_HEADER, token)
+			.header(Headers.TOKEN, token)
 			.retrieve()
 			.body(new ParameterizedTypeReference<>() {
 			});
@@ -191,7 +191,7 @@ public class TestControllerTest {
 		String token = responseEntity.getData();
 		responseVoid = restClient.get()
 			.uri("/test/throw/AbstractException")
-			.header(SystemEtc.TOKEN_HEADER, token)
+			.header(Headers.TOKEN, token)
 			.retrieve()
 			.body(new ParameterizedTypeReference<>() {
 			});
@@ -199,7 +199,7 @@ public class TestControllerTest {
 		Assertions.assertTrue(responseVoid.isFailure());
 		responseVoid = restClient.get()
 			.uri("/test/throw/AbstractException2")
-			.header(SystemEtc.TOKEN_HEADER, token)
+			.header(Headers.TOKEN, token)
 			.retrieve()
 			.body(new ParameterizedTypeReference<>() {
 			});
@@ -207,7 +207,7 @@ public class TestControllerTest {
 		Assertions.assertTrue(responseVoid.isFailure());
 		responseVoid = restClient.get()
 			.uri("/test/throw/Throwable")
-			.header(SystemEtc.TOKEN_HEADER, token)
+			.header(Headers.TOKEN, token)
 			.retrieve()
 			.body(new ParameterizedTypeReference<>() {
 			});

@@ -1,7 +1,6 @@
 package com.l7bug.system.client;
 
 import com.alibaba.fastjson2.JSON;
-import com.github.javafaker.Faker;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.AbstractException;
 import com.l7bug.common.page.PageData;
@@ -19,6 +18,7 @@ import com.l7bug.system.mybatis.service.SystemUserService;
 import com.l7bug.system.security.UserDetailsImpl;
 import com.l7bug.web.context.MdcUserInfoContext;
 import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class UserClientImplTest {
 		String login = user.login();
 		MdcUserInfoContext.putMdcToken(login);
 		User user = userGateway.currentUser();
-		MdcUserInfoContext.putMdcUserName(user.getUsername());
+		MdcUserInfoContext.putMdcUsername(user.getUsername());
 		UserDetailsImpl userDetails = new UserDetailsImpl();
 		BeanUtils.copyProperties(user, userDetails);
 		userDetails.setPassword("123456");

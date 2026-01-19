@@ -1,7 +1,6 @@
 package com.l7bug.system.filter;
 
-import com.github.javafaker.Faker;
-import com.l7bug.common.etc.SystemEtc;
+import com.l7bug.common.etc.Headers;
 import com.l7bug.system.config.AuthConfiguration;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
@@ -9,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.MDC;
@@ -43,7 +43,7 @@ class JwtAuthenticationFilterTest {
 		jwtAuthenticationFilter.doFilterInternal(httpServletRequest, Mockito.mock(HttpServletResponse.class), Mockito.mock(FilterChain.class));
 		// 测试有token
 		String login = user.login();
-		Mockito.doReturn(login).when(httpServletRequest).getHeader(SystemEtc.TOKEN_HEADER);
+		Mockito.doReturn(login).when(httpServletRequest).getHeader(Headers.TOKEN);
 		jwtAuthenticationFilter.doFilterInternal(httpServletRequest, Mockito.mock(HttpServletResponse.class), Mockito.mock(FilterChain.class));
 		// 测试有凭证
 		UsernamePasswordAuthenticationToken authentication =
