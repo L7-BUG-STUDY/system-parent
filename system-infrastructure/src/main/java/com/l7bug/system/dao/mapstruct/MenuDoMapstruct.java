@@ -78,7 +78,7 @@ public abstract class MenuDoMapstruct {
 	}
 
 	@Named("mapType")
-	protected MenuType mapType(String type) {
+	public MenuType mapType(String type) {
 		try {
 			return MenuType.valueOf(Optional.ofNullable(type).orElse("FOLDER").toUpperCase());
 		} catch (Exception e) {
