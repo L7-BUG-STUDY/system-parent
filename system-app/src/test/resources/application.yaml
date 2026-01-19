@@ -12,8 +12,7 @@ spring:
             enabled: true
 logging:
     level:
-        root: info
-        com.l7bug: debug
+        root: debug
 l7bug:
     auth:
         white-api:

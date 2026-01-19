@@ -1,6 +1,7 @@
 package com.l7bug.system.client;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.etc.Headers;
 import com.l7bug.common.result.Result;
@@ -22,7 +23,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * TestControllerTest
@@ -31,7 +35,7 @@ import java.util.UUID;
  * @since 2025/11/12 11:47
  */
 @Slf4j
-@Import(TestController.class)
+@Import({TestController.class, WorkWxBotApiConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TestControllerTest {
 	private final Faker faker = new Faker(Locale.CHINA);
@@ -40,6 +44,9 @@ public class TestControllerTest {
 	private String apiHost;
 	private User user;
 	private RestClient restClient;
+
+	@Autowired
+	private WorkWxBotApi workWxBotApi;
 
 	@Autowired
 	private UserGateway userGateway;
@@ -213,5 +220,22 @@ public class TestControllerTest {
 			});
 		Assertions.assertNotNull(responseVoid);
 		Assertions.assertTrue(responseVoid.isFailure());
+	}
+
+	@Test
+	public void ttttttt() {
+		try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
+			for (int i = 0; i < 1; i++) {
+				int finalI = i;
+				executorService.execute(() -> {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("msgtype", "markdown");
+					jsonObject.put("markdown", Map.of("content", "# 标题" + finalI));
+					log.info("{}::发送=>{}", finalI, jsonObject);
+					var send = workWxBotApi.send(jsonObject, "969b7059-e4f4-4bb0-a0a7-4e5457416359");
+					log.info("{}::发送结果:{}", finalI, send);
+				});
+			}
+		}
 	}
 }
