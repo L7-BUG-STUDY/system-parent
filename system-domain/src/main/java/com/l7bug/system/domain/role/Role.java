@@ -44,6 +44,7 @@ public class Role implements Comparable<Role> {
 	private String fullCode;
 
 	private Integer sort = 0;
+	private String remark;
 
 	/**
 	 * 将角色状态设置为禁用

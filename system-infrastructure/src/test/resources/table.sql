@@ -33,19 +33,19 @@ INSERT INTO public.system_users (id, nickname, username, password, status, creat
                                  update_time)
 VALUES (-1, 'root', 'root', '$2b$10$2Wh0XP9AAgTH.XWi2gfPyuwyrFhjUJIbZs4sFVSzedDS/XA3eycYS', 1, -1, -1,
         now(), now());
-/*
+
 drop table if exists public.system_role;
 create table public.system_role
 (
     id          bigint        not null
         primary key,
-    father_id   bigint        not null default -1,
-    code        varchar(64)   not null default NULL,
-    name        varchar(64)   not null default NULL,
-    full_id     varchar(2048) not null default NULL,
-    full_name   varchar(1024) not null default NULL,
-    remark      varchar(256)  not null default NULL,
-    status      integer       not null default 1,
+    code        varchar(64)   not null,
+    father_code varchar(64)   not null,
+    status      varchar(16)   not null,
+    name        varchar(64)   not null,
+    full_code   varchar(1024) not null,
+    sort        int           not null default 0,
+    remark      varchar(256)  not null default '',
     create_by   bigint,
     update_by   bigint,
     create_time timestamptz,
@@ -54,25 +54,21 @@ create table public.system_role
 
 comment on table public.system_role is '角色表';
 
-comment on column public.system_role.father_id is '上级id';
+comment on column public.system_role.father_code is '上级编码';
 comment on column public.system_role.code is '角色编码';
 comment on column public.system_role.name is '角色名称';
-comment on column public.system_role.full_id is '全路径id';
-comment on column public.system_role.full_name is '全路径名称';
+comment on column public.system_role.full_code is '全路径名称';
 comment on column public.system_role.remark is '备注';
-comment on column public.system_role.status is '1启用';
+comment on column public.system_role.status is '状态';
 
 create unique index
+    on public.system_role (father_code, code);
+
+create index
     on public.system_role (code);
 
 create index
-    on public.system_role (father_id);
-
-create index
-    on public.system_role (full_id);
-
-create index
-    on public.system_role (status);*/
+    on public.system_role (full_code);
 
 drop table if exists public.system_menu;
 
