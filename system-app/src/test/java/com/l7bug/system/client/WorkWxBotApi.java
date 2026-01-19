@@ -8,7 +8,7 @@ import org.springframework.web.service.annotation.PostExchange;
 import java.util.Map;
 
 /**
- * Testttt
+ * WorkWxBotApi
  *
  * @author Administrator
  * @since 2026/1/19 13:47
