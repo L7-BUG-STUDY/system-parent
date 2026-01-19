@@ -25,7 +25,7 @@ public class SystemRole extends BaseNotDeleDo {
 	private static final long serialVersionUID = 501611771464247879L;
 	private String code;
 
-	private String fatherCode;
+	private String fatherFullCode;
 
 	private String status;
 

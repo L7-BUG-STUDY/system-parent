@@ -28,7 +28,7 @@ public class Role implements Comparable<Role> {
 	 * 父级角色编码
 	 */
 	@NotBlank(message = "父级编码不能为空")
-	private String fatherCode;
+	private String fatherFullCode;
 	/**
 	 * 角色状态
 	 */

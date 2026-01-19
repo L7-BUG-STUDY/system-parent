@@ -1,6 +1,5 @@
 package com.l7bug.system.gateway;
 
-import com.l7bug.system.dao.mapstruct.RoleDoMapstruct;
 import com.l7bug.system.domain.role.Role;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -19,8 +18,6 @@ class RoleGatewayImplTest {
 	private final Faker faker = new Faker(Locale.CHINA);
 	@Autowired
 	private RoleGatewayImpl roleGateway;
-	@Autowired
-	private RoleDoMapstruct roleDoMapstruct;
 	private Role role;
 
 	@BeforeEach
@@ -29,7 +26,7 @@ class RoleGatewayImplTest {
 		role.setName(faker.name().fullName());
 		role.setCode(UUID.randomUUID().toString());
 		role.enabled();
-		role.setFatherCode(Role.ROOT_CODE);
+		role.setFatherFullCode(Role.ROOT_CODE);
 		role.setFullCode(Role.PATH_SEPARATOR + role.getCode());
 	}
 
@@ -45,6 +42,7 @@ class RoleGatewayImplTest {
 		role.save();
 		Assertions.assertThat(role.getId())
 			.isNotNull();
+		role.delete();
 	}
 
 	@Test
@@ -60,7 +58,7 @@ class RoleGatewayImplTest {
 		role.setName(faker.name().fullName());
 		role.setCode(UUID.randomUUID().toString());
 		role.enabled();
-		role.setFatherCode(this.role.getFullCode());
+		role.setFatherFullCode(this.role.getFullCode());
 		role.setFullCode(this.role.getFullCode() + Role.PATH_SEPARATOR + role.getCode());
 		role.save();
 		Assertions.assertThat(roleGateway.findLikeFullCode(this.role.getFullCode()))
@@ -90,5 +88,27 @@ class RoleGatewayImplTest {
 		role.delete();
 		Assertions.assertThat(roleGateway.findById(role.getId()))
 			.isEmpty();
+	}
+
+	@Test
+	void findByFullCode() {
+		role.save();
+		Assertions.assertThat(this.roleGateway.findByFullCode(role.getFullCode()))
+			.isPresent()
+			.get()
+			.extracting(Role::getId)
+			.isEqualTo(role.getId());
+		Role role = new Role(roleGateway);
+		role.setName(faker.name().fullName());
+		role.setCode(this.role.getCode());
+		role.enabled();
+		role.setFatherFullCode(Role.ROOT_CODE);
+		role.setFullCode(Role.PATH_SEPARATOR + role.getCode());
+		Assertions.assertThatThrownBy(role::save)
+			.isNotNull()
+			.message()
+			.isNotBlank()
+			.satisfies(log::error);
+		this.role.delete();
 	}
 }

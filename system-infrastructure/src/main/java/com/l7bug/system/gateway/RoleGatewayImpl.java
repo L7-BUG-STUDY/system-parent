@@ -40,6 +40,12 @@ public class RoleGatewayImpl implements RoleGateway {
 	}
 
 	@Override
+	public Optional<Role> findByFullCode(String fullCode) {
+		Optional<SystemRole> byFullCode = this.systemRoleRepository.findByFullCode(fullCode);
+		return byFullCode.map(roleDoMapstruct::mapDomain);
+	}
+
+	@Override
 	public Optional<Role> findById(Long id) {
 		Optional<SystemRole> byId = this.systemRoleRepository.findById(id);
 		return byId.map(roleDoMapstruct::mapDomain);

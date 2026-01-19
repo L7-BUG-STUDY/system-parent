@@ -18,6 +18,8 @@ public interface RoleGateway {
 
 	List<Role> findLikeFullCode(String fullCode);
 
+	Optional<Role> findByFullCode(String fullCode);
+
 	Optional<Role> findById(Long id);
 
 	void deleteById(Long id);
