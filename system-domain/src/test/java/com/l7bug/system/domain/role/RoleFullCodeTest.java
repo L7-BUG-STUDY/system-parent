@@ -1,0 +1,112 @@
+package com.l7bug.system.domain.role;
+
+import net.datafaker.Faker;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.*;
+
+/**
+ * RoleFullCodeTest
+ *
+ * @author Administrator
+ * @since 2026/1/21 11:28
+ */
+public class RoleFullCodeTest {
+	private static final Log log = LogFactory.getLog(RoleFullCodeTest.class);
+	private final Faker faker = new Faker(Locale.CHINA);
+	private RoleGateway mock;
+
+	/**
+	 * 初始化测试所需的Mock对象，模拟RoleGateway的各种方法行为
+	 * <p>
+	 * 该方法创建了一个内存Map来存储Role对象，并为RoleGateway接口的以下方法提供了模拟实现：
+	 * - save(Collection<Role>): 保存角色集合到内存映射中，并为没有ID的角色分配新的ID
+	 * - save(Role): 保存单个角色，将其委托给保存集合的方法
+	 * - findById(Long): 根据ID从内存映射中检索角色
+	 * - findByFullCode(String): 根据完整路径编码精确匹配角色
+	 * - findLikeFullCode(String): 根据完整路径编码前缀匹配多个角色
+	 */
+	@BeforeEach
+	void setUp() {
+		// 创建Mock对象和内存存储映射
+		mock = Mockito.mock();
+		Map<Long, Role> map = new HashMap<>();
+		// 模拟批量保存角色的方法
+		Mockito.doAnswer(invocation -> {
+			Collection<Role> argument = invocation.getArgument(0);
+			for (Role item : argument) {
+				if (item.getId() == null) {
+					item.setId((long) UUID.randomUUID().hashCode());
+				}
+				map.put(item.getId(), item);
+			}
+			return true;
+		}).when(mock).save(Mockito.anyCollection());
+
+		// 模拟保存单个角色的方法，将其转换为保存单元素集合
+		Mockito.doAnswer(invocation -> {
+			Role argument = invocation.getArgument(0);
+			return mock.save(List.of(argument));
+		}).when(mock).save(Mockito.any(Role.class));
+		// 模拟根据ID查找角色的方法
+		Mockito.doAnswer(invocation -> {
+			Long argument = invocation.getArgument(0);
+			return Optional.ofNullable(map.get(argument));
+		}).when(mock).findById(Mockito.anyLong());
+		// // 模拟根据完整路径编码精确查找角色的方法
+		// Mockito.doAnswer(invocation -> {
+		// 	String argument = invocation.getArgument(0);
+		// 	return map.values().parallelStream().filter(item -> item.getFullCode().equals(argument)).findFirst();
+		// }).when(mock).findByFullCode(Mockito.anyString());
+		// // 模拟根据完整路径编码前缀查找相关角色的方法
+		// Mockito.doAnswer(invocation -> {
+		// 	String argument = invocation.getArgument(0);
+		// 	return map.values().parallelStream().filter(item -> item.getFullCode().startsWith(argument)).toList();
+		// }).when(mock).findLikeFullCode(Mockito.anyString());
+	}
+
+	@DisplayName("移动父节点测试")
+	@Test
+	void moveFatherTest() {
+		// Role root = new Role(mock);
+		// root.setName(faker.name().fullName());
+		// root.setCode("root");
+		// root.enabled();
+		// root.setFatherFullCode(Role.PATH_SEPARATOR);
+		// root.save();
+		//
+		// Role node1 = new Role(mock);
+		// node1.setName(faker.name().fullName());
+		// node1.setCode("1");
+		// node1.enabled();
+		// node1.setFatherFullCode(Role.PATH_SEPARATOR);
+		// node1.save();
+		//
+		// Role node1_1 = new Role(mock);
+		// node1_1.setName(faker.name().fullName());
+		// node1_1.setCode("11");
+		// node1_1.enabled();
+		// node1_1.setFatherFullCode(Role.PATH_SEPARATOR);
+		// node1_1.save();
+		// node1_1.setFatherFullCode(node1.getFullCode());
+		// node1_1.save();
+		// System.err.println(root);
+		// System.err.println(node1);
+		// System.err.println(node1_1);
+		//
+		//
+		// Role node1_temp = new Role(mock);
+		// node1_temp.setId(node1.getId());
+		// node1_temp.setName(faker.name().fullName());
+		// node1_temp.setCode("1");
+		// node1_temp.enabled();
+		// node1_temp.setFatherFullCode(root.getFullCode());
+		// node1_temp.save();
+		// log.info(mock.findById(node1_1.getId()));
+	}
+}
