@@ -69,23 +69,38 @@ public class Role implements Comparable<Role> {
 		this.status = RoleStatus.ENABLED;
 	}
 
+	/**
+	 * 保存角色信息，包括构建角色的全路径编码、验证唯一性以及更新子节点的路径信息
+	 * <p>
+	 * 此方法会执行以下操作：
+	 * 1. 根据父级角色编码构建当前角色的全路径编码
+	 * 2. 检查具有相同全路径编码的角色是否存在，确保路径唯一性
+	 * 3. 如果角色的父级路径发生变化，则同步更新所有子节点的全路径编码
+	 * 4. 保存当前角色信息到数据库
+	 */
 	public void save() {
+		// 查找父级角色，用于构建当前角色的全路径编码
 		Optional<Role> father = this.roleGateway.findByFullCode(this.getFatherFullCode());
 		father.ifPresent(role -> {
 			this.setFullCode(role.getFullCode() + PATH_SEPARATOR + this.getCode());
 		});
+		// 根据是否有父级角色来确定当前角色的全路径编码格式
 		father.ifPresentOrElse(role -> {
 			this.setFullCode(role.getFullCode() + PATH_SEPARATOR + this.getCode());
 		}, () -> {
 			this.setFullCode(PATH_SEPARATOR + this.getCode());
 		});
+		// 获取当前角色的旧数据，用于比较父级路径是否发生变化
 		Optional<Role> oldData = this.roleGateway.findById(this.getId());
+		// 检查是否有其他角色已使用相同的全路径编码
 		Optional<Role> byFullCode = this.roleGateway.findByFullCode(this.getFullCode());
 		byFullCode.ifPresent(role -> {
 			if (!Optional.ofNullable(role.getId()).orElse(Long.MIN_VALUE).equals(this.getId())) {
+				// 如果存在其他角色使用相同路径编码，则抛出异常
 				throw new ClientException(ClientErrorCode.NODE_IS_NOT_NULL, this.getFullCode() + "::" + ClientErrorCode.NODE_IS_NOT_NULL.getMessage());
 			}
 		});
+		// 如果角色的父级路径发生变化，则更新所有子节点的路径信息
 		oldData.ifPresent(role -> {
 			if (!role.getFatherFullCode().equals(this.getFatherFullCode())) {
 				// 同步更新子节点的全路径编码
@@ -99,6 +114,7 @@ public class Role implements Comparable<Role> {
 				this.roleGateway.save(oldLikeFullCode);
 			}
 		});
+		// 保存当前角色信息到数据库
 		this.roleGateway.save(this);
 	}
 
