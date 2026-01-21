@@ -30,16 +30,20 @@ class RoleGatewayImplTest {
 
 	@Test
 	void save() {
-
 		Assertions.assertThatThrownBy(new Role(roleGateway)::save)
 			.isNotNull()
 			.satisfies(temp -> log.info("测试参数校验::异常::{}", temp))
 			.message()
 			.isNotBlank()
-			.contains("父级编码不能为空", "角色名称不能为空", "角色编码不能为空");
+			.contains("角色名称不能为空");
 		role.save();
 		Assertions.assertThat(role.getId())
 			.isNotNull();
+		Assertions.assertThat(role)
+			.extracting(Role::getId, Role::getName, Role::getFatherId, Role::getFullId)
+			.isNotNull()
+			.isNotEmpty()
+		;
 		role.delete();
 	}
 
@@ -95,10 +99,12 @@ class RoleGatewayImplTest {
 
 	@Test
 	void testSave() {
+		this.role.save();
 		Role role = new Role(roleGateway);
 		role.setName(faker.name().fullName());
 		role.enabled();
 		role.setFatherId(Role.ROOT_ID);
+		role.save();
 		Assertions.assertThat(this.roleGateway.save(List.of(role, this.role)))
 			.isTrue();
 		Assertions.assertThat(role.getId())

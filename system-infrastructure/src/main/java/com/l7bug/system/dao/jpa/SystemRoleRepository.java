@@ -4,8 +4,6 @@ import com.l7bug.system.dao.dataobject.SystemRoleDo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 /**
  * RoleRepository
  *
@@ -14,5 +12,4 @@ import java.util.Optional;
  */
 @Repository
 public interface SystemRoleRepository extends JpaRepository<SystemRoleDo, Long> {
-	Optional<SystemRoleDo> findByFullCode(String fullCode);
 }

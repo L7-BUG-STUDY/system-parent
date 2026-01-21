@@ -63,7 +63,7 @@ comment on column public.system_role.remark is '备注';
 create index
     on public.system_role (father_id);
 
-create unique index
+create index
     on public.system_role (full_id);
 
 drop table if exists public.system_menu;

@@ -41,7 +41,7 @@ public class Role implements Comparable<Role> {
 	private RoleStatus status = RoleStatus.ENABLED;
 
 	private Integer sort = 0;
-	private String remark;
+	private String remark = "";
 	private PriorityQueue<Role> children = new PriorityQueue<>();
 
 	/**
@@ -72,14 +72,19 @@ public class Role implements Comparable<Role> {
 	public void save() {
 		boolean isNewData = this.getId() == null;
 		if (isNewData) {
+			// 先占位,稍后会处理
+			this.setFullId(PATH_SEPARATOR + UUID.randomUUID());
 			this.roleGateway.save(this);
 		}
 		// 查找父级角色，用于构建当前角色的全路径编码
 		Optional<Role> father = this.roleGateway.findById(this.getFatherId());
-		father.ifPresentOrElse(role -> this.setFullId(role.getFullId() + PATH_SEPARATOR + this.getId()), () -> {
-			this.setFullId(PATH_SEPARATOR + this.getId());
-			this.setFatherId(ROOT_ID);
-		});
+		father.ifPresentOrElse(
+			role -> this.setFullId(role.getFullId() + PATH_SEPARATOR + this.getId()),
+			() -> {
+				this.setFullId(PATH_SEPARATOR + this.getId());
+				this.setFatherId(ROOT_ID);
+			}
+		);
 		if (isNewData) {
 			this.roleGateway.save(this);
 			return;
