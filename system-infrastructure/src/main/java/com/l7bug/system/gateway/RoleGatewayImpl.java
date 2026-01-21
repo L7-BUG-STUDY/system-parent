@@ -12,10 +12,7 @@ import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +40,7 @@ public class RoleGatewayImpl implements RoleGateway {
 		if (roles.isEmpty()) {
 			return false;
 		}
-		IdentityHashMap<SystemRoleDo, Role> identityHashMap = roles.stream().collect(Collectors.toMap(roleDoMapstruct::mapDo, item -> item, (old, newItem) -> newItem, IdentityHashMap::new));
+		Map<SystemRoleDo, Role> identityHashMap = roles.parallelStream().collect(Collectors.toMap(roleDoMapstruct::mapDo, item -> item, (old, newItem) -> newItem, IdentityHashMap::new));
 		this.systemRoleRepository.saveAllAndFlush(identityHashMap.keySet());
 		identityHashMap.entrySet().parallelStream().forEach(entry -> entry.getValue().setId(entry.getKey().getId()));
 		return true;
@@ -68,7 +65,10 @@ public class RoleGatewayImpl implements RoleGateway {
 	}
 
 	@Override
-	public void deleteById(Long id) {
+	public void deleteById(@Nullable Long id) {
+		if (id == null) {
+			return;
+		}
 		this.systemRoleRepository.deleteById(id);
 	}
 }

@@ -1,5 +1,7 @@
 package com.l7bug.system.gateway;
 
+import com.l7bug.common.error.ClientErrorCode;
+import com.l7bug.common.exception.ClientException;
 import com.l7bug.system.domain.role.Role;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -67,8 +69,8 @@ class RoleGatewayImplTest {
 			.hasSize(2)
 			.extracting(Role::getId)
 			.contains(role.getId(), this.role.getId());
-		this.role.delete();
 		role.delete();
+		this.role.delete();
 	}
 
 	@Test
@@ -90,7 +92,22 @@ class RoleGatewayImplTest {
 
 	@Test
 	void deleteById() {
+		this.roleGateway.deleteById(null);
 		role.save();
+		Role role1 = new Role(roleGateway);
+		role1.setName(faker.name().fullName());
+		Assertions.assertThat(role.getId()).isNotNull();
+		role1.setFatherId(role.getId());
+		role1.enabled();
+		role1.save();
+		Assertions.assertThatThrownBy(role::delete)
+			.isNotNull()
+			.isInstanceOf(ClientException.class)
+			.satisfies(temp -> log.info("测试删除::异常::{}", temp))
+			.message()
+			.contains(ClientErrorCode.CHILDREN_IS_NOT_NULL.getMessage())
+		;
+		role1.delete();
 		role.delete();
 		if (role.getId() == null) {
 			return;

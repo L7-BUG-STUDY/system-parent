@@ -1,5 +1,7 @@
 package com.l7bug.system.domain.role;
 
+import com.l7bug.common.error.ClientErrorCode;
+import com.l7bug.common.exception.ClientException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -144,6 +146,10 @@ public class Role implements Comparable<Role> {
 	public void delete() {
 		if (this.id == null) {
 			return;
+		}
+		this.findAllChildren();
+		if (!this.getChildren().isEmpty()) {
+			throw new ClientException(ClientErrorCode.CHILDREN_IS_NOT_NULL);
 		}
 		this.roleGateway.deleteById(this.id);
 	}
