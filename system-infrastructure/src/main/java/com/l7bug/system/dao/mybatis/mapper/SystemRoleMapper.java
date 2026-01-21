@@ -1,7 +1,7 @@
 package com.l7bug.system.dao.mybatis.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.l7bug.system.dao.dataobject.SystemRole;
+import com.l7bug.system.dao.dataobject.SystemRoleDo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Mapper
-public interface SystemRoleMapper extends BaseMapper<SystemRole> {
+public interface SystemRoleMapper extends BaseMapper<SystemRoleDo> {
 }

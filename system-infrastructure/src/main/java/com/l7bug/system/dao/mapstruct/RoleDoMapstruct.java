@@ -1,6 +1,6 @@
 package com.l7bug.system.dao.mapstruct;
 
-import com.l7bug.system.dao.dataobject.SystemRole;
+import com.l7bug.system.dao.dataobject.SystemRoleDo;
 import com.l7bug.system.domain.role.Role;
 import com.l7bug.system.gateway.RoleGatewayImpl;
 import jakarta.annotation.Resource;
@@ -25,7 +25,7 @@ public abstract class RoleDoMapstruct {
 		return new Role(applicationContext.getBean(RoleGatewayImpl.class));
 	}
 
-	public abstract Role mapDomain(SystemRole role);
+	public abstract Role mapDomain(SystemRoleDo role);
 
-	public abstract SystemRole mapDo(Role role);
+	public abstract SystemRoleDo mapDo(Role role);
 }

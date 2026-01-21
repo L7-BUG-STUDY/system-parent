@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Role
  *
@@ -16,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 @Data
 public class Role implements Comparable<Role> {
 	public static final String PATH_SEPARATOR = "/";
+	public static final Long ROOT_ID = -1L;
 	@Getter(AccessLevel.PRIVATE)
 	private final RoleGateway roleGateway;
 	@Nullable
@@ -38,6 +42,7 @@ public class Role implements Comparable<Role> {
 
 	private Integer sort = 0;
 	private String remark;
+	private PriorityQueue<Role> children = new PriorityQueue<>();
 
 	/**
 	 * 将角色状态设置为禁用
@@ -65,43 +70,70 @@ public class Role implements Comparable<Role> {
 	 * 4. 保存当前角色信息到数据库
 	 */
 	public void save() {
+		boolean isNewData = this.getId() == null;
+		if (isNewData) {
+			this.roleGateway.save(this);
+		}
 		// 查找父级角色，用于构建当前角色的全路径编码
-		// Optional<Role> father = this.roleGateway.findByFullCode(this.getFatherFullCode());
-		// father.ifPresent(role -> {
-		// 	this.setFullCode(role.getFullCode() + PATH_SEPARATOR + this.getCode());
-		// });
-		// // 根据是否有父级角色来确定当前角色的全路径编码格式
-		// father.ifPresentOrElse(role -> {
-		// 	this.setFullCode(role.getFullCode() + PATH_SEPARATOR + this.getCode());
-		// }, () -> {
-		// 	this.setFullCode(PATH_SEPARATOR + this.getCode());
-		// });
-		// // 获取当前角色的旧数据，用于比较父级路径是否发生变化
-		// Optional<Role> oldData = this.roleGateway.findById(this.getId());
-		// // 检查是否有其他角色已使用相同的全路径编码
-		// Optional<Role> byFullCode = this.roleGateway.findByFullCode(this.getFullCode());
-		// byFullCode.ifPresent(role -> {
-		// 	if (!Optional.ofNullable(role.getId()).orElse(Long.MIN_VALUE).equals(this.getId())) {
-		// 		// 如果存在其他角色使用相同路径编码，则抛出异常
-		// 		throw new ClientException(ClientErrorCode.NODE_IS_NOT_NULL, this.getFullCode() + "::" + ClientErrorCode.NODE_IS_NOT_NULL.getMessage());
-		// 	}
-		// });
-		// // 如果角色的父级路径发生变化，则更新所有子节点的路径信息
-		// oldData.ifPresent(role -> {
-		// 	if (!role.getFatherFullCode().equals(this.getFatherFullCode())) {
-		// 		// 同步更新子节点的全路径编码
-		// 		String oldFullCode = role.getFullCode() + PATH_SEPARATOR;
-		// 		List<Role> oldLikeFullCode = this.roleGateway.findLikeFullCode(oldFullCode);
-		// 		oldLikeFullCode.parallelStream()
-		// 			.forEach(item -> {
-		// 				item.setFullCode(item.getFullCode().replace(oldFullCode, this.getFullCode() + PATH_SEPARATOR));
-		// 				item.setFatherFullCode(item.getFatherFullCode().replace(oldFullCode, this.getFullCode() + PATH_SEPARATOR));
-		// 			});
-		// 		this.roleGateway.save(oldLikeFullCode);
-		// 	}
-		// });
-		// // 保存当前角色信息到数据库
-		// this.roleGateway.save(this);
+		Optional<Role> father = this.roleGateway.findById(this.getFatherId());
+		father.ifPresentOrElse(role -> this.setFullId(role.getFullId() + PATH_SEPARATOR + this.getId()), () -> {
+			this.setFullId(PATH_SEPARATOR + this.getId());
+			this.setFatherId(ROOT_ID);
+		});
+		if (isNewData) {
+			this.roleGateway.save(this);
+			return;
+		}
+		Optional<Role> oldData = this.roleGateway.findById(this.getId());
+
+		oldData.ifPresent(role -> {
+			if (!role.getFatherId().equals(this.getFatherId())) {
+				this.moveFather(this.getFatherId());
+			} else {
+				this.roleGateway.save(this);
+			}
+		});
+	}
+
+	public void moveFather(Long fatherId) {
+		Optional<Role> father = this.roleGateway.findById(fatherId);
+		this.setFatherId(father.map(Role::getId).orElse(ROOT_ID));
+		this.setFullId(father.map(Role::getFullId).orElse("") + PATH_SEPARATOR + this.getId());
+		this.findAllChildren();
+		this.updateAllChildrenFullId();
+		Collection<Role> roles = this.flattenAllChildrenNode();
+		this.roleGateway.save(roles);
+		this.roleGateway.save(this);
+	}
+
+	public void findAllChildren() {
+		Optional<Role> byId = this.roleGateway.findById(this.getId());
+		List<Role> roles = byId.map(item -> this.roleGateway.findLikeRightFullId(item.getFullId() + PATH_SEPARATOR)).orElse(List.of());
+		if (roles.isEmpty()) {
+			this.setChildren(new PriorityQueue<>());
+			return;
+		}
+		var fatherIdMap = roles.parallelStream().collect(Collectors.groupingBy(Role::getFatherId));
+		for (Role role : roles) {
+			role.setChildren(new PriorityQueue<>(fatherIdMap.getOrDefault(role.getId(), new LinkedList<>())));
+		}
+		this.setChildren(new PriorityQueue<>(fatherIdMap.getOrDefault(this.getId(), new LinkedList<>())));
+	}
+
+	public void updateAllChildrenFullId() {
+		for (Role child : this.getChildren()) {
+			child.setFullId(this.getFullId() + PATH_SEPARATOR + child.getId());
+			child.updateAllChildrenFullId();
+		}
+	}
+
+	public Collection<Role> flattenAllChildrenNode() {
+		var roles = new LinkedList<Role>();
+		for (Role role : this.children) {
+			roles.add(role);
+			roles.addAll(role.flattenAllChildrenNode());
+		}
+		return roles;
 	}
 
 	public void delete() {

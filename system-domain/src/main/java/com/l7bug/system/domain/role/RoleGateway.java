@@ -21,9 +21,7 @@ public interface RoleGateway {
 
 	boolean save(@NotNull Collection<@Valid Role> roles);
 
-	List<Role> findLikeFullCode(@Nullable String fullCode);
-
-	Optional<Role> findByFullCode(String fullCode);
+	List<Role> findLikeRightFullId(String fullId);
 
 	Optional<Role> findById(@Nullable Long id);
 

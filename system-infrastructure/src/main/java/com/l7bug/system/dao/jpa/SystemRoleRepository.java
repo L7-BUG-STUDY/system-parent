@@ -1,6 +1,6 @@
 package com.l7bug.system.dao.jpa;
 
-import com.l7bug.system.dao.dataobject.SystemRole;
+import com.l7bug.system.dao.dataobject.SystemRoleDo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ import java.util.Optional;
  * @since 2026/1/19 11:44
  */
 @Repository
-public interface SystemRoleRepository extends JpaRepository<SystemRole, Long> {
-	Optional<SystemRole> findByFullCode(String fullCode);
+public interface SystemRoleRepository extends JpaRepository<SystemRoleDo, Long> {
+	Optional<SystemRoleDo> findByFullCode(String fullCode);
 }

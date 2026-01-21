@@ -1,7 +1,5 @@
 package com.l7bug.system.gateway;
 
-import com.l7bug.common.error.ClientErrorCode;
-import com.l7bug.common.exception.ClientException;
 import com.l7bug.system.domain.role.Role;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -13,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 @Slf4j
 @SpringBootTest
@@ -27,10 +24,8 @@ class RoleGatewayImplTest {
 	void setUp() {
 		role = new Role(roleGateway);
 		role.setName(faker.name().fullName());
-		role.setCode(UUID.randomUUID().toString());
 		role.enabled();
-		role.setFatherFullCode(Role.PATH_SEPARATOR);
-		role.setFullCode(Role.PATH_SEPARATOR + role.getCode());
+		role.setFatherId(Role.ROOT_ID);
 	}
 
 	@Test
@@ -49,9 +44,10 @@ class RoleGatewayImplTest {
 	}
 
 	@Test
-	void findLikeFullCode() {
+	void findLikeRightFullId() {
 		role.save();
-		Assertions.assertThat(roleGateway.findLikeFullCode(role.getFullCode()))
+		Assertions.assertThat(role.getId()).isNotNull();
+		Assertions.assertThat(roleGateway.findLikeRightFullId(role.getFullId()))
 			.isNotNull()
 			.hasSize(1)
 			.first()
@@ -59,12 +55,10 @@ class RoleGatewayImplTest {
 			.isEqualTo(role.getId());
 		Role role = new Role(roleGateway);
 		role.setName(faker.name().fullName());
-		role.setCode(UUID.randomUUID().toString());
 		role.enabled();
-		role.setFatherFullCode(this.role.getFullCode());
-		role.setFullCode(this.role.getFullCode() + Role.PATH_SEPARATOR + role.getCode());
+		role.setFatherId(this.role.getId());
 		role.save();
-		Assertions.assertThat(roleGateway.findLikeFullCode(this.role.getFullCode()))
+		Assertions.assertThat(roleGateway.findLikeRightFullId(this.role.getFullId()))
 			.isNotNull()
 			.hasSize(2)
 			.extracting(Role::getId)
@@ -100,37 +94,11 @@ class RoleGatewayImplTest {
 	}
 
 	@Test
-	void findByFullCode() {
-		role.save();
-		Assertions.assertThat(this.roleGateway.findByFullCode(role.getFullCode()))
-			.isPresent()
-			.get()
-			.extracting(Role::getId)
-			.isEqualTo(role.getId());
-		Role role = new Role(roleGateway);
-		role.setName(faker.name().fullName());
-		role.setCode(this.role.getCode());
-		role.enabled();
-		role.setFatherFullCode(Role.PATH_SEPARATOR);
-		role.setFullCode(Role.PATH_SEPARATOR + role.getCode());
-		Assertions.assertThatThrownBy(role::save)
-			.isNotNull()
-			.isInstanceOf(ClientException.class)
-			.message()
-			.isNotBlank()
-			.satisfies(log::error)
-			.contains(ClientErrorCode.NODE_IS_NOT_NULL.getMessage());
-		this.role.delete();
-	}
-
-	@Test
 	void testSave() {
 		Role role = new Role(roleGateway);
 		role.setName(faker.name().fullName());
-		role.setCode(UUID.randomUUID().toString());
 		role.enabled();
-		role.setFatherFullCode(Role.PATH_SEPARATOR);
-		role.setFullCode(Role.PATH_SEPARATOR + role.getCode());
+		role.setFatherId(Role.ROOT_ID);
 		Assertions.assertThat(this.roleGateway.save(List.of(role, this.role)))
 			.isTrue();
 		Assertions.assertThat(role.getId())
@@ -138,5 +106,7 @@ class RoleGatewayImplTest {
 		Assertions.assertThat(this.role.getId())
 			.isNotNull()
 			.isNotSameAs(role.getId());
+		role.delete();
+		this.role.delete();
 	}
 }

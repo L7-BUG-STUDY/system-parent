@@ -1,7 +1,8 @@
 package com.l7bug.system.gateway;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.l7bug.system.dao.dataobject.SystemRole;
+import com.l7bug.system.dao.dataobject.SystemRoleDo;
 import com.l7bug.system.dao.jpa.SystemRoleRepository;
 import com.l7bug.system.dao.mapstruct.RoleDoMapstruct;
 import com.l7bug.system.dao.mybatis.mapper.SystemRoleMapper;
@@ -32,7 +33,7 @@ public class RoleGatewayImpl implements RoleGateway {
 
 	@Override
 	public boolean save(Role role) {
-		SystemRole save = systemRoleRepository.save(roleDoMapstruct.mapDo(role));
+		SystemRoleDo save = systemRoleRepository.save(roleDoMapstruct.mapDo(role));
 		role.setId(save.getId());
 		return true;
 	}
@@ -42,22 +43,19 @@ public class RoleGatewayImpl implements RoleGateway {
 		if (roles.isEmpty()) {
 			return false;
 		}
-		IdentityHashMap<SystemRole, Role> identityHashMap = roles.stream().collect(Collectors.toMap(roleDoMapstruct::mapDo, item -> item, (old, newItem) -> newItem, IdentityHashMap::new));
+		IdentityHashMap<SystemRoleDo, Role> identityHashMap = roles.stream().collect(Collectors.toMap(roleDoMapstruct::mapDo, item -> item, (old, newItem) -> newItem, IdentityHashMap::new));
 		this.systemRoleRepository.saveAllAndFlush(identityHashMap.keySet());
 		identityHashMap.entrySet().parallelStream().forEach(entry -> entry.getValue().setId(entry.getKey().getId()));
 		return true;
 	}
 
 	@Override
-	public List<Role> findLikeFullCode(@Nullable String fullCode) {
-		List<SystemRole> systemRoles = systemRoleMapper.selectList(Wrappers.lambdaQuery(SystemRole.class).likeRight(SystemRole::getFullCode, fullCode));
-		return systemRoles.stream().map(roleDoMapstruct::mapDomain).toList();
-	}
-
-	@Override
-	public Optional<Role> findByFullCode(String fullCode) {
-		Optional<SystemRole> byFullCode = this.systemRoleRepository.findByFullCode(fullCode);
-		return byFullCode.map(roleDoMapstruct::mapDomain);
+	public List<Role> findLikeRightFullId(String fullId) {
+		List<SystemRoleDo> systemRoleDos = systemRoleMapper.selectList(
+			Wrappers.lambdaQuery(SystemRoleDo.class)
+				.likeRight(StrUtil.isNotBlank(fullId), SystemRoleDo::getFullId, fullId)
+		);
+		return systemRoleDos.stream().map(roleDoMapstruct::mapDomain).toList();
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class RoleGatewayImpl implements RoleGateway {
 		if (id == null) {
 			return Optional.empty();
 		}
-		Optional<SystemRole> byId = this.systemRoleRepository.findById(id);
+		Optional<SystemRoleDo> byId = this.systemRoleRepository.findById(id);
 		return byId.map(roleDoMapstruct::mapDomain);
 	}
 

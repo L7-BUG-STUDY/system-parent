@@ -10,6 +10,8 @@ import org.mockito.Mockito;
 
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * RoleFullCodeTest
  *
@@ -20,6 +22,8 @@ public class RoleFullCodeTest {
 	private static final Log log = LogFactory.getLog(RoleFullCodeTest.class);
 	private final Faker faker = new Faker(Locale.CHINA);
 	private RoleGateway mock;
+
+	private Role root;
 
 	/**
 	 * 初始化测试所需的Mock对象，模拟RoleGateway的各种方法行为
@@ -58,27 +62,20 @@ public class RoleFullCodeTest {
 			Long argument = invocation.getArgument(0);
 			return Optional.ofNullable(map.get(argument));
 		}).when(mock).findById(Mockito.anyLong());
-		// // 模拟根据完整路径编码精确查找角色的方法
-		// Mockito.doAnswer(invocation -> {
-		// 	String argument = invocation.getArgument(0);
-		// 	return map.values().parallelStream().filter(item -> item.getFullCode().equals(argument)).findFirst();
-		// }).when(mock).findByFullCode(Mockito.anyString());
-		// // 模拟根据完整路径编码前缀查找相关角色的方法
-		// Mockito.doAnswer(invocation -> {
-		// 	String argument = invocation.getArgument(0);
-		// 	return map.values().parallelStream().filter(item -> item.getFullCode().startsWith(argument)).toList();
-		// }).when(mock).findLikeFullCode(Mockito.anyString());
+		// 模拟根据完整路径编码精确查找角色的方法
+		Mockito.doAnswer(invocation -> {
+			String argument = invocation.getArgument(0);
+			return map.values().parallelStream().filter(item -> item.getFullId().startsWith(argument)).toList();
+		}).when(mock).findLikeRightFullId(Mockito.anyString());
+		root = new Role(mock);
+		root.setName("root");
+		root.enabled();
+		root.save();
 	}
 
 	@DisplayName("移动父节点测试")
 	@Test
 	void moveFatherTest() {
-		// Role root = new Role(mock);
-		// root.setName(faker.name().fullName());
-		// root.setCode("root");
-		// root.enabled();
-		// root.setFatherFullCode(Role.PATH_SEPARATOR);
-		// root.save();
 		//
 		// Role node1 = new Role(mock);
 		// node1.setName(faker.name().fullName());
@@ -109,4 +106,54 @@ public class RoleFullCodeTest {
 		// node1_temp.save();
 		// log.info(mock.findById(node1_1.getId()));
 	}
+
+	@DisplayName("测试未拥有父节点的情况下,自动设置为根节点")
+	@Test
+	void testSave() {
+		Role root = new Role(mock);
+		root.setName("root");
+		root.enabled();
+		root.save();
+		assertThat(root).extracting(Role::getFatherId).isEqualTo(Role.ROOT_ID);
+		assertThat(root.getFullId()).isNotNull().isEqualTo(Role.PATH_SEPARATOR + root.getId());
+		root.save();
+		root.save();
+		root.save();
+		root.save();
+		assertThat(root).extracting(Role::getFatherId).isEqualTo(Role.ROOT_ID);
+		assertThat(root.getFullId()).isNotNull().isEqualTo(Role.PATH_SEPARATOR + root.getId());
+	}
+
+	@DisplayName("测试移动父节点")
+	@Test
+	void testMoveFather() {
+		assertThat(root.getId()).isNotNull();
+		Role node1 = new Role(mock);
+		node1.setName(faker.name().fullName());
+		node1.enabled();
+		node1.save();
+		assertThat(node1.getId()).isNotNull();
+		Role node1_1 = new Role(mock);
+		node1_1.setName(faker.name().fullName());
+		node1_1.enabled();
+		node1_1.setFatherId(node1.getId());
+		node1_1.save();
+		log.info(node1_1.getFullId());
+		Long id = node1.getId();
+		node1 = new Role(mock);
+		node1.setId(id);
+		node1.setName(faker.name().fullName());
+		node1.setFatherId(root.getId());
+		node1.save();
+		assertThat(node1.getFullId()).isEqualTo(root.getFullId() + Role.PATH_SEPARATOR + node1.getId());
+		assertThat(node1_1.getFullId()).isEqualTo(root.getFullId() + Role.PATH_SEPARATOR + node1.getId() + Role.PATH_SEPARATOR + node1_1.getId());
+	}
+
+	@DisplayName("测试查询子节点")
+	@Test
+	void findAllChildrenTest() {
+		root.findAllChildren();
+		assertThat(root.getChildren()).isNotNull().hasSize(0);
+	}
+
 }
