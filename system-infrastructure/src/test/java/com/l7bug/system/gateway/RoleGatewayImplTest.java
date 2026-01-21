@@ -84,6 +84,8 @@ class RoleGatewayImplTest {
 			.extracting(Role::getId)
 			.isEqualTo(role.getId());
 		role.delete();
+		Assertions.assertThat(roleGateway.findById(null))
+			.isNotPresent();
 	}
 
 	@Test
@@ -99,6 +101,8 @@ class RoleGatewayImplTest {
 
 	@Test
 	void testSave() {
+		Assertions.assertThat(this.roleGateway.save(List.of()))
+			.isFalse();
 		this.role.save();
 		Role role = new Role(roleGateway);
 		role.setName(faker.name().fullName());
