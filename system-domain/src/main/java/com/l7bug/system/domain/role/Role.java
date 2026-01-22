@@ -46,6 +46,8 @@ public class Role implements Comparable<Role> {
 	private String remark = "";
 	private PriorityQueue<Role> children = new PriorityQueue<>();
 
+	private List<Long> menuId = new LinkedList<>();
+
 	/**
 	 * 将角色状态设置为禁用
 	 * 此方法会将当前角色的status字段更新为RoleStatus.DISABLED
@@ -176,6 +178,29 @@ public class Role implements Comparable<Role> {
 			sort += 2;
 		}
 		this.roleGateway.save(byFatherId);
+	}
+
+	public void findAllMenuIds() {
+		if (this.getId() == null) {
+			return;
+		}
+		this.menuId = new ArrayList<>(this.roleGateway.findMenuIds(this.getId()));
+	}
+
+	public void assignMenus(Collection<Long> menuIds) {
+		if (this.getId() == null) {
+			return;
+		}
+		if (this.roleGateway.assignMenus(this.getId(), menuIds)) {
+			this.findAllMenuIds();
+		}
+	}
+
+	public void deleteMenus() {
+		if (this.getId() == null) {
+			return;
+		}
+		this.roleGateway.deleteMenusByRoleId(this.getId());
 	}
 
 	@Override
