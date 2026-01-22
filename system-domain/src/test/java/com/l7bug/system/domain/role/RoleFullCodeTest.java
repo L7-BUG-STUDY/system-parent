@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RoleFullCodeTest {
 	private static final Log log = LogFactory.getLog(RoleFullCodeTest.class);
 	private final Faker faker = new Faker(Locale.CHINA);
-	private RoleGateway mock;
+	private RoleGateway roleGateway;
 
 	private Role root;
 
@@ -40,8 +40,8 @@ public class RoleFullCodeTest {
 	@BeforeEach
 	void setUp() {
 		// 创建Mock对象和内存存储映射
-		mock = new RoleGatewayTestImpl();
-		root = new Role(mock);
+		roleGateway = new RoleGatewayTestImpl();
+		root = new Role(roleGateway);
 		root.setName("root");
 		root.enabled();
 		root.save();
@@ -84,7 +84,7 @@ public class RoleFullCodeTest {
 	@DisplayName("测试未拥有父节点的情况下,自动设置为根节点")
 	@Test
 	void testSave() {
-		Role root = new Role(mock);
+		Role root = new Role(roleGateway);
 		root.setName("root");
 		root.enabled();
 		root.save();
@@ -102,19 +102,19 @@ public class RoleFullCodeTest {
 	@Test
 	void testMoveFather() {
 		assertThat(root.getId()).isNotNull();
-		Role node1 = new Role(mock);
+		Role node1 = new Role(roleGateway);
 		node1.setName(faker.name().fullName());
 		node1.enabled();
 		node1.save();
 		assertThat(node1.getId()).isNotNull();
-		Role node1_1 = new Role(mock);
+		Role node1_1 = new Role(roleGateway);
 		node1_1.setName(faker.name().fullName());
 		node1_1.enabled();
 		node1_1.setFatherId(node1.getId());
 		node1_1.save();
 		log.info(node1_1.getFullId());
 		Long id = node1.getId();
-		node1 = new Role(mock);
+		node1 = new Role(roleGateway);
 		node1.setId(id);
 		node1.setName(faker.name().fullName());
 		node1.setFatherId(root.getId());
@@ -133,7 +133,7 @@ public class RoleFullCodeTest {
 	@DisplayName("测试根节点查询子节点逻辑")
 	@Test
 	void rootFindAllChildrenTest() {
-		Role root = new Role(mock);
+		Role root = new Role(roleGateway);
 		root.setFullId("");
 		root.findAllChildren();
 		root.setId(Role.ROOT_ID);
@@ -145,7 +145,7 @@ public class RoleFullCodeTest {
 	void deleteChildrenTest() {
 		root.save();
 		assertThat(root.getId()).isNotNull();
-		Role node1 = new Role(mock);
+		Role node1 = new Role(roleGateway);
 		node1.setName(faker.name().fullName());
 		node1.enabled();
 		node1.save();
@@ -156,6 +156,51 @@ public class RoleFullCodeTest {
 			.isInstanceOf(ClientException.class)
 			.message()
 			.contains(ClientErrorCode.CHILDREN_IS_NOT_NULL.getMessage())
+		;
+	}
+
+	@DisplayName("测试排序值自动刷新情况")
+	@Test
+	void refreshSiblingSortValueTest() {
+		root.save();
+		root.refreshSiblingSortValue();
+		Role[] nodes = new Role[5];
+		Assertions.assertThat(root.getId()).isNotNull();
+		for (int i = 0; i < nodes.length; i++) {
+			nodes[i] = new Role(roleGateway);
+			nodes[i].setName(faker.name().fullName());
+			nodes[i].setFatherId(root.getId());
+			nodes[i].save();
+		}
+		nodes[0].setSort(Integer.MIN_VALUE);
+		nodes[0].save();
+		nodes[2].setSort(Integer.MAX_VALUE);
+		nodes[2].save();
+		Assertions.assertThat(roleGateway.findById(nodes[0].getId()))
+			.isPresent()
+			.get()
+			.extracting(Role::getSort)
+			.isEqualTo(0)
+		;
+		Assertions.assertThat(roleGateway.findById(nodes[2].getId()))
+			.isPresent()
+			.get()
+			.extracting(Role::getSort)
+			.isEqualTo(2 * 4)
+		;
+		nodes[0].setSort(Integer.MAX_VALUE);
+		nodes[0].save();
+		Assertions.assertThat(roleGateway.findById(nodes[0].getId()))
+			.isPresent()
+			.get()
+			.extracting(Role::getSort)
+			.isEqualTo(2 * 4)
+		;
+		Assertions.assertThat(roleGateway.findById(nodes[2].getId()))
+			.isPresent()
+			.get()
+			.extracting(Role::getSort)
+			.isEqualTo(2 * 3)
 		;
 	}
 }

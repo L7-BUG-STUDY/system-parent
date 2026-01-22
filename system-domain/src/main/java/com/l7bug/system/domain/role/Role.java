@@ -100,6 +100,7 @@ public class Role implements Comparable<Role> {
 				this.roleGateway.save(this);
 			}
 		});
+		this.refreshSiblingSortValue();
 	}
 
 	public void moveFather(Long fatherId) {
@@ -161,6 +162,20 @@ public class Role implements Comparable<Role> {
 			throw new ClientException(ClientErrorCode.CHILDREN_IS_NOT_NULL);
 		}
 		this.roleGateway.deleteById(this.id);
+	}
+
+	public void refreshSiblingSortValue() {
+		List<Role> byFatherId = this.roleGateway.findByFatherId(this.getFatherId());
+		if (byFatherId.isEmpty()) {
+			return;
+		}
+		PriorityQueue<Role> roles = new PriorityQueue<>(byFatherId);
+		int sort = 0;
+		while (!roles.isEmpty()) {
+			roles.poll().setSort(sort);
+			sort += 2;
+		}
+		this.roleGateway.save(byFatherId);
 	}
 
 	@Override
