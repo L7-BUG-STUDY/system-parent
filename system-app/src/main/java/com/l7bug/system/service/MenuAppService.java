@@ -5,7 +5,6 @@ import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * MenuClient
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
  * @author Administrator
  * @since 2025/12/3 18:00
  */
-@Validated
 public interface MenuAppService {
 
 	Result<MenuNodeResponse> getRootNode();

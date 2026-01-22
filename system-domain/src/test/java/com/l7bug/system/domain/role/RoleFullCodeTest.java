@@ -168,6 +168,7 @@ public class RoleFullCodeTest {
 		Assertions.assertThat(root.getId()).isNotNull();
 		for (int i = 0; i < nodes.length; i++) {
 			nodes[i] = new Role(roleGateway);
+			nodes[i].refreshSiblingSortValue();
 			nodes[i].setName(faker.name().fullName());
 			nodes[i].setFatherId(root.getId());
 			nodes[i].save();
