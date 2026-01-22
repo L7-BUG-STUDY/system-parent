@@ -4,6 +4,8 @@ import com.l7bug.system.dao.dataobject.SystemRoleDo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * RoleRepository
  *
@@ -12,4 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SystemRoleRepository extends JpaRepository<SystemRoleDo, Long> {
+	List<SystemRoleDo> findByFatherId(Long fatherId);
 }

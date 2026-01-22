@@ -67,6 +67,11 @@ public class RoleGatewayImpl implements RoleGateway {
 	}
 
 	@Override
+	public List<Role> findByFatherId(@Nullable Long fatherId) {
+		return this.systemRoleRepository.findByFatherId(fatherId).parallelStream().map(roleDoMapstruct::mapDomain).toList();
+	}
+
+	@Override
 	public void deleteById(@Nullable Long id) {
 		if (id == null) {
 			return;

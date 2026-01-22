@@ -43,6 +43,11 @@ public class RoleGatewayTestImpl implements RoleGateway {
 	}
 
 	@Override
+	public List<Role> findByFatherId(@Nullable Long fatherId) {
+		return map.values().parallelStream().filter(item -> item.getFatherId().equals(fatherId)).toList();
+	}
+
+	@Override
 	public void deleteById(@Nullable Long id) {
 		map.remove(id);
 	}

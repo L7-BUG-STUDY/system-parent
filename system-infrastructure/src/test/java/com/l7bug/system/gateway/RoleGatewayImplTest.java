@@ -136,4 +136,20 @@ class RoleGatewayImplTest {
 		role.delete();
 		this.role.delete();
 	}
+
+	@Test
+	void findByFatherId() {
+		role.save();
+		Assertions.assertThat(role.getId()).isNotNull();
+		Role role1 = new Role(roleGateway);
+		role1.setName(faker.name().fullName());
+		role1.setFatherId(role.getId());
+		role1.save();
+		Assertions.assertThat(roleGateway.findByFatherId(role.getId()))
+			.isNotNull()
+			.hasSize(1)
+			.first()
+			.extracting(Role::getId)
+			.isEqualTo(role1.getId());
+	}
 }
