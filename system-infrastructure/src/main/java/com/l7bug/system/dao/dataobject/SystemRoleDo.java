@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 
@@ -19,6 +20,7 @@ import java.io.Serial;
 @Data
 @Entity
 @DynamicInsert
+@DynamicUpdate
 @Table(name = "system_role")
 @TableName("system_role")
 @EqualsAndHashCode(callSuper = true)
