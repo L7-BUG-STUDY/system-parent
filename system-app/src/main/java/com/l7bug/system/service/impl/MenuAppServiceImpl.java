@@ -11,7 +11,7 @@ import com.l7bug.system.dto.response.MenuNodeResponse;
 import com.l7bug.system.mapstruct.MenuAppMapstruct;
 import com.l7bug.system.service.MenuAppService;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Administrator
  * @since 2025/12/4 18:18
  */
-@Component
+@Service
 @AllArgsConstructor
 public class MenuAppServiceImpl implements MenuAppService {
 	private final MenuGateway menuGateway;

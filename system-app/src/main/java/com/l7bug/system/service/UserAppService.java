@@ -10,6 +10,7 @@ import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * UserService
@@ -17,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Administrator
  * @since 2025/11/7 14:25
  */
+@Validated
 public interface UserAppService {
 	/**
 	 * 登录

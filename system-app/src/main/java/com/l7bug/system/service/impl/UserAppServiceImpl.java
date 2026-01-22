@@ -18,8 +18,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,8 +30,7 @@ import java.util.List;
  * @since 2025/11/10 15:40
  */
 @Slf4j
-@Component
-@Validated
+@Service
 @AllArgsConstructor
 public class UserAppServiceImpl implements UserAppService {
 	private final UserGateway userGateway;
