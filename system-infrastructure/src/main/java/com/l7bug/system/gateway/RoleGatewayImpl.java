@@ -3,6 +3,8 @@ package com.l7bug.system.gateway;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.l7bug.system.dao.dataobject.SystemRoleDo;
+import com.l7bug.system.dao.dataobject.SystemRoleMenuDo;
+import com.l7bug.system.dao.jpa.SystemRoleMenuRepository;
 import com.l7bug.system.dao.jpa.SystemRoleRepository;
 import com.l7bug.system.dao.mapstruct.RoleDoMapstruct;
 import com.l7bug.system.dao.mybatis.mapper.SystemRoleMapper;
@@ -30,6 +32,8 @@ public class RoleGatewayImpl implements RoleGateway {
 	private final SystemRoleRepository systemRoleRepository;
 	private final SystemRoleMapper systemRoleMapper;
 
+	private final SystemRoleMenuRepository systemRoleMenuRepository;
+
 	@Override
 	public boolean save(Role role) {
 		SystemRoleDo save = systemRoleRepository.save(roleDoMapstruct.mapDo(role));
@@ -46,6 +50,21 @@ public class RoleGatewayImpl implements RoleGateway {
 		this.systemRoleRepository.saveAllAndFlush(identityHashMap.keySet());
 		identityHashMap.entrySet().parallelStream().forEach(entry -> entry.getValue().setId(entry.getKey().getId()));
 		return true;
+	}
+
+	@Override
+	public boolean assignMenus(Long roleId, Collection<Long> menuIds) {
+		if (menuIds.isEmpty()) {
+			return false;
+		}
+		List<SystemRoleMenuDo> list = menuIds.parallelStream().map(menuId -> new SystemRoleMenuDo(roleId, menuId)).toList();
+		this.systemRoleMenuRepository.saveAll(list);
+		return true;
+	}
+
+	@Override
+	public List<Long> findMenuIds(Long roleId) {
+		return this.systemRoleMenuRepository.findByRoleId(roleId).parallelStream().map(SystemRoleMenuDo::getMenuId).toList();
 	}
 
 	@Override
@@ -77,5 +96,10 @@ public class RoleGatewayImpl implements RoleGateway {
 			return;
 		}
 		this.systemRoleRepository.deleteById(id);
+	}
+
+	@Override
+	public void deleteMenusByRoleId(Long roleId) {
+		this.systemRoleMenuRepository.removeAllByRoleId(roleId);
 	}
 }

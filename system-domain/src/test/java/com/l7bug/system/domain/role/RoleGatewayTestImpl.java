@@ -14,7 +14,8 @@ import java.util.*;
  */
 @NullMarked
 public class RoleGatewayTestImpl implements RoleGateway {
-	private final Map<Long, Role> map = new HashMap<>();
+	private final Map<Long, Role> roleTable = new HashMap<>();
+	private final Map<Long, List<Long>> menuTable = new HashMap<>();
 
 	@Override
 	public boolean save(Role role) {
@@ -27,28 +28,44 @@ public class RoleGatewayTestImpl implements RoleGateway {
 			if (item.getId() == null) {
 				item.setId((long) UUID.randomUUID().hashCode());
 			}
-			map.put(item.getId(), item);
+			roleTable.put(item.getId(), item);
 		}
 		return true;
 	}
 
 	@Override
+	public boolean assignMenus(Long roleId, Collection<Long> menuIds) {
+		menuTable.getOrDefault(roleId, new LinkedList<>()).addAll(menuIds);
+		return true;
+	}
+
+	@Override
+	public List<Long> findMenuIds(Long roleId) {
+		return menuTable.getOrDefault(roleId, new LinkedList<>());
+	}
+
+	@Override
 	public List<Role> findLikeRightFullId(String fullId) {
-		return map.values().parallelStream().filter(item -> item.getFullId().startsWith(fullId)).toList();
+		return roleTable.values().parallelStream().filter(item -> item.getFullId().startsWith(fullId)).toList();
 	}
 
 	@Override
 	public Optional<Role> findById(@Nullable Long id) {
-		return Optional.ofNullable(map.get(id));
+		return Optional.ofNullable(roleTable.get(id));
 	}
 
 	@Override
 	public List<Role> findByFatherId(@Nullable Long fatherId) {
-		return map.values().parallelStream().filter(item -> item.getFatherId().equals(fatherId)).toList();
+		return roleTable.values().parallelStream().filter(item -> item.getFatherId().equals(fatherId)).toList();
 	}
 
 	@Override
 	public void deleteById(@Nullable Long id) {
-		map.remove(id);
+		roleTable.remove(id);
+	}
+
+	@Override
+	public void deleteMenusByRoleId(Long roleId) {
+		menuTable.remove(roleId);
 	}
 }

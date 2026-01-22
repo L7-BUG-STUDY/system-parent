@@ -103,3 +103,21 @@ comment on column public.system_menu.enable is '启用状态';
 create index on public.system_menu (del_flag);
 create index on public.system_menu (father_id);
 create index on public.system_menu (full_id);
+
+drop table if exists public.system_role_menu;
+
+create table public.system_role_menu
+(
+    id          bigint not null
+        primary key,
+    role_id     bigint not null,
+    menu_id     bigint not null,
+    create_by   bigint,
+    update_by   bigint,
+    create_time timestamptz,
+    update_time timestamptz
+);
+
+
+create index on public.system_role_menu (role_id);
+create index on public.system_role_menu (menu_id);

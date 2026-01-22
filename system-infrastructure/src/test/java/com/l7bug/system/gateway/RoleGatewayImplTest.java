@@ -1,5 +1,6 @@
 package com.l7bug.system.gateway;
 
+import cn.hutool.core.util.IdUtil;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import com.l7bug.system.domain.role.Role;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
@@ -151,5 +153,32 @@ class RoleGatewayImplTest {
 			.first()
 			.extracting(Role::getId)
 			.isEqualTo(role1.getId());
+	}
+
+	@Transactional
+	@Test
+	void assignMenus() {
+		role.save();
+		Assertions.assertThat(role.getId()).isNotNull();
+		this.roleGateway.assignMenus(role.getId(), List.of(IdUtil.getSnowflakeNextId(), IdUtil.getSnowflakeNextId(), IdUtil.getSnowflakeNextId()));
+		List<Long> menuIds = this.roleGateway.findMenuIds(role.getId());
+		Assertions.assertThat(menuIds)
+			.isNotNull()
+			.hasSize(3)
+		;
+		this.roleGateway.deleteMenusByRoleId(role.getId());
+		role.delete();
+	}
+
+	@Transactional
+	@Test
+	void deleteMenusByRoleId() {
+		role.save();
+		Assertions.assertThat(role.getId()).isNotNull();
+		this.roleGateway.assignMenus(role.getId(), List.of(IdUtil.getSnowflakeNextId(), IdUtil.getSnowflakeNextId(), IdUtil.getSnowflakeNextId()));
+		this.roleGateway.deleteMenusByRoleId(role.getId());
+		Assertions.assertThat(this.roleGateway.findMenuIds(role.getId()))
+			.isEmpty();
+		role.delete();
 	}
 }
