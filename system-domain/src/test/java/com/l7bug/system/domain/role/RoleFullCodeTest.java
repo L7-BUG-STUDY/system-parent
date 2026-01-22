@@ -1,14 +1,16 @@
 package com.l7bug.system.domain.role;
 
+import com.l7bug.common.error.ClientErrorCode;
+import com.l7bug.common.exception.ClientException;
 import net.datafaker.Faker;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,35 +40,7 @@ public class RoleFullCodeTest {
 	@BeforeEach
 	void setUp() {
 		// 创建Mock对象和内存存储映射
-		mock = Mockito.mock();
-		Map<Long, Role> map = new HashMap<>();
-		// 模拟批量保存角色的方法
-		Mockito.doAnswer(invocation -> {
-			Collection<Role> argument = invocation.getArgument(0);
-			for (Role item : argument) {
-				if (item.getId() == null) {
-					item.setId((long) UUID.randomUUID().hashCode());
-				}
-				map.put(item.getId(), item);
-			}
-			return true;
-		}).when(mock).save(Mockito.anyCollection());
-
-		// 模拟保存单个角色的方法，将其转换为保存单元素集合
-		Mockito.doAnswer(invocation -> {
-			Role argument = invocation.getArgument(0);
-			return mock.save(List.of(argument));
-		}).when(mock).save(Mockito.any(Role.class));
-		// 模拟根据ID查找角色的方法
-		Mockito.doAnswer(invocation -> {
-			Long argument = invocation.getArgument(0);
-			return Optional.ofNullable(map.get(argument));
-		}).when(mock).findById(Mockito.anyLong());
-		// 模拟根据完整路径编码精确查找角色的方法
-		Mockito.doAnswer(invocation -> {
-			String argument = invocation.getArgument(0);
-			return map.values().parallelStream().filter(item -> item.getFullId().startsWith(argument)).toList();
-		}).when(mock).findLikeRightFullId(Mockito.anyString());
+		mock = new RoleGatewayTestImpl();
 		root = new Role(mock);
 		root.setName("root");
 		root.enabled();
@@ -156,4 +130,32 @@ public class RoleFullCodeTest {
 		assertThat(root.getChildren()).isNotNull().hasSize(0);
 	}
 
+	@DisplayName("测试根节点查询子节点逻辑")
+	@Test
+	void rootFindAllChildrenTest() {
+		Role root = new Role(mock);
+		root.setFullId("");
+		root.findAllChildren();
+		root.setId(Role.ROOT_ID);
+		root.findAllChildren();
+	}
+
+	@DisplayName("测试删除子节点")
+	@Test
+	void deleteChildrenTest() {
+		root.save();
+		assertThat(root.getId()).isNotNull();
+		Role node1 = new Role(mock);
+		node1.setName(faker.name().fullName());
+		node1.enabled();
+		node1.save();
+		node1.setFatherId(root.getId());
+		node1.save();
+		Assertions.assertThatThrownBy(root::delete)
+			.isNotNull()
+			.isInstanceOf(ClientException.class)
+			.message()
+			.contains(ClientErrorCode.CHILDREN_IS_NOT_NULL.getMessage())
+		;
+	}
 }

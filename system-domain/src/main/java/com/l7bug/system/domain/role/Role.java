@@ -30,12 +30,12 @@ public class Role implements Comparable<Role> {
 	 * 角色名称
 	 */
 	@NotBlank(message = "角色名称不能为空")
-	private String name;
+	private String name = "";
 
 	@NotNull(message = "父节点id不能为空")
 	private Long fatherId;
 	@NotBlank(message = "全路径id不能为空")
-	private String fullId;
+	private String fullId = "";
 	/**
 	 * 角色状态
 	 */
@@ -114,8 +114,17 @@ public class Role implements Comparable<Role> {
 	}
 
 	public void findAllChildren() {
-		Optional<Role> byId = this.roleGateway.findById(this.getId());
-		List<Role> roles = byId.map(item -> this.roleGateway.findLikeRightFullId(item.getFullId() + PATH_SEPARATOR)).orElse(List.of());
+		if (this.getId() == null) {
+			this.setChildren(new PriorityQueue<>());
+			return;
+		}
+		List<Role> roles;
+		if (this.getId().equals(ROOT_ID)) {
+			roles = this.getRoleGateway().findLikeRightFullId("");
+		} else {
+			Optional<Role> byId = this.roleGateway.findById(this.getId());
+			roles = byId.map(item -> this.roleGateway.findLikeRightFullId(item.getFullId() + PATH_SEPARATOR)).orElse(List.of());
+		}
 		if (roles.isEmpty()) {
 			this.setChildren(new PriorityQueue<>());
 			return;
