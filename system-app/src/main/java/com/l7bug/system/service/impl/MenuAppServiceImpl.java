@@ -1,8 +1,7 @@
-package com.l7bug.system.client.impl;
+package com.l7bug.system.service.impl;
 
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
-import com.l7bug.system.client.MenuClient;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.domain.menu.MenuType;
@@ -10,6 +9,7 @@ import com.l7bug.system.domain.menu.MetaVal;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
 import com.l7bug.system.mapstruct.MenuAppMapstruct;
+import com.l7bug.system.service.MenuAppService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Component
 @AllArgsConstructor
-public class MenuClientImpl implements MenuClient {
+public class MenuAppServiceImpl implements MenuAppService {
 	private final MenuGateway menuGateway;
 	private final MenuAppMapstruct menuAppMapstruct;
 

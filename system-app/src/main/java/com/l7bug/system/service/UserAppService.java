@@ -1,4 +1,4 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 
 import com.l7bug.common.page.PageData;
@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Administrator
  * @since 2025/11/7 14:25
  */
-public interface UserClient {
+public interface UserAppService {
 	/**
 	 * 登录
 	 *

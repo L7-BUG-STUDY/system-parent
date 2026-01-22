@@ -1,4 +1,4 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 /**
  * RoleClient
@@ -6,5 +6,5 @@ package com.l7bug.system.client;
  * @author Administrator
  * @since 2026/1/22 09:55
  */
-public interface RoleClient {
+public interface RoleAppService {
 }

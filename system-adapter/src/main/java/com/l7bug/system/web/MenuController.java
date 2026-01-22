@@ -1,9 +1,9 @@
 package com.l7bug.system.web;
 
 import com.l7bug.common.result.Result;
-import com.l7bug.system.client.MenuClient;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
+import com.l7bug.system.service.MenuAppService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,32 +18,32 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/menu")
 public class MenuController {
-	private final MenuClient menuClient;
+	private final MenuAppService menuAppService;
 
 	@GetMapping("/root")
 	public Result<MenuNodeResponse> getRoot() {
-		return menuClient.getRootNode();
+		return menuAppService.getRootNode();
 	}
 
 	@GetMapping("/{id}")
 	public Result<MenuNodeResponse> getById(@PathVariable Long id) {
-		return menuClient.getNodeById(id);
+		return menuAppService.getNodeById(id);
 	}
 
 	@PostMapping
 	public Result<MenuNodeResponse> createMenuNode(@Valid @RequestBody MenuNodeRequest menuNodeRequest) {
-		return menuClient.createMenuNode(menuNodeRequest);
+		return menuAppService.createMenuNode(menuNodeRequest);
 	}
 
 	@PutMapping("/{id}")
 	public Result<Boolean> updateMenuNode(@PathVariable Long id, @RequestBody MenuNodeRequest menuNodeRequest) {
-		return menuClient.updateMenuNode(menuNodeRequest, id);
+		return menuAppService.updateMenuNode(menuNodeRequest, id);
 	}
 
 
 	@DeleteMapping("/{id}")
 	public Result<Boolean> deleteNode(@PathVariable Long id) {
-		return menuClient.deleteMenuNode(id);
+		return menuAppService.deleteMenuNode(id);
 	}
 
 	/**
@@ -55,6 +55,6 @@ public class MenuController {
 	 */
 	@PutMapping("/{id}/sort/{sort}")
 	public Result<Boolean> addSortVal(@PathVariable Long id, @PathVariable Integer sort) {
-		return menuClient.addSortVal(id, sort);
+		return menuAppService.addSortVal(id, sort);
 	}
 }

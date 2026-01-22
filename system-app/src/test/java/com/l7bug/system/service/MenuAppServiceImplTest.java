@@ -1,13 +1,13 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 
 import com.l7bug.common.result.Result;
-import com.l7bug.system.client.impl.MenuClientImpl;
 import com.l7bug.system.dao.mapstruct.MenuDoMapstruct;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.dto.request.MenuNodeRequest;
 import com.l7bug.system.dto.response.MenuNodeResponse;
+import com.l7bug.system.service.impl.MenuAppServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +21,9 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class MenuClientImplTest {
+class MenuAppServiceImplTest {
 	@Autowired
-	private MenuClientImpl menuClient;
+	private MenuAppServiceImpl menuClient;
 	@Autowired
 	private JsonMapper jsonMapper;
 

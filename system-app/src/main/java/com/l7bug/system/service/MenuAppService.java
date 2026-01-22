@@ -1,4 +1,4 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 import com.l7bug.common.result.Result;
 import com.l7bug.system.dto.request.MenuNodeRequest;
@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Administrator
  * @since 2025/12/3 18:00
  */
-public interface MenuClient {
+public interface MenuAppService {
 
 	Result<MenuNodeResponse> getRootNode();
 

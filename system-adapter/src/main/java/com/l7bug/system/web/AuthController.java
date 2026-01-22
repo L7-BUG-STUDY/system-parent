@@ -4,12 +4,12 @@ import com.alibaba.fastjson2.JSONArray;
 import com.google.common.io.CharStreams;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
-import com.l7bug.system.client.MenuClient;
-import com.l7bug.system.client.UserClient;
 import com.l7bug.system.config.AppSecurityConfiguration;
 import com.l7bug.system.dto.request.LoginRequest;
 import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.MenuNodeResponse;
+import com.l7bug.system.service.MenuAppService;
+import com.l7bug.system.service.UserAppService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,27 +27,27 @@ import java.nio.charset.StandardCharsets;
 @AllArgsConstructor
 @RestController
 public class AuthController {
-	private final UserClient userClient;
-	private final MenuClient menuClient;
+	private final UserAppService userAppService;
+	private final MenuAppService menuAppService;
 
 	@PostMapping(AppSecurityConfiguration.LOGIN_URL)
 	public Result<String> login(@RequestBody LoginRequest loginRequest) {
-		return userClient.login(loginRequest);
+		return userAppService.login(loginRequest);
 	}
 
 	@DeleteMapping("/auth/logout")
 	public Result<Void> logout() {
-		return userClient.logout();
+		return userAppService.logout();
 	}
 
 	@GetMapping("/user/current-user-info")
 	public Result<CurrentUserInfoResponse> currentUserInfo() {
-		return userClient.currentUserInfo();
+		return userAppService.currentUserInfo();
 	}
 
 	@GetMapping("/menu-list")
 	public Result<JSONArray> menuList() throws IOException {
-		Result<MenuNodeResponse> rootNode = menuClient.getRootNode();
+		Result<MenuNodeResponse> rootNode = menuAppService.getRootNode();
 		try (InputStream inputStream = this.getClass().getResourceAsStream("/menu-list.json")) {
 			String read = null;
 			if (inputStream != null) {

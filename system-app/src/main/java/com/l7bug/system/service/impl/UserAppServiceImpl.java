@@ -1,11 +1,10 @@
-package com.l7bug.system.client.impl;
+package com.l7bug.system.service.impl;
 
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
-import com.l7bug.system.client.UserClient;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.domain.user.UserStatus;
@@ -14,6 +13,7 @@ import com.l7bug.system.dto.request.QueryUserRequest;
 import com.l7bug.system.dto.request.UpdateUserRequest;
 import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.UserInfoResponse;
+import com.l7bug.system.service.UserAppService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ import java.util.List;
 @Component
 @Validated
 @AllArgsConstructor
-public class UserClientImpl implements UserClient {
+public class UserAppServiceImpl implements UserAppService {
 	private final UserGateway userGateway;
 
 	@Override

@@ -2,10 +2,10 @@ package com.l7bug.system.web;
 
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
-import com.l7bug.system.client.UserClient;
 import com.l7bug.system.dto.request.QueryUserRequest;
 import com.l7bug.system.dto.request.UpdateUserRequest;
 import com.l7bug.system.dto.response.UserInfoResponse;
+import com.l7bug.system.service.UserAppService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,26 +19,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
-	private final UserClient userClient;
+	private final UserAppService userAppService;
 
 	@GetMapping
 	public Result<PageData<UserInfoResponse>> page(QueryUserRequest queryUserRequest) {
-		return userClient.pageUser(queryUserRequest);
+		return userAppService.pageUser(queryUserRequest);
 	}
 
 	@PutMapping("/{id}")
 	public Result<Void> update(@PathVariable("id") Long id, @RequestBody UpdateUserRequest updateUserRequest) {
-		return userClient.updateUserById(id, updateUserRequest);
+		return userAppService.updateUserById(id, updateUserRequest);
 	}
 
 	@PostMapping
 	public Result<Void> create(@RequestBody UpdateUserRequest updateUserRequest) {
-		return userClient.createUser(updateUserRequest);
+		return userAppService.createUser(updateUserRequest);
 	}
 
 	@DeleteMapping("/{id}")
 	public Result<Void> delete(@PathVariable Long id) {
-		return userClient.deleteUserById(id);
+		return userAppService.deleteUserById(id);
 	}
 
 }

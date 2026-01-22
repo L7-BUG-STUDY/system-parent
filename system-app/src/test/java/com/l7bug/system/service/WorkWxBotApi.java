@@ -1,4 +1,4 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;

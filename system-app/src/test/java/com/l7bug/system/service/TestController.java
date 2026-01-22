@@ -1,12 +1,12 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
-import com.l7bug.system.client.impl.UserClientImpl;
 import com.l7bug.system.config.AppSecurityConfiguration;
 import com.l7bug.system.dto.request.LoginRequest;
+import com.l7bug.system.service.impl.UserAppServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class TestController {
 	@Autowired
-	private UserClientImpl userClient;
+	private UserAppServiceImpl userClient;
 
 	@PostMapping(AppSecurityConfiguration.LOGIN_URL)
 	public Result<String> login(@RequestBody LoginRequest loginRequest) {

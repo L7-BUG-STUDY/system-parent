@@ -1,4 +1,4 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

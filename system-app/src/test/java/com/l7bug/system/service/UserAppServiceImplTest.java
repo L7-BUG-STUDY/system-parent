@@ -1,11 +1,10 @@
-package com.l7bug.system.client;
+package com.l7bug.system.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.AbstractException;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
-import com.l7bug.system.client.impl.UserClientImpl;
 import com.l7bug.system.dao.dataobject.SystemUser;
 import com.l7bug.system.dao.mybatis.service.SystemUserService;
 import com.l7bug.system.domain.user.User;
@@ -17,6 +16,7 @@ import com.l7bug.system.dto.request.UpdateUserRequest;
 import com.l7bug.system.dto.response.CurrentUserInfoResponse;
 import com.l7bug.system.dto.response.UserInfoResponse;
 import com.l7bug.system.security.UserDetailsImpl;
+import com.l7bug.system.service.impl.UserAppServiceImpl;
 import com.l7bug.web.context.MdcUserInfoContext;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -34,10 +34,10 @@ import java.util.UUID;
 
 @Slf4j
 @SpringBootTest
-class UserClientImplTest {
+class UserAppServiceImplTest {
 	private final Faker faker = new Faker(Locale.CHINA);
 	@Autowired
-	private UserClientImpl userClient;
+	private UserAppServiceImpl userClient;
 	@Autowired
 	private UserGateway userGateway;
 	private User user;
