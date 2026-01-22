@@ -4,6 +4,7 @@ import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
+import com.l7bug.system.client.impl.UserClientImpl;
 import com.l7bug.system.config.AppSecurityConfiguration;
 import com.l7bug.system.dto.request.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;

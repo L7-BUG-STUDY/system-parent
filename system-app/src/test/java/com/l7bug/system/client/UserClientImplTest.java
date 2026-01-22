@@ -5,6 +5,7 @@ import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.AbstractException;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
+import com.l7bug.system.client.impl.UserClientImpl;
 import com.l7bug.system.dao.dataobject.SystemUser;
 import com.l7bug.system.dao.mybatis.service.SystemUserService;
 import com.l7bug.system.domain.user.User;

@@ -2,6 +2,7 @@ package com.l7bug.system.client;
 
 
 import com.l7bug.common.result.Result;
+import com.l7bug.system.client.impl.MenuClientImpl;
 import com.l7bug.system.dao.mapstruct.MenuDoMapstruct;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;

@@ -1,7 +1,8 @@
-package com.l7bug.system.client;
+package com.l7bug.system.client.impl;
 
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
+import com.l7bug.system.client.MenuClient;
 import com.l7bug.system.domain.menu.Menu;
 import com.l7bug.system.domain.menu.MenuGateway;
 import com.l7bug.system.domain.menu.MenuType;

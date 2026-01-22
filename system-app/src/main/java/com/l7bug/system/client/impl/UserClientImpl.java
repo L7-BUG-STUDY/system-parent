@@ -1,10 +1,11 @@
-package com.l7bug.system.client;
+package com.l7bug.system.client.impl;
 
 import com.l7bug.common.error.ClientErrorCode;
 import com.l7bug.common.exception.ClientException;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.result.Result;
 import com.l7bug.common.result.Results;
+import com.l7bug.system.client.UserClient;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.domain.user.UserStatus;
