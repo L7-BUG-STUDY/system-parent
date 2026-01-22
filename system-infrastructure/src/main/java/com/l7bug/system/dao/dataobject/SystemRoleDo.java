@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.io.Serial;
@@ -19,8 +17,6 @@ import java.io.Serial;
  * @since 2026/1/19 11:33
  */
 @Data
-@Getter
-@Setter
 @Entity
 @DynamicInsert
 @Table(name = "system_role")

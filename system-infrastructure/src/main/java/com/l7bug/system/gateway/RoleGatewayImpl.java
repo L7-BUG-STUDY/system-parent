@@ -9,6 +9,7 @@ import com.l7bug.system.dao.mybatis.mapper.SystemRoleMapper;
 import com.l7bug.system.domain.role.Role;
 import com.l7bug.system.domain.role.RoleGateway;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  * @author Administrator
  * @since 2026/1/19 11:38
  */
+@Slf4j
 @AllArgsConstructor
 @Component
 public class RoleGatewayImpl implements RoleGateway {
