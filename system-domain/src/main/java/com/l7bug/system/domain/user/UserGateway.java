@@ -3,6 +3,7 @@ package com.l7bug.system.domain.user;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.page.PageQuery;
 import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * UserGateway
@@ -23,7 +24,7 @@ public interface UserGateway {
 
 	void logout();
 
-	String encode(CharSequence rawPassword);
+	@Nullable String encode(CharSequence rawPassword);
 
 	boolean matches(CharSequence rawPassword, String encodedPassword);
 

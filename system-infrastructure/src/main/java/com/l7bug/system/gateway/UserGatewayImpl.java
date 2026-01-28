@@ -1,6 +1,5 @@
 package com.l7bug.system.gateway;
 
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.base.Strings;
@@ -8,6 +7,7 @@ import com.l7bug.common.error.ServerErrorCode;
 import com.l7bug.common.exception.ServerException;
 import com.l7bug.common.page.PageData;
 import com.l7bug.common.page.PageQuery;
+import com.l7bug.database.utils.PageUtils;
 import com.l7bug.system.dao.dataobject.SystemUser;
 import com.l7bug.system.dao.mapstruct.UserDoMapstruct;
 import com.l7bug.system.dao.mybatis.service.SystemUserService;
@@ -16,6 +16,7 @@ import com.l7bug.system.domain.user.UserGateway;
 import com.l7bug.system.security.UserDetailsImpl;
 import com.l7bug.web.context.MdcUserInfoContext;
 import lombok.AllArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.HashOperations;
@@ -120,6 +121,7 @@ public class UserGatewayImpl implements UserGateway {
 		stringRedisTemplate.delete(buildRedisKey(token));
 	}
 
+	@Nullable
 	@Override
 	public String encode(CharSequence rawPassword) {
 		return passwordEncoder.encode(rawPassword);
@@ -132,13 +134,7 @@ public class UserGatewayImpl implements UserGateway {
 
 	@Override
 	public PageData<User> page(PageQuery pageQuery, String username) {
-		Page<SystemUser> page = new Page<>();
-		page.setCurrent(pageQuery.getCurrent());
-		page.setSize(pageQuery.getSize());
-		OrderItem orderItem = new OrderItem();
-		orderItem.setColumn(pageQuery.getColumn());
-		orderItem.setAsc(pageQuery.isAsc());
-		page.addOrder(orderItem);
+		Page<SystemUser> page = PageUtils.buildMybatisPlusPage(pageQuery);
 		Page<SystemUser> systemUserPage = this.systemUserService.page(page, Wrappers.lambdaQuery(SystemUser.class).eq(!Strings.isNullOrEmpty(username), SystemUser::getUsername, username));
 		List<User> data = systemUserPage.getRecords().stream().map(userDoMapstruct::mapDomain).toList();
 		return new PageData<>(systemUserPage.getTotal(), data);
