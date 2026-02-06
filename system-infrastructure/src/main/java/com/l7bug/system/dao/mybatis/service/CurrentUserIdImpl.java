@@ -1,6 +1,6 @@
 package com.l7bug.system.dao.mybatis.service;
 
-import com.l7bug.database.config.DataBaseAutoConfiguration;
+import com.l7bug.database.config.CurrentUserId;
 import com.l7bug.system.domain.user.User;
 import com.l7bug.system.domain.user.UserGateway;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @AllArgsConstructor
 @Component
-public class CurrentUserIdImpl implements DataBaseAutoConfiguration.CurrentUserId {
+public class CurrentUserIdImpl implements CurrentUserId {
 	private final ApplicationContext applicationContext;
 
 	@Override
