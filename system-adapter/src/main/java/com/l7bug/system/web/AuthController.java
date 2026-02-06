@@ -11,6 +11,7 @@ import com.l7bug.system.dto.response.MenuNodeResponse;
 import com.l7bug.system.service.MenuAppService;
 import com.l7bug.system.service.UserAppService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.nio.charset.StandardCharsets;
  * @author Administrator
  * @since 2025/11/10 16:46
  */
+@Slf4j
 @AllArgsConstructor
 @RestController
 public class AuthController {
