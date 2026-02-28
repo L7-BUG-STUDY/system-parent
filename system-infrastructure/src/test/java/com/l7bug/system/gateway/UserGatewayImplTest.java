@@ -161,8 +161,6 @@ class UserGatewayImplTest {
 		PageQuery pageQuery = new PageQuery();
 		pageQuery.setCurrent(0);
 		pageQuery.setSize(0);
-		pageQuery.setColumn("id");
-		pageQuery.setAsc(true);
 		PageData<User> page = this.userGatewayImpl.page(pageQuery, "");
 		Assertions.assertEquals(this.systemUserService.count(), page.total());
 		Assertions.assertTrue(page.data().isEmpty());
